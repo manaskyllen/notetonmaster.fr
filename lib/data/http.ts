@@ -510,10 +510,14 @@ export function parseRetryAfter(headers: Headers, now: number): number | null {
   return Number.isFinite(t) ? Math.max(0, t - now) : null;
 }
 
-/** User-Agent of the robot: notetonmasterBot/1.0 (+<CRAWLER_INFO_URL>). */
+/**
+ * User-Agent of the robot: notetonmasterBot/1.0 (+<CRAWLER_INFO_URL>; <CRAWLER_CONTACT_EMAIL>).
+ * Both are required in production (lib/env.ts).
+ */
 export function crawlerUserAgent() {
-  const info = process.env.CRAWLER_INFO_URL ?? 'https://notetonmaster.example/a-propos#notre-robot';
-  return `notetonmasterBot/1.0 (+${info})`;
+  const info = process.env.CRAWLER_INFO_URL ?? 'https://notetonmaster.example/a-propos#sources';
+  const contact = process.env.CRAWLER_CONTACT_EMAIL?.trim();
+  return `notetonmasterBot/1.0 (+${info}${contact ? `; ${contact}` : ''})`;
 }
 
 /** URL patterns of the open-data exception, shared by the connectors. */

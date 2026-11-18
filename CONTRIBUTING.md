@@ -57,8 +57,8 @@ se connectent une fois par serveur, par les écrans, dans le projet `setup`
 - **Captures d'écran** (à la main, jamais dans la suite) : `VISUAL=1 playwright test
 --project=visual` (`tests/visual`).
 - En CI, la suite complète tourne à chaque pull request qui touche le site, ses dépendances ou ses
-  tests, à chaque push sur `main` et chaque nuit ; `pnpm deploy:check` refuse un commit dont la
-  suite n'est pas verte sur `main`. Le job tourne directement sur la machine de GitHub, avec le
+  tests, à chaque push sur `main` et chaque nuit ; `main` étant protégée, seul du code passé par
+  la suite complète y arrive, et `scripts/deploy.sh` ne déploie que `main`. Le job tourne directement sur la machine de GitHub, avec le
   seul Chromium « headless shell » de la version de `@playwright/test`, mis en cache (dans l'image
   Playwright, chaque test y prenait deux fois plus de temps). En local, `make e2e-full` utilise
   l'image Playwright de `docker-compose.yml`, qui doit suivre la même version

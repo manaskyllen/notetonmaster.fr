@@ -11,6 +11,10 @@ updates:
       timezone: Europe/Paris
     open-pull-requests-limit: 10
     labels: [dépendances]
+    ignore:
+      # Follows the Node.js major of production (Dockerfile, NODE_VERSION), never ahead of it.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       # Playwright and its axe integration in one pull request, every kind of update. The CI image
       # of the e2e job follows package.json on its own; docker-compose.yml is updated in the same

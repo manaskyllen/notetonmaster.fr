@@ -4,7 +4,11 @@ import { prisma } from '@/lib/db';
 import { flushIndexNow, INDEXNOW_JOB, queueIndexNow } from '@/lib/seo/indexnow';
 import { FX } from '../fixtures/ids';
 
-const saved = { url: process.env.APP_URL, key: process.env.INDEXNOW_KEY };
+const saved = {
+  url: process.env.APP_URL,
+  key: process.env.INDEXNOW_KEY,
+  indexing: process.env.PUBLIC_INDEXING,
+};
 let programId = '';
 let slug = '';
 
@@ -20,6 +24,7 @@ beforeAll(async () => {
 afterAll(async () => {
   process.env.APP_URL = saved.url;
   process.env.INDEXNOW_KEY = saved.key;
+  process.env.PUBLIC_INDEXING = saved.indexing;
   await prisma.job.deleteMany({ where: { type: INDEXNOW_JOB } });
 });
 
@@ -29,12 +34,16 @@ describe('IndexNow', () => {
     await prisma.job.deleteMany({ where: { type: INDEXNOW_JOB } });
     process.env.APP_URL = 'https://notetonmaster.fr';
     process.env.INDEXNOW_KEY = 'cle-de-test-1234';
+    process.env.PUBLIC_INDEXING = 'true';
   });
   it('does nothing outside production or without a key', async () => {
     process.env.APP_URL = 'http://localhost:3002';
     process.env.INDEXNOW_KEY = 'cle-de-test-1234';
     expect(await queueIndexNow([programId])).toBe(0);
     process.env.APP_URL = 'https://notetonmaster.fr';
+    process.env.PUBLIC_INDEXING = 'false';
+    expect(await queueIndexNow([programId])).toBe(0);
+    process.env.PUBLIC_INDEXING = 'true';
     process.env.INDEXNOW_KEY = '';
     expect(await queueIndexNow([programId])).toBe(0);
     expect(await prisma.job.count({ where: { type: INDEXNOW_JOB } })).toBe(0);

@@ -170,9 +170,9 @@ Pour simuler un refus, mettre `fail` dans `localStorage["nm-turnstile-mock"]`.
 | `make e2e-full`                           | Suite de bout en bout complète comme en CI : build de production, 4 serveurs et 4 bases            |
 | `make tokens`                             | Régénère `styles/tokens.css` depuis `styles/tokens.json`                                           |
 | `make shell`                              | Shell dans le conteneur de l'app                                                                   |
-| `make prod-build`                         | Construit les images de production                                                                 |
-| `make prod-up` / `make prod-down`         | Lance / arrête la stack de production en local (http://localhost:3001)                             |
-| `make prod-logs`                          | Journaux de production (dont le mot de passe admin généré au premier démarrage)                    |
+| `make prod-build`                         | Construit les images de production (`.env.prod`, projet `notetonmaster-prod`)                      |
+| `make prod-up` / `make prod-down`         | Lance / arrête la stack de production en local (aucun port publié : réseau `gateway`)              |
+| `make prod-logs`                          | Journaux de la stack de production locale                                                          |
 | `make prod-local`                         | Build de production du code courant sur la base de dev, sur :3002                                  |
 | `make perf` / `make vitals` / `make lhci` | Mesures de performance sur `make prod-local` (voir [docs/performance.md](docs/performance.md))     |
 | `make seo-check`                          | Contrôle SEO de `make prod-local` depuis son sitemap (voir [docs/seo/audit.md](docs/seo/audit.md)) |
@@ -310,24 +310,19 @@ le dev, les tests et la CI tournent hors ligne.
 
 ## Mise en production
 
-La procédure complète est dans [docs/deploiement.md](docs/deploiement.md) : variables à générer,
-sauvegarde, migrations, déploiement, vérifications, retour en arrière. Elle est manuelle, et aucun
-workflow ne déploie.
+La procédure complète est dans [docs/deploiement.md](docs/deploiement.md) : serveur, passerelle
+Caddy, variables (`.env.prod.example`), `scripts/deploy.sh`, sauvegardes chiffrées et restauration,
+mails, ouverture des villes. Elle est manuelle, et aucun workflow ne déploie.
 
 En production, le serveur refuse de démarrer s'il manque une variable, si une valeur de
 développement ou une clé de test est encore là, ou si la base contient des données de démo
-(`lib/env.ts`, `lib/auth/demo.ts`). Pour essayer la pile de production sur ta machine
-(`make prod-up`, http://localhost:3001), ajoute dans `.env` :
+(`lib/env.ts`, `lib/auth/demo.ts`). Une base neuve démarre avec toutes les villes fermées et
+`PUBLIC_INDEXING=false` : rien n'est indexé tant que les villes ne sont pas ouvertes.
 
-```sh
-APP_DB_PASSWORD=un-mot-de-passe-local-de-16-caracteres
-PROD_ALLOW_INSECURE_LOCAL=1   # local seulement : refusé sur une adresse publique
-PROD_TURNSTILE_MODE=mock
-```
-
-Après le premier démarrage, complète les pages légales de `content/legal/` (éditeur, hébergeur,
-contacts, durées), puis ouvre une première ville dans Administration › Paramètres › Villes
-ouvertes, après une synchronisation des sources.
+Pour essayer la pile de production sur ta machine : `cp .env.prod.example .env.prod`, puis dans
+`.env.prod` des secrets locaux, `APP_URL=http://localhost:3001`, `ALLOW_INSECURE_LOCAL_PROD=1`
+(refusé sur une adresse publique), `TURNSTILE_MODE=mock`, et `make prod-build prod-up`. Elle
+tourne sous le projet `notetonmaster-prod`, à côté de la pile de dev.
 
 ---
 

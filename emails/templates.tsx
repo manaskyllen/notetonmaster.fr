@@ -616,3 +616,20 @@ export function adminExportMail(what: string, lines: number): Mail {
     ),
   };
 }
+
+/** `pnpm mail:test --to …` (scripts/mail-test.ts): checks SMTP, SPF, DKIM and DMARC after a deploy. */
+export function testMail(p: { sentAt: string }): Mail {
+  return {
+    subject: 'Mail de test de notetonmaster',
+    element: (
+      <Layout preview="Le serveur de mail de notetonmaster fonctionne.">
+        <H1>Mail de test</H1>
+        <P>
+          Envoyé depuis le serveur de production le {p.sentAt}. S’il est arrivé dans la boîte de
+          réception, l’envoi fonctionne ; vérifie aussi dans ses en-têtes que SPF, DKIM et DMARC
+          sont à « pass ».
+        </P>
+      </Layout>
+    ),
+  };
+}

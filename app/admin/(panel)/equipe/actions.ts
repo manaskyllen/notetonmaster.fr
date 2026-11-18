@@ -2,56 +2,25 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { appUrl } from '@/emails/Layout';
-import { adminInviteMail } from '@/emails/templates';
+import { inviteAdmin, INVITABLE_ROLES } from '@/lib/admin/invite';
 import { audit } from '@/lib/audit';
 import { guardSensitive } from '@/lib/auth/admin';
 import { revokeAllSessions } from '@/lib/auth/session';
-import { hashToken, normalizeEmail, randomToken } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { ROLE_LABEL } from '@/lib/domain/permissions';
 import { sendMailSafe } from '@/lib/mail/send';
 
-const role = z.enum(['ADMIN', 'MODERATOR', 'DATA_EDITOR', 'LEGAL']);
+const role = z.enum(INVITABLE_ROLES);
 
 export async function inviteMember(raw: unknown) {
   return guardSensitive('team.manage', async (admin) => {
     const p = z.object({ email: z.string().trim().email(), role }).safeParse(raw);
     if (!p.success) return { ok: false as const, error: 'Adresse ou rôle invalide.' };
-    const email = normalizeEmail(p.data.email);
-    const existing = await prisma.adminUser.findUnique({ where: { email } });
-    if (existing && !existing.removedAt && existing.passwordHash)
-      return { ok: false as const, error: 'Cette personne fait déjà partie de l’équipe.' };
-    const token = randomToken();
-    await prisma.adminUser.upsert({
-      where: { email },
-      create: {
-        email,
-        name: 'Invitation en attente',
-        role: p.data.role,
-        invitedAt: new Date(),
-        inviteTokenHash: hashToken(token),
-      },
-      update: {
-        role: p.data.role,
-        invitedAt: new Date(),
-        inviteTokenHash: hashToken(token),
-        removedAt: null,
-        passwordHash: null,
-        totpSecretEnc: null,
-        totpEnabledAt: null,
-      },
-    });
-    await sendMailSafe(
-      email,
-      adminInviteMail({
-        url: `${appUrl()}/admin/invitation/${token}`,
-        roleLabel: ROLE_LABEL[p.data.role],
-      }),
-    );
-    await audit(admin, 'TEAM', email, `Invitation envoyée · rôle ${ROLE_LABEL[p.data.role]}`);
+    const r = await inviteAdmin(p.data.email, p.data.role, sendMailSafe);
+    if (!r.ok) return r;
+    await audit(admin, 'TEAM', r.email, `Invitation envoyée · rôle ${ROLE_LABEL[p.data.role]}`);
     revalidatePath('/admin/equipe');
-    return { ok: true as const, message: `Invitation envoyée à ${email}.` };
+    return { ok: true as const, message: `Invitation envoyée à ${r.email}.` };
   });
 }
 

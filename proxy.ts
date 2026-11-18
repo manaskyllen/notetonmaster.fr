@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { isPrivatePath } from '@/lib/seo/meta';
-import { canonicalRedirect, isProductionSite } from '@/lib/seo/site';
+import { canonicalRedirect, publicIndexing } from '@/lib/seo/site';
 import { getIronSession } from 'iron-session';
 import { isAllowedOrigin } from '@/lib/security/origin';
 import { SESSION_COOKIE_RE, staffSessionOptions, studentSessionOptions } from '@/lib/auth/cookies';
@@ -145,11 +145,12 @@ async function catalogGate(
 }
 
 /**
- * Indexing headers: outside production (local, CI, any host but https://notetonmaster.fr)
- * every answer is noindex, nofollow; in production the private areas are (account, forms, API).
+ * Indexing headers: while indexing is off (PUBLIC_INDEXING, local, CI, any host but
+ * https://notetonmaster.fr) every answer is noindex, nofollow; once it is on, the private areas
+ * still are (account, forms, API).
  */
 function robotsHeader(res: NextResponse, pathname: string): NextResponse {
-  if (!isProductionSite() || isPrivatePath(pathname))
+  if (!publicIndexing() || isPrivatePath(pathname))
     res.headers.set('X-Robots-Tag', 'noindex, nofollow');
   return res;
 }

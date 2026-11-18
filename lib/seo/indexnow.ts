@@ -1,5 +1,5 @@
 import { prisma } from '../db';
-import { isProductionSite, siteOrigin } from './site';
+import { publicIndexing, siteOrigin } from './site';
 
 /**
  * IndexNow (Bing, Yandex, Seznam…): tells the engines that a fiche changed (published, a review
@@ -21,7 +21,7 @@ export function indexNowKey(): string | null {
 }
 
 export function indexNowEnabled(): boolean {
-  return isProductionSite() && indexNowKey() !== null;
+  return publicIndexing() && indexNowKey() !== null;
 }
 
 /** Queues the fiches of these programs (public establishments only). Never throws. */
@@ -56,7 +56,7 @@ export async function flushIndexNow(
   send: typeof fetch = fetch,
 ): Promise<{ sent: number; status: number | null }> {
   const key = indexNowKey();
-  if (!key || !isProductionSite()) return { sent: 0, status: null };
+  if (!key || !publicIndexing()) return { sent: 0, status: null };
   const jobs = await prisma.job.findMany({
     where: { type: INDEXNOW_JOB, status: 'QUEUED', runAt: { lte: new Date() } },
     orderBy: { createdAt: 'asc' },

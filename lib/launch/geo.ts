@@ -1,20 +1,16 @@
-import { prisma } from '../db';
+import { crawlerUserAgent } from '../data/http';
 
 /**
  * API Découpage administratif (geo.api.gouv.fr, Licence Ouverte): intercommunalities (EPCI) and
  * their communes. Called from the admin (« Ajouter une ville ») and by the yearly refresh of the
- * worker, never at request time on the public site. Same User-Agent as the collection.
+ * worker, never at request time on the public site. Same User-Agent as the collection
+ * (CRAWLER_INFO_URL and CRAWLER_CONTACT_EMAIL).
  */
 const BASE = 'https://geo.api.gouv.fr';
 
-async function userAgent(): Promise<string> {
-  const s = await prisma.setting.findUnique({ where: { key: 'collect.userAgent' } });
-  return typeof s?.value === 'string' ? s.value : 'notetonmasterBot/1.0';
-}
-
 async function get<T>(path: string): Promise<T> {
   const r = await fetch(`${BASE}${path}`, {
-    headers: { accept: 'application/json', 'user-agent': await userAgent() },
+    headers: { accept: 'application/json', 'user-agent': crawlerUserAgent() },
     signal: AbortSignal.timeout(10_000),
   });
   if (!r.ok) throw new Error(`geo.api.gouv.fr ${path} : HTTP ${r.status}`);

@@ -1,75 +1,97 @@
-# Production stack (run locally with `make prod-build && make prod-up`).
-# No Mailpit, no dev dependencies in the runtime image.
-name: notetonmaster-prod
+# Production stack of notetonmaster (docs/deploiement.md). Always run with the production
+# environment file:
+#
+#   docker compose --env-file .env.prod -f docker-compose.prod.yml <command>
+#
+# (Another file, for a local test: ENV_FILE=<file> in the environment and --env-file <file>.)
+#
+# - Fixed project name: containers, volumes and networks are notetonmaster_*, never in collision
+#   with the other applications of the server.
+# - No port published on the host. Only `app` joins the reverse proxy's external network
+#   (PROXY_NETWORK, `gateway` by default) under the alias `notetonmaster-app`; `worker` and
+#   `postgres` stay on the internal network.
+# - State lives only in named volumes: pgdata (database), uploads (proofs of study), rawdata
+#   (raw downloads of the collector, rebuilt by the next sync, not backed up).
+name: notetonmaster
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: ${LOG_MAX_SIZE:-10m}
+    max-file: '${LOG_MAX_FILE:-3}'
 
 x-runtime: &runtime
-  image: notetonmaster:latest
-  env_file: .env
+  image: notetonmaster:${IMAGE_TAG:-latest}
+  env_file: ${ENV_FILE:-.env.prod}
   environment:
     NODE_ENV: production
     # The site and the worker connect with nm_app (rows only, lib/db/roles.ts); the owner
     # account (POSTGRES_USER) is only used by the migrate service.
-    DATABASE_URL: postgresql://nm_app:${APP_DB_PASSWORD:?APP_DB_PASSWORD must be set}@db:5432/${POSTGRES_DB:-notetonmaster}
-    # Mails: if PROD_SMTP_HOST is empty, mails are only logged.
-    SMTP_HOST: ${PROD_SMTP_HOST:-}
-    SMTP_PORT: ${PROD_SMTP_PORT:-587}
-    SMTP_USER: ${PROD_SMTP_USER:-}
-    SMTP_PASS: ${PROD_SMTP_PASS:-}
-    APP_URL: ${PROD_APP_URL:-http://localhost:3001}
-    SEED_ON_START: 'false'
-    # Cloudflare Turnstile: real keys required (the server refuses to start without them,
-    # lib/env.ts). To try the production build on this machine, set PROD_ALLOW_INSECURE_LOCAL=1
-    # with PROD_TURNSTILE_MODE=mock and a local PROD_APP_URL.
-    TURNSTILE_MODE: ${PROD_TURNSTILE_MODE:-live}
-    TURNSTILE_SITE_KEY: ${PROD_TURNSTILE_SITE_KEY:-}
-    TURNSTILE_SECRET_KEY: ${PROD_TURNSTILE_SECRET_KEY:-}
-    # Only for a production build tried on this machine (localhost): never on the server.
-    ALLOW_INSECURE_LOCAL_PROD: ${PROD_ALLOW_INSECURE_LOCAL:-}
-    # Reverse proxy in front of the app (Caddy, which replaces X-Forwarded-For): lib/ip.ts.
-    TRUSTED_PROXY_HOPS: ${PROD_TRUSTED_PROXY_HOPS:-1}
-    RATE_LIMIT_MULTIPLIER: '1'
-    TRUST_CLOUDFLARE: ${PROD_TRUST_CLOUDFLARE:-false}
-    # Real connectors in production (mock in dev, tests and CI).
-    CONNECTORS_MODE: ${PROD_CONNECTORS_MODE:-live}
+    DATABASE_URL: postgresql://nm_app:${APP_DB_PASSWORD:?APP_DB_PASSWORD manque}@postgres:5432/${POSTGRES_DB:-notetonmaster}
+    UPLOADS_DIR: /data/uploads
     RAW_DATA_DIR: /data/raw
-    CRAWLER_INFO_URL: ${PROD_CRAWLER_INFO_URL:-http://localhost:3001/a-propos#notre-robot}
-    CRAWLER_CONTACT_EMAIL: ${PROD_CRAWLER_CONTACT_EMAIL:-robot@notetonmaster.example}
+    INTERNAL_APP_URL: http://app:3000
+    RATE_LIMIT_MULTIPLIER: '1'
+    SEED_ON_START: 'false'
   volumes:
     - uploads:/data/uploads
     - rawdata:/data/raw
+  networks: [internal]
+  logging: *logging
   restart: unless-stopped
 
 services:
-  db:
+  postgres:
+    # Same major version as the CI (.github/workflows/ci.yml).
     image: postgres:17-alpine
-    # Query statistics for the performance checks.
-    command: ['postgres', '-c', 'shared_preload_libraries=pg_stat_statements']
+    # Memory settings follow PG_MEM_LIMIT (.env.prod.example): shared_buffers about 1/4 of it,
+    # work_mem × max_connections well under it. Query statistics for the performance checks.
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - max_connections=${PG_MAX_CONNECTIONS:-50}
+      - -c
+      - shared_buffers=${PG_SHARED_BUFFERS:-256MB}
+      - -c
+      - effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE:-512MB}
+      - -c
+      - work_mem=${PG_WORK_MEM:-8MB}
+      - -c
+      - maintenance_work_mem=${PG_MAINTENANCE_WORK_MEM:-64MB}
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-notetonmaster}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manque}
       POSTGRES_DB: ${POSTGRES_DB:-notetonmaster}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    shm_size: 256mb
+    mem_limit: ${PG_MEM_LIMIT:-1g}
+    cpus: ${PG_CPUS:-1}
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
-      interval: 3s
+      interval: 5s
       timeout: 3s
       retries: 20
+    networks: [internal]
+    logging: *logging
     restart: unless-stopped
 
-  # One-shot: exports the tables a migration drops, applies migrations, then the production bootstrap (settings, domains, data sources,
-  # first admin): idempotent, never demo data, never truncates.
+  # One-shot, once per deployment (scripts/deploy.sh), with the owner account: exports the tables
+  # a migration drops, applies the migrations, updates the nm_app role, then the production
+  # bootstrap (settings, domains, data sources). Idempotent, never demo data, never truncates.
+  # Also the image of the command-line tools (pnpm admin:create, pnpm mail:test, restore).
   migrate:
     build:
       context: .
       target: build
-    image: notetonmaster-migrate:latest
-    env_file: .env
+    image: notetonmaster-migrate:${IMAGE_TAG:-latest}
+    env_file: ${ENV_FILE:-.env.prod}
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-notetonmaster}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-notetonmaster}
-      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD must be set}
-    # Tables about to be dropped are exported first to ./backups (JSON, outside the site).
-    # Then the application role nm_app (privileges of the new tables too).
+      DATABASE_URL: postgresql://${POSTGRES_USER:-notetonmaster}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manque}@postgres:5432/${POSTGRES_DB:-notetonmaster}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manque}
+      RAW_DATA_DIR: /data/raw
     command:
       [
         'sh',
@@ -77,10 +99,15 @@ services:
         'pnpm tsx scripts/backup-tables.ts && pnpm prisma migrate deploy && pnpm db:roles && pnpm tsx prisma/bootstrap.ts',
       ]
     volumes:
+      # Tables about to be dropped are exported first (JSON, outside the site, never committed).
       - ./backups:/app/backups
+      # The list of communes downloaded by the collector, read when the search index is rebuilt.
+      - rawdata:/data/raw:ro
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
+    networks: [internal]
+    logging: *logging
     restart: 'no'
 
   app:
@@ -88,26 +115,47 @@ services:
     build:
       context: .
       target: runner
-    ports:
-      - '127.0.0.1:${PROD_PORT:-3001}:3000'
+      args:
+        APP_VERSION: ${IMAGE_TAG:-dev}
+    mem_limit: ${APP_MEM_LIMIT:-1g}
+    cpus: ${APP_CPUS:-1}
+    networks:
+      internal: {}
+      proxy:
+        aliases: [notetonmaster-app]
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
-      migrate:
-        condition: service_completed_successfully
 
   worker:
     <<: *runtime
     command: ['node', 'dist/worker.js']
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://nm_app:${APP_DB_PASSWORD:?APP_DB_PASSWORD manque}@postgres:5432/${POSTGRES_DB:-notetonmaster}
+      UPLOADS_DIR: /data/uploads
+      RAW_DATA_DIR: /data/raw
+      INTERNAL_APP_URL: http://app:3000
+      RATE_LIMIT_MULTIPLIER: '1'
+      SEED_ON_START: 'false'
+      NM_PROCESS: worker
+    mem_limit: ${WORKER_MEM_LIMIT:-1g}
+    cpus: ${WORKER_CPUS:-1}
     healthcheck:
       disable: true
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
-      migrate:
-        condition: service_completed_successfully
       app:
         condition: service_started
+
+networks:
+  # The application's own network: app, worker, postgres and migrate only.
+  internal: {}
+  # The reverse proxy's network, created outside this project (docs/deploiement.md).
+  proxy:
+    name: ${PROXY_NETWORK:-gateway}
+    external: true
 
 volumes:
   pgdata:
