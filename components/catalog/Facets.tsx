@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useId, useMemo, useRef, useState, useTransition } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -22,6 +22,7 @@ import { gradeColor } from '@/lib/domain/rating';
 import { normalize } from '@/lib/domain/search';
 import { DEFAULT_KINDS, ESTABLISHMENT_KINDS, type EstablishmentKind } from '@/lib/domain/sector';
 import { ListSearch } from './ListSearch';
+import { cancelUrlUpdate, liveParams } from '@/lib/url-update';
 
 /**
  * Faceted filters of a program list. Every option shows the number of programs
@@ -59,10 +60,11 @@ const STORE = 'nm-facets-collapsed';
 function useFilterNav() {
   const router = useRouter();
   const pathname = usePathname();
-  const sp = useSearchParams();
   const [pending, start] = useTransition();
   const apply = (f: Filters) => {
-    const p = new URLSearchParams(sp.toString());
+    // From the address as it is now, and a search still waiting is dropped (lib/url-update.ts).
+    cancelUrlUpdate();
+    const p = liveParams();
     for (const [k, v] of Object.entries(filtersToParams(f))) {
       if (v) p.set(k, v);
       else p.delete(k);

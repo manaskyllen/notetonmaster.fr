@@ -32,6 +32,7 @@
   --color-surface-50: var(--surface-50);
   --color-surface-0: var(--surface-0);
   --color-surface-100: var(--surface-100);
+  --color-surface-subtle: var(--surface-subtle);
   --color-border: var(--border);
   --color-border-control: var(--border-control);
   --color-ink: var(--ink);
@@ -54,6 +55,7 @@
   --color-coral-800: var(--coral-800);
   --color-success: var(--success);
   --color-success-bg: var(--success-bg);
+  --color-success-subtle: var(--success-subtle);
   --color-warning: var(--warning);
   --color-warning-bg: var(--warning-bg);
   --color-danger: var(--danger);

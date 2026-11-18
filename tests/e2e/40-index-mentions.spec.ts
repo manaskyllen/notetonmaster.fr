@@ -72,7 +72,7 @@ test('/mentions: domain, city and text combined, kept in the address; empty stat
   page,
 }) => {
   const zones = await openZones();
-  test.skip(!zones.length, 'no open city');
+  expect(!zones.length, 'fixtures: no open city').toBe(false);
   await page.goto('/mentions');
   await waitForHydration(page);
   const total = await cards(page).count();
@@ -92,7 +92,7 @@ test('/mentions: domain, city and text combined, kept in the address; empty stat
        JOIN "Domain" d ON d.id = m."domainId" AND d.slug = 'droit-economie-gestion'
       WHERE z.open ORDER BY z.name LIMIT 1`,
   );
-  test.skip(!found, 'no mention of the domain in an open city');
+  expect(!found, 'fixtures: no mention of the domain in an open city').toBe(false);
   const city = found!;
   await page.getByRole('button', { name: /^Ville/ }).click();
   await page.getByRole('option', { name: new RegExp(`^${city.name}`) }).click();
@@ -172,7 +172,7 @@ test('city picker: keyboard, search without accents, Escape, outside click, no c
   page,
 }) => {
   const zones = await openZones();
-  test.skip(zones.length < 1, 'no open city');
+  expect(zones.length < 1, 'fixtures: no open city').toBe(false);
   // an open city with nothing published in it: never offered
   await sql(
     `INSERT INTO "LaunchZone" (id, slug, name, "epciCode", "epciName", "communeCodes", open, "updatedAt")

@@ -15,7 +15,10 @@ export default defineConfig({
   // over the workers.
   fullyParallel: false,
   workers: STACK ? SERVERS : 1,
+  // In CI a failure is retried once, for its trace; a test that passes only on its retry still
+  // fails the run (flaky is not green).
   retries: process.env.CI ? 1 : 0,
+  failOnFlakyTests: !!process.env.CI,
   timeout: 90_000,
   expect: { timeout: 15_000 },
   reporter: process.env.PW_BLOB
@@ -44,12 +47,18 @@ export default defineConfig({
       dependencies: ['setup'],
       use: { ...devices['Desktop Chrome'] },
     },
-    // Screenshots of the admin at 1440 px (tests/visual/screens), only with VISUAL=1.
-    {
-      name: 'visual',
-      testDir: 'tests/visual',
-      dependencies: ['setup'],
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 1000 } },
-    },
+    // Screenshots taken by hand (tests/visual: the admin at 1440 px into tests/visual/screens,
+    // logged-in pages into .shots/). Declared with VISUAL=1 only, so that no run of the suite
+    // lists them, not even as skipped: `VISUAL=1 playwright test --project=visual`.
+    ...(process.env.VISUAL
+      ? [
+          {
+            name: 'visual',
+            testDir: 'tests/visual',
+            dependencies: ['setup'],
+            use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 1000 } },
+          },
+        ]
+      : []),
   ],
 });

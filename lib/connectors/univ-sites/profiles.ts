@@ -184,7 +184,11 @@ export type SeedProfile = z.infer<typeof seedProfileSchema>;
 export const PROFILES_FILE = 'fixtures/decisions/univ-sites-profils.json';
 
 export function readSeedProfiles(path = PROFILES_FILE): SeedProfile[] {
-  const raw = JSON.parse(readFileSync(path, 'utf8')) as { profiles: unknown[] };
+  // turbopackIgnore: read at run time from the working directory (the runner image copies
+  // fixtures/decisions); the tracer must not take the whole project for it.
+  const raw = JSON.parse(readFileSync(/* turbopackIgnore: true */ path, 'utf8')) as {
+    profiles: unknown[];
+  };
   return raw.profiles.map((p) => seedProfileSchema.parse(p));
 }
 

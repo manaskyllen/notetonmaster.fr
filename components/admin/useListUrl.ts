@@ -1,35 +1,31 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
+import { cancelUrlUpdate, hrefFrom, liveParams, scheduleUrlUpdate } from '@/lib/url-update';
 
 /**
  * Filters of a server-paginated admin list live in the URL: `hrefWith` builds the same list with
  * other parameters (back to page 1 unless asked), `go` navigates there, `typed` debounces a
- * search field (200 ms).
+ * search field (200 ms). `go` and the debounced search start from the address as it is when they
+ * run, and `go` cancels a search still waiting (lib/url-update.ts): a filter or a tab chosen
+ * during the wait is never undone by it.
  */
 export function useListUrl() {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
   const [pending, start] = useTransition();
-  const timer = useRef<number | undefined>(undefined);
-  useEffect(() => () => window.clearTimeout(timer.current), []);
-  const hrefWith = (set: Record<string, string | null>, keepPage = false) => {
-    const p = new URLSearchParams(sp.toString());
-    for (const [k, v] of Object.entries(set)) {
-      if (v) p.set(k, v);
-      else p.delete(k);
-    }
-    if (!keepPage) p.delete('page');
-    const qs = p.toString();
-    return qs ? `${pathname}?${qs}` : pathname;
+  useEffect(() => cancelUrlUpdate, []);
+  /** For links rendered now (the parameters of this render). */
+  const hrefWith = (set: Record<string, string | null>, keepPage = false) =>
+    hrefFrom(pathname, sp, set, keepPage);
+  const go = (set: Record<string, string | null>) => {
+    cancelUrlUpdate();
+    const href = hrefFrom(window.location.pathname, liveParams(), set);
+    start(() => router.replace(href, { scroll: false }));
   };
-  const go = (set: Record<string, string | null>) =>
-    start(() => router.replace(hrefWith(set), { scroll: false }));
-  const typed = (key: string, v: string) => {
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => go({ [key]: v.trim() || null }), 200);
-  };
+  const typed = (key: string, v: string) =>
+    scheduleUrlUpdate(() => go({ [key]: v.trim() || null }), 200);
   return { hrefWith, go, typed, pending, sp, refresh: () => router.refresh() };
 }

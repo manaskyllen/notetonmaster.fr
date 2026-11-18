@@ -3,7 +3,7 @@ DC      := docker compose
 DC_PROD := docker compose -f docker-compose.prod.yml
 RUN     := $(DC) run --rm --no-deps app
 
-.PHONY: e2e-full test-int seo-check data-univ-sites-preview data-replay-origins prod-local perf vitals lhci sectors prod-logs data-national-preview data-replay-pilot totp help env dev down logs install seed reset migration restart test check typecheck lint e2e shell tokens prod-build prod-up prod-down
+.PHONY: budget analyze e2e-full test-int seo-check data-univ-sites-preview data-replay-origins prod-local perf vitals lhci sectors prod-logs data-national-preview data-replay-pilot totp help env dev down logs install seed reset migration restart test check typecheck lint e2e shell tokens prod-build prod-up prod-down
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[1m%-12s\033[0m %s\n", $$1, $$2}'
@@ -73,11 +73,18 @@ e2e-full: env ## Complete end-to-end suite as in the CI (production build, 4 ser
 prod-local: env ## Production build of the working tree against the dev database (national data), on :3002
 	-docker rm -f nm-prodlocal >/dev/null 2>&1
 	docker volume create nm_prodnext >/dev/null
-	docker run -d --name nm-prodlocal --network notetonmaster_default --env-file .env -e NODE_ENV=production -e ALLOW_INSECURE_LOCAL_PROD=1 -e APP_URL=http://localhost:3002 -v "$(PWD)":/app -v notetonmaster_node_modules:/app/node_modules -v nm_prodnext:/app/.next -w /app -p 127.0.0.1:3002:3000 --user 1000:1000 notetonmaster-dev sh -c "pnpm -s prisma generate >/dev/null && pnpm next build && pnpm next start -p 3000"
+	docker run -d --name nm-prodlocal --network notetonmaster_default --env-file .env -e NODE_ENV=production -e ALLOW_INSECURE_LOCAL_PROD=1 -e APP_URL=http://localhost:3002 -v "$(PWD)":/app -v notetonmaster_node_modules:/app/node_modules -v nm_prodnext:/app/.next -w /app -p 127.0.0.1:3002:3000 --user 1000:1000 notetonmaster-dev sh -c "pnpm -s prisma generate >/dev/null && pnpm next build && sh scripts/standalone-site.sh /tmp/nm-site && cd /tmp/nm-site && PORT=3000 HOSTNAME=0.0.0.0 node server.js"
 	@echo "Production locale : http://localhost:3002 (docker logs -f nm-prodlocal)"
 
 perf: env ## Light load on the key routes of make prod-local: TTFB p50/p95/p99, HTML and JS weight (performance budgets)
 	$(DC) --profile e2e run --rm -T e2e node scripts/perf.mjs --base=http://nm-prodlocal:3000 --n=20 --c=2 --assert --json=docs/perf/latest.json
+
+budget: env ## JavaScript budget as in the CI (job build-budget): production build, demo seed in its own database, perf.mjs --js-only --assert
+	$(DC) up -d db
+	$(DC) run --rm --no-deps -T -v nm_budget_next:/app/.next $(E2E_ENV) -e APP_URL=http://localhost:3099 app sh scripts/budget.sh
+
+analyze: env ## Heaviest modules of the browser JavaScript (Turbopack analysis of a production build)
+	$(DC) run --rm --no-deps -T -v nm_budget_next:/app/.next app pnpm -s analyze
 
 vitals: env ## LCP and INP on a mobile profile (4G, CPU ×4) against make prod-local
 	$(DC) --profile e2e run --rm -T e2e node scripts/web-vitals.mjs --base=http://nm-prodlocal:3000 --runs=3 --assert --json=docs/perf/latest-vitals.json

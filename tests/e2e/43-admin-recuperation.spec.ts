@@ -113,6 +113,8 @@ test('Récupération: Relancer, Pause 7 jours, villes ouvertes seulement, un pas
   await sw.click();
   await expect(page).toHaveURL(/toutes=1/);
   await page.getByLabel('Chercher un établissement').fill('E2E de la collecte');
+  // The search reaches the address after its debounce: the next step starts from there.
+  await expect(page).toHaveURL(/q=E2E\+de\+la\+collecte/);
   await expect(page.getByRole('row', { name: /Université E2E de la collecte/ })).toBeVisible();
   await expect(
     page.getByRole('status').filter({ hasText: /dans les villes ouvertes · .* au total/ }),
@@ -122,6 +124,9 @@ test('Récupération: Relancer, Pause 7 jours, villes ouvertes seulement, un pas
   await page.getByRole('tab', { name: 'Journal' }).click();
   await expect(page).toHaveURL(/onglet=journal/);
   await page.getByLabel('Période').selectOption('tout');
+  // The new list arrives with the address: a pass opened before would be reset by it.
+  await expect(page).toHaveURL(/periode=tout/);
+  await expect(page.getByLabel('Période')).toHaveValue('tout');
   const panelId = await page
     .getByRole('tabpanel')
     .getByRole('button', { expanded: false })
@@ -131,4 +136,25 @@ test('Récupération: Relancer, Pause 7 jours, villes ouvertes seulement, un pas
   await pass.click();
   await expect(pass).toHaveAttribute('aria-expanded', 'true');
   await expect(page.getByLabel(/^Journal du passage/).first()).toBeVisible();
+});
+
+test('a tab chosen right after typing a search is not undone by the search', async ({ page }) => {
+  await loginAdmin(page);
+  await page.goto('/admin/recuperation?onglet=etablissements');
+  await waitForHydration(page);
+  // A slow server for the journal (as on a busy CI machine): the tab navigation is still in
+  // flight when the debounce of the search ends, which is when the old code overwrote it.
+  await page.route(/onglet=journal/, async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    await route.continue();
+  });
+  // No wait between the keystrokes and the click: the search is still in its debounce.
+  await page.getByLabel('Chercher un établissement').pressSequentially('nantes');
+  await page.getByRole('tab', { name: 'Journal' }).click();
+  await expect(page).toHaveURL(/onglet=journal/);
+  await expect(page.getByRole('tab', { name: 'Journal' })).toHaveAttribute('aria-selected', 'true');
+  // Longer than the debounce (200 ms) and a round trip: the address stays on the journal.
+  await page.waitForLoadState('networkidle');
+  await expect(page).toHaveURL(/onglet=journal/);
+  expect(page.url()).not.toContain('q=');
 });

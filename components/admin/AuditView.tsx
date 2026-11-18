@@ -162,9 +162,7 @@ function Entry({ e }: { e: AuditEntry }) {
                     >
                       {d.before}
                     </td>
-                    <td
-                      className={cn(TD, 'bg-[#f4fbf6] break-words text-success dark:bg-success-bg')}
-                    >
+                    <td className={cn(TD, 'bg-success-subtle break-words text-success')}>
                       {d.after}
                     </td>
                   </tr>
@@ -177,7 +175,7 @@ function Entry({ e }: { e: AuditEntry }) {
               {e.detail}
             </p>
           )}
-          <p className="m-0 bg-[#fbfafd] px-3 py-2 font-mono text-[12px] text-ink-muted dark:bg-surface-50">
+          <p className="m-0 bg-surface-subtle px-3 py-2 font-mono text-[12px] text-ink-muted">
             {e.meta}
           </p>
         </div>
@@ -214,7 +212,7 @@ export function AuditList({
             aria-label={d.label}
             className="overflow-hidden rounded-2xl border border-border bg-surface-0"
           >
-            <h2 className="m-0 border-b border-border bg-[#fbfafd] px-3.5 py-2.5 text-[12px] font-bold tracking-[0.05em] text-ink-muted uppercase dark:bg-surface-50">
+            <h2 className="m-0 border-b border-border bg-surface-subtle px-3.5 py-2.5 text-[12px] font-bold tracking-[0.05em] text-ink-muted uppercase">
               {d.label}
             </h2>
             {d.items.map((e) => (

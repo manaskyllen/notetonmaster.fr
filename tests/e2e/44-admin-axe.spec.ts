@@ -69,6 +69,13 @@ test('axe: vue d’ensemble, fiches (tiroir, sélection), modifier, récupérati
 
   await page.goto('/admin/audit');
   await waitForHydration(page);
-  await page.getByRole('button', { name: 'Détail' }).first().click();
+  const detail = page.getByRole('button', { name: 'Détail' }).first();
+  // Read before the click: once open, the button is « Masquer » and the locator moves on.
+  const panel = page.locator(`#${await detail.getAttribute('aria-controls')}`);
+  await detail.click();
+  // The detail unfolds with a fade (.expand): axe measures the colors as painted, so a check in
+  // the middle of it sees text at ~83 % opacity and reports contrasts that are not there.
+  await panel.waitFor();
+  await animationsDone(page);
   await check(page, 'journal d’audit');
 });

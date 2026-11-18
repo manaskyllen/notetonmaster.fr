@@ -12,6 +12,11 @@ updates:
     open-pull-requests-limit: 10
     labels: [dépendances]
     groups:
+      # Playwright and its axe integration in one pull request, every kind of update. The CI image
+      # of the e2e job follows package.json on its own; docker-compose.yml is updated in the same
+      # pull request (scripts/check-playwright-image.mjs fails until it is).
+      playwright:
+        patterns: ['@playwright/test', '@axe-core/playwright']
       mineures-et-correctifs:
         update-types: [minor, patch]
       outillage-dev:
@@ -33,3 +38,6 @@ updates:
     schedule:
       interval: weekly
     labels: [dépendances]
+    ignore:
+      # Follows @playwright/test (npm group « playwright » above), never on its own.
+      - dependency-name: 'mcr.microsoft.com/playwright'

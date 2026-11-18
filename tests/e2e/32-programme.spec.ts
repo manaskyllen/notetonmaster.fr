@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { loginAdmin, sql, waitForHydration } from './helpers';
+import { E2E_EXTRAS } from './fixtures/names';
 
 /** Fiche parcours, part B: the Programme tab by year, its filters, its states and the admin. */
 const VNP = 'valorisation-des-nouveaux-patrimoines';
@@ -62,14 +63,8 @@ test('the theme filter highlights one theme, with only the themes present', asyn
 });
 
 test('a parcours of another discipline: law is its core', async ({ page }) => {
-  const [p] = await sql<{ slug: string }>(
-    `SELECT p.slug FROM "Program" p JOIN "Mention" m ON m.id = p."mentionId"
-      WHERE m.name ILIKE 'Droit%' AND p."isPublished"
-        AND EXISTS (SELECT 1 FROM "ProgramSemester" s JOIN "ProgramCourse" c ON c."semesterId" = s.id WHERE s."programId" = p.id)
-      ORDER BY p.slug LIMIT 1`,
-  );
-  test.skip(!p, 'no law parcours with a programme in this database');
-  const panel = await programmeTab(page, p!.slug);
+  // A law parcours with its programme: tests/e2e/fixtures/extras.ts.
+  const panel = await programmeTab(page, E2E_EXTRAS.programme);
   const group = panel.getByRole('group', { name: 'Mettre en avant une thématique' });
   await expect(group.getByRole('button', { name: 'Cœur du master' })).toBeVisible();
   await expect(group.getByRole('button', { name: 'Droit, gestion et économie' })).toHaveCount(0);

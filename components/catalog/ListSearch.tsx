@@ -5,11 +5,14 @@ import { useEffect, useId, useRef, useState, useTransition } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { ShortcutKbd } from '@/components/ui/Kbd';
 import { useSearchShortcut } from '@/components/public/SearchShortcut';
+import { cancelUrlUpdate, hrefFrom, liveParams, scheduleUrlUpdate } from '@/lib/url-update';
 
 /**
  * Keyword field of a program list (Explorer, « Chercher dans les 40 parcours de Droit… »): the
  * site search, applied to the list. ⌘K / Ctrl K puts the cursor here on these pages. Typing
- * updates ?q= (120 ms debounce) and goes back to page 1; without JavaScript, a GET form.
+ * updates ?q= (120 ms debounce) and goes back to page 1; without JavaScript, a GET form. The
+ * debounced update starts from the address as it is when it runs, and a filter or a link chosen
+ * during the wait cancels it (lib/url-update.ts).
  */
 export function ListSearch({
   placeholder,
@@ -26,23 +29,17 @@ export function ListSearch({
   const [pending, start] = useTransition();
   const field = useRef<HTMLInputElement>(null);
   const id = useId();
-  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => cancelUrlUpdate, []);
   useSearchShortcut({ kind: 'focus', get: () => field.current });
   useEffect(() => {
     if (document.activeElement !== field.current) setQ(urlQ);
   }, [urlQ]);
 
-  const apply = (v: string) => {
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => {
-      const p = new URLSearchParams(sp.toString());
-      if (v.trim()) p.set('q', v.trim());
-      else p.delete('q');
-      p.delete('page');
-      const qs = p.toString();
-      start(() => router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false }));
-    }, 120);
-  };
+  const apply = (v: string, ms = 120) =>
+    scheduleUrlUpdate(() => {
+      const href = hrefFrom(window.location.pathname, liveParams(), { q: v.trim() || null });
+      start(() => router.replace(href, { scroll: false }));
+    }, ms);
 
   return (
     <form
@@ -51,7 +48,7 @@ export function ListSearch({
       action={pathname}
       onSubmit={(e) => {
         e.preventDefault();
-        apply(q);
+        apply(q, 0);
       }}
       aria-busy={pending || undefined}
       className="nm-search-field flex items-center gap-2.5 rounded-md border-[1.5px] border-ink bg-surface-0 px-3.5 focus-within:shadow-[0_0_0_4px_var(--focus-halo)]"

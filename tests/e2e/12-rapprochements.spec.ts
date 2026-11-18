@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { loginAdmin, waitForHydration } from './helpers';
 
 /**
- * « Rapprochements à valider »: filters, selection and validation of a proposal.
- * Proposals only exist after a real (or replayed) simulation: skipped otherwise.
+ * « Rapprochements à valider »: filters, selection and validation of a proposal. The merge
+ * proposal comes from a Mon Master simulation replayed by the fixtures (tests/e2e/fixtures/extras.ts).
  */
 test('admin: filter the merge proposals, select one and validate it', async ({ page }) => {
   await loginAdmin(page);
@@ -13,10 +13,7 @@ test('admin: filter the merge proposals, select one and validate it', async ({ p
     page.getByRole('heading', { name: 'Rapprochements à valider', level: 1 }),
   ).toBeVisible();
   const boxes = page.getByRole('checkbox', { name: /^Sélectionner :/ });
-  test.skip(
-    (await boxes.count()) === 0,
-    'aucune proposition (lancer une simulation réelle ou make data-replay-pilot)',
-  );
+  await expect(boxes.first()).toBeVisible();
   await expect(page.getByText('Fusion', { exact: true }).first()).toBeVisible();
   await boxes.first().check();
   await page.getByRole('button', { name: /Valider la sélection \(1\)/ }).click();

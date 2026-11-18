@@ -181,7 +181,7 @@ export function ProgrammeEditor({
               onClick={() => setOpen((o) => ({ ...o, [i]: !isOpen }))}
               className={cn(
                 'flex min-h-12 w-full cursor-pointer items-center gap-2.5 border-0 px-3.5 text-left text-ink',
-                isOpen ? 'bg-[#fbfafd] dark:bg-surface-50' : 'bg-surface-0',
+                isOpen ? 'bg-surface-subtle' : 'bg-surface-0',
               )}
             >
               <svg

@@ -140,7 +140,7 @@ export function ListFooter({
   const step =
     'inline-flex min-h-8.5 items-center rounded-pill border-[1.5px] border-[#d7d3e0] bg-surface-0 px-2.5 font-bold text-ink no-underline dark:border-border-control';
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-border bg-[#fbfafd] px-3.5 py-2.5 text-[13px] dark:bg-surface-50">
+    <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-border bg-surface-subtle px-3.5 py-2.5 text-[13px]">
       <span className="text-[#3b3648] dark:text-ink-muted" role="status">
         {total ? `${nf.format(from)}–${nf.format(to)} sur ${nf.format(total)}` : '0 résultat'}
         {suffix}

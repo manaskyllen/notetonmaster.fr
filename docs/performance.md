@@ -1,7 +1,7 @@
 # Performance
 
 Budgets de performance du site, mesurés sur le jeu national (8 168 parcours, 111 établissements)
-avec un build de production (`make prod-local`, `next build && next start` sur la base de
+avec un build de production (`make prod-local`, `next build` puis son serveur standalone, sur la base de
 développement). « Avant » / « après » : avant et après le travail sur la pagination et les caches
 (novembre 2026). Dernières mesures brutes : `docs/perf/latest.json`, `docs/perf/latest-vitals.json`.
 
@@ -90,6 +90,31 @@ fait son tri et ses compteurs en base au lieu de tout envoyer.
 palette ⌘K, pied de page, thème, Turnstile). Le budget de 150 Ko n'est pas atteignable sans
 changer de cadre. Ce qui a baissé, c'est la charge de rendu : l'accueil n'hydrate plus 8 000 lignes,
 Explorer plus 8 000 cartes, la palette et le formulaire d'avis ne reçoivent plus le catalogue.
+
+Mesure : `scripts/perf.mjs` additionne toutes les balises `<script src>` de la page, polyfill
+`noModule` compris (≈ 39 Ko, que les navigateurs récents ne téléchargent pas) : c'est la même
+méthode depuis le début, les chiffres restent comparables.
+
+### Régression de novembre 2026 (228 Ko au lieu de 197)
+
+Le job `build-budget` de la première CI du dépôt public a échoué : toutes les pages, même la
+page 404, dépassaient 215 Ko. Le surplus (≈ 31 Ko compressés) était dans le JavaScript commun, et déjà là
+dans le premier commit de l'historique conservé (il date d'avant la publication) :
+
+- **`components/ui/index.ts`** : un barrel (`export *`) importé par plus de quatre-vingts fichiers, dont une cinquantaine de composants
+  client. Turbopack ne l'élague pas : un seul `import { Button } from '@/components/ui'` dans
+  l'en-tête embarquait toute la bibliothèque (formulaire d'avis, saisie du code, fichiers,
+  bulles de messages…) sur chaque page. Les barrels sont supprimés et interdits par ESLint
+  (`no-restricted-imports`).
+- **`zod`** : le bandeau d'information (`SiteBanner`, composant client du
+  layout public) importait `lib/domain/banner.ts`, qui construisait aussi le schéma du formulaire
+  d'administration. Le schéma vit maintenant dans `lib/domain/banner-schema.ts`.
+- Les modules serveur qui lisent la base sans passer par un autre garde-fou importent
+  `server-only` : une fuite vers un composant client casse le build au lieu d'alourdir le site.
+
+Après correction : 184 Ko pour la page 404, 187–196 Ko pour les pages publiques, 205 Ko pour la
+fiche parcours. `make budget` refait la mesure de la CI en local, `make analyze` liste les modules
+les plus lourds (analyse Turbopack : `@next/bundle-analyzer` ne lit que les builds webpack).
 
 ## Ce qui a été fait
 

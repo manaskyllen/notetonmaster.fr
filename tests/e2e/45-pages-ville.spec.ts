@@ -26,7 +26,7 @@ test('a city page: one h1, its mentions, its establishments, and a breadcrumb in
   page,
 }) => {
   const c = await cityAndMention();
-  test.skip(!c, 'no open city with 2 parcours of one mention');
+  expect(!c, 'fixtures: no open city with 2 parcours of one mention').toBe(false);
   await page.goto(`/masters/${c!.city}`);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Les masters à ${c!.name}`);
   await expect(page.locator('h1')).toHaveCount(1);
@@ -46,7 +46,7 @@ test('a city page: one h1, its mentions, its establishments, and a breadcrumb in
 
 test('a city × mention page lists its parcours and leads back to the mention', async ({ page }) => {
   const c = await cityAndMention();
-  test.skip(!c, 'no open city with 2 parcours of one mention');
+  expect(!c, 'fixtures: no open city with 2 parcours of one mention').toBe(false);
   await page.goto(`/masters/${c!.city}/${c!.mention}`);
   await expect(page.getByRole('heading', { level: 1 })).toContainText(`à ${c!.name}`);
   // the same list as a mention page: 20 per page
@@ -70,7 +70,7 @@ test('a city × mention page lists its parcours and leads back to the mention', 
 
 test('the footer lists the open cities; a closed or unknown city answers 404', async ({ page }) => {
   const c = await cityAndMention();
-  test.skip(!c, 'no open city');
+  expect(!c, 'fixtures: no open city').toBe(false);
   await page.goto('/');
   await expect(
     page.locator('footer').getByRole('link', { name: `Masters à ${c!.name}` }),
@@ -87,7 +87,7 @@ test('the footer lists the open cities; a closed or unknown city answers 404', a
 
 test('no serious axe violation on a city page and a city × mention page', async ({ page }) => {
   const c = await cityAndMention();
-  test.skip(!c, 'no open city');
+  expect(!c, 'fixtures: no open city').toBe(false);
   for (const path of [`/masters/${c!.city}`, `/masters/${c!.city}/${c!.mention}`]) {
     await page.goto(path);
     await waitForHydration(page);

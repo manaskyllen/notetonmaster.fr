@@ -94,7 +94,7 @@ export async function saveDocument(file: File): Promise<SaveResult> {
   if (!clean) return { ok: false, error: DOCUMENT_REFUSED };
   await mkdir(UPLOADS_DIR, { recursive: true });
   const name = `${randomToken(16)}.${type.ext}`;
-  await writeFile(join(UPLOADS_DIR, name), clean, { mode: 0o600 });
+  await writeFile(join(/* turbopackIgnore: true */ UPLOADS_DIR, name), clean, { mode: 0o600 });
   return { ok: true, path: name, mime: type.mime };
 }
 
@@ -102,12 +102,14 @@ export async function saveDocument(file: File): Promise<SaveResult> {
 export async function deleteDocument(path: string | null | undefined) {
   if (!path) return;
   try {
-    await unlink(join(UPLOADS_DIR, basename(path)));
+    await unlink(join(/* turbopackIgnore: true */ UPLOADS_DIR, basename(path)));
   } catch {
     /* already gone */
   }
 }
 
 export function documentFullPath(path: string) {
-  return join(UPLOADS_DIR, basename(path));
+  // turbopackIgnore (here and above): the private uploads volume, read at run time; without it the
+  // build tracer copies the whole project into .next/standalone.
+  return join(/* turbopackIgnore: true */ UPLOADS_DIR, basename(path));
 }

@@ -238,6 +238,6 @@ export function MiniBar({ pct, tone }: { pct: number; tone?: 'auto' | 'violet' }
 
 /** Header cell of the compact admin tables. */
 export const TH =
-  'border-b border-border bg-[#fbfafd] px-3 py-2.5 text-left text-[11px] font-bold tracking-[0.05em] whitespace-nowrap text-ink-muted uppercase dark:bg-surface-50';
+  'border-b border-border bg-surface-subtle px-3 py-2.5 text-left text-[11px] font-bold tracking-[0.05em] whitespace-nowrap text-ink-muted uppercase';
 /** Body cell of the compact admin tables. */
 export const TD = 'border-b border-surface-100 px-3 py-2.25 align-middle';

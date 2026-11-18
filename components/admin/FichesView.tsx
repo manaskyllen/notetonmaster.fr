@@ -21,6 +21,7 @@ import { cn } from '@/lib/cn';
 import { ClearFilters, Drawer, SearchBox, Sel } from './list';
 import { ISSUE_TONE, KIND_TAG, MiniBar, PUBLICATION_TAG, Tag, TD, TH, URGENCY } from './ui';
 import { useListUrl } from './useListUrl';
+import { cancelUrlUpdate } from '@/lib/url-update';
 
 const nf = new Intl.NumberFormat('fr-FR');
 const ISSUE_SHORT: Record<string, string> = {
@@ -228,6 +229,7 @@ export function SaveViewButton({
           else {
             setOpen(false);
             setName('');
+            cancelUrlUpdate();
             router.push(query ? `/admin/fiches?${query}` : '/admin/fiches');
             router.refresh();
           }

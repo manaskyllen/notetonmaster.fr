@@ -99,16 +99,10 @@ async function main() {
   );
 
   // No demo, debug or seed route.
-  // The demo invitation exists on purpose in a local build with the demo data: checked over HTTPS.
-  const demoRoutes = HTTPS ? ['/admin/invitation/demo-invitation-juridique'] : [];
-  for (const p of [
-    '/design-system',
-    '/api/debug',
-    '/api/seed',
-    '/api/demo',
-    '/_next/webpack-hmr',
-    ...demoRoutes,
-  ]) {
+  // The demo invitation and the design system exist on purpose in a local build with the demo
+  // data (ALLOW_INSECURE_LOCAL_PROD, local APP_URL only): checked over HTTPS.
+  const demoRoutes = HTTPS ? ['/admin/invitation/demo-invitation-juridique', '/design-system'] : [];
+  for (const p of ['/api/debug', '/api/seed', '/api/demo', '/_next/webpack-hmr', ...demoRoutes]) {
     const r = await get(p);
     const body = r.status === 200 ? await r.text() : '';
     const exposed = r.status === 200 && !/Invitation expirée/.test(body);

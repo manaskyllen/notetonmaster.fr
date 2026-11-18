@@ -25,7 +25,7 @@ test('/masters: one card per open city, most masters first, the whole card a lin
   page,
 }) => {
   const zones = await listed();
-  test.skip(!zones.length, 'no open city');
+  expect(!zones.length, 'fixtures: no open city').toBe(false);
   await page.goto('/masters');
   await waitForHydration(page);
   await expect(
@@ -68,7 +68,7 @@ test('/masters: one card per open city, most masters first, the whole card a lin
 test('/masters: region, text and sort, kept in the address; unknown city', async ({ page }) => {
   const zones = await listed();
   const withRegion = zones.filter((z) => z.region);
-  test.skip(withRegion.length < 2, 'not enough cities');
+  expect(withRegion.length < 2, 'fixtures: not enough cities').toBe(false);
   await page.goto('/masters');
   await waitForHydration(page);
   const region = withRegion.at(-1)!.region!;
@@ -138,7 +138,7 @@ test('/masters: average from 3 reviews, the count below, « Pas encore d’avis 
   page,
 }) => {
   const zones = await listed();
-  test.skip(zones.length < 3, 'not enough cities');
+  expect(zones.length < 3, 'fixtures: not enough cities').toBe(false);
   const saved = await sql<{ slug: string; reviewCount: number; avgRating: number | null }>(
     `SELECT slug, "reviewCount", "avgRating" FROM "LaunchZone" WHERE slug = ANY($1)`,
     [zones.slice(0, 3).map((z) => z.slug)],
@@ -178,7 +178,7 @@ test('/masters: an open city without any published master is not listed', async 
     `SELECT slug, name FROM "LaunchZone" WHERE NOT open AND "programCount" = 0
       AND name NOT IN (SELECT name FROM "LaunchZone" WHERE open) LIMIT 1`,
   );
-  test.skip(!empty.length, 'no closed city to open');
+  expect(!empty.length, 'fixtures: no closed city to open').toBe(false);
   const z = empty[0]!;
   // opened by hand, its parcours not indexed: 0 published master
   await sql(`UPDATE "LaunchZone" SET open = true WHERE slug = $1`, [z.slug]);

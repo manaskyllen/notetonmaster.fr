@@ -15,7 +15,10 @@ tourne sous Docker : il te faut seulement Docker et, si possible, `make`.
 
 1. Crée une branche depuis `main`.
 2. Lance `make check` (typecheck, lint, tests unitaires) et `make test-int` (tests sur la base) :
-   ils doivent passer.
+   ils doivent passer. Si ton changement touche le site, lance aussi `make budget` : build de
+   production, seed de démo dans sa propre base, puis le poids du JavaScript de chaque page
+   principale contre le seuil de `perf-budget.json` (le même contrôle que le job `build-budget` de
+   la CI). Pour voir ce qui pèse : `make analyze`.
 3. Si ton changement touche le site, ajoute ou adapte un test dans `tests/e2e` (voir
    [Tests de bout en bout](#tests-de-bout-en-bout)). Une action serveur ou une route nouvelle entre
    dans la matrice des droits ([docs/matrice-des-droits.md](docs/matrice-des-droits.md)) et dans
@@ -45,10 +48,19 @@ se connectent une fois par serveur, par les écrans, dans le projet `setup`
 - Pas de `waitForTimeout` : on attend un élément, une réponse ou la fin des animations
   (`animationsDone` de `tests/e2e/helpers.ts`).
 - Un test ne dépend jamais des données de ta base de développement : ce dont il a besoin est dans
-  les fixtures, ou créé par le test lui-même.
+  les fixtures, ou créé par le test lui-même. Jamais de `test.skip` quand une donnée manque : ajoute
+  la fixture (`tests/e2e/fixtures`), sinon le test disparaît sans que personne ne le voie.
+- Les serveurs de la suite sont le serveur standalone du build (`node server.js`, comme l'image de
+  production), assemblé par `scripts/standalone-site.sh`.
+- En CI, un test qui ne passe qu'au second essai fait échouer le job (`failOnFlakyTests`) : la
+  trace du premier essai est dans le rapport Playwright.
+- **Captures d'écran** (à la main, jamais dans la suite) : `VISUAL=1 playwright test
+--project=visual` (`tests/visual`).
 - En CI, la suite complète tourne à chaque pull request qui touche le site, ses dépendances ou ses
   tests, à chaque push sur `main` et chaque nuit ; `pnpm deploy:check` refuse un commit dont la
-  suite n'est pas verte sur `main`.
+  suite n'est pas verte sur `main`. Le job tourne dans l'image officielle Playwright de la version
+  de `@playwright/test` (navigateur et dépendances système compris) ; l'image de
+  `docker-compose.yml` doit suivre la même version (`scripts/check-playwright-image.mjs`).
 
 ## Avant chaque commit
 

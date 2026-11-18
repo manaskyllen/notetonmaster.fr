@@ -36,15 +36,20 @@ test('/mentions/droit: a list of 20, no grouped view, no figure cards, nothing a
   ]);
 });
 
+// The abroad parcours: tests/e2e/fixtures/extras.ts (taught in Nantes and in Phnom Penh).
 test('/mentions/droit: establishments facet with counters, abroad', async ({ page }) => {
   await page.goto('/mentions/droit');
   await waitForHydration(page);
   const filters = page.getByRole('complementary', { name: 'Filtres' });
   await expect(filters.getByRole('checkbox').first()).toBeVisible();
   const abroad = filters.getByRole('checkbox', { name: /À l’étranger/ });
-  test.skip(!(await abroad.count()), 'no parcours abroad in this mention');
+  await expect(abroad).toBeVisible();
   await abroad.check();
   await expect(page).toHaveURL(/lieu=etranger/);
+  await expect(
+    page.getByRole('list', { name: 'Parcours de la page' }).getByRole('listitem'),
+  ).toHaveCount(1);
+  await expect(page.getByText(/Droit international et comparé/)).toBeVisible();
 });
 
 test('a university: the Explorer cards; establishments-composantes switch', async ({ page }) => {

@@ -58,7 +58,7 @@ test('/universites: kind, city and text combined; « Mieux notées »; empty sta
 }) => {
   const rows = await published();
   const univ = rows.filter((r) => r.kind === 'UNIVERSITY');
-  test.skip(!univ.length, 'no university');
+  expect(!univ.length, 'fixtures: no university').toBe(false);
   const city = univ[0]!.zones[0]!;
   await page.goto('/universites');
   await waitForHydration(page);
@@ -137,7 +137,7 @@ test('the footer and the breadcrumbs lead to the indexes', async ({ page }) => {
     '/universites',
   );
   const [u] = await published();
-  test.skip(!u, 'no establishment');
+  expect(!u, 'fixtures: no establishment').toBe(false);
   await page.goto(`/universites/${u!.slug}`);
   await expect(
     page

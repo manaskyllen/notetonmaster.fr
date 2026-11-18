@@ -27,3 +27,46 @@ describe('buildTokensCss', () => {
     expect(readFileSync('styles/tokens.css', 'utf8')).toBe(css);
   });
 });
+
+/** WCAG relative luminance and contrast ratio. */
+const luminance = (hex: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  }) as [number, number, number];
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (a: string, b: string) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+describe('text tokens on the light backgrounds (WCAG AA, 4.5:1)', () => {
+  const value = Object.fromEntries(
+    (tokens.color.tokens as { name: string; value: { light: string; dark: string } }[]).map((t) => [
+      t.name,
+      t.value,
+    ]),
+  );
+  const texts = ['ink', 'ink-muted', 'success', 'warning', 'danger', 'violet-500', 'violet-700'];
+  const backgrounds = [
+    'surface-0',
+    'surface-50',
+    'surface-100',
+    'surface-subtle',
+    'success-bg',
+    'success-subtle',
+    'warning-bg',
+    'danger-bg',
+    'violet-100',
+  ];
+  for (const theme of ['light', 'dark'] as const)
+    for (const fg of texts)
+      it(`${fg} (${theme})`, () => {
+        for (const bg of backgrounds)
+          expect(
+            contrast(value[fg]![theme], value[bg]![theme]),
+            `${fg} on ${bg}`,
+          ).toBeGreaterThanOrEqual(4.5);
+      });
+});

@@ -274,7 +274,7 @@ export default async function AdminOverview({
           ) : (
             <p className="m-0 p-7 text-center text-ink-muted">Rien à traiter pour ce filtre.</p>
           )}
-          <p className="m-0 bg-[#fbfafd] px-4.5 py-3 text-[12px] text-ink-muted dark:bg-surface-50">
+          <p className="m-0 bg-surface-subtle px-4.5 py-3 text-[12px] text-ink-muted">
             Classé par urgence, puis par nombre d’éléments. Un sujet disparaît dès qu’il est réglé ;
             les compteurs sont recalculés toutes les 5 minutes.
           </p>

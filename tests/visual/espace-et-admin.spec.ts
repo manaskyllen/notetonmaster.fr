@@ -1,8 +1,10 @@
 import { test } from '@playwright/test';
-import { loginStudent, waitForHydration } from './helpers';
+import { loginAdmin, loginStudent, waitForHydration } from '../e2e/helpers';
 
-/** Visual check helper, only with SHOTS=1: screenshots of logged-in pages into .shots/. */
-test.skip(!process.env.SHOTS, 'screenshots only on demand');
+/**
+ * Screenshots of logged-in pages into .shots/, for a visual check by hand (project « visual »,
+ * VISUAL=1, never in the end-to-end suite). SHOTS_EXTRA=/admin/avis,/admin/equipe adds pages.
+ */
 
 test('student space screenshots', async ({ page }) => {
   await loginStudent(page, 'alexis.demo@demo.notetonmaster.local');
@@ -14,7 +16,6 @@ test('student space screenshots', async ({ page }) => {
 });
 
 test('admin screenshots', async ({ page }) => {
-  const { loginAdmin } = await import('./helpers');
   await page.setViewportSize({ width: 1440, height: 900 });
   await loginAdmin(page);
   for (const [path, name] of [

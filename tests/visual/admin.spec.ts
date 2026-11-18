@@ -4,9 +4,9 @@ import { createDemoConflicts, dropDemoConflicts } from './fixtures';
 
 /**
  * Screenshots of the redesigned admin at 1440 px, kept in tests/visual/screens (one per screen
- * and state). Only with VISUAL=1: `playwright test --project=visual`.
+ * and state). Project « visual », declared with VISUAL=1 only:
+ * `VISUAL=1 playwright test --project=visual tests/visual/admin.spec.ts`.
  */
-test.skip(!process.env.VISUAL, 'screenshots only on demand (VISUAL=1)');
 test.describe.configure({ mode: 'serial' });
 
 const shot = (page: Page, name: string, fullPage = true) =>

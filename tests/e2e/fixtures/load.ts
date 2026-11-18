@@ -10,6 +10,8 @@
  * - Paris, a commune outside the open cities: « Paris n'est pas encore sur notetonmaster »;
  * - four closed cities, Lyon, Marseille and Rennes with one parcours each, Sarrebourg without
  *   any: the tests that open more than three cities.
+ * - what the tests that used to skip themselves need (./extras.ts): a law parcours abroad and one
+ *   with its programme, a mention with a single parcours, a Mon Master merge proposal.
  * Ends by recomputing what the application derives, as after a sync.
  *
  * Run: tsx tests/e2e/fixtures/load.ts (DATABASE_URL = the template database).
@@ -20,6 +22,7 @@ import { refreshIndexRatings, refreshZoneStats } from '@/lib/catalog/index-ratin
 import { computeSiteCommunes, refreshOpenZoneFlags } from '@/lib/launch/zones';
 import { campus, city, program, university } from '../../integration/fixtures/factories';
 import { FX } from '../../integration/fixtures/ids';
+import { loadExtras } from './extras';
 
 type Kind = 'LICENCE' | 'LICENCE_PRO' | 'BUT' | 'MASTER' | 'OTHER' | 'NOT_ENROLLED';
 /** Per session: admitted, then [origin, applications, offers, admitted]. */
@@ -171,6 +174,8 @@ async function main() {
       campusId: site.id,
     });
   }
+
+  await loadExtras();
 
   await computeSiteCommunes(null);
   await refreshOpenZoneFlags(null);

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { AnimationDemos } from './AnimationDemos';
 import { notFound } from 'next/navigation';
+import { isInsecureLocalProd } from '@/lib/env';
 import { Badge } from '@/components/ui/Badge';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { Button } from '@/components/ui/Button';
@@ -94,7 +95,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 const row = 'flex flex-wrap items-center gap-3';
 
 export default function DesignPage() {
-  if (process.env.NODE_ENV === 'production') notFound();
+  // Development, and the local production builds with the demo data (CI end-to-end tests:
+  // tests/e2e/11-reduced-motion.spec.ts); never a real deployment (APP_URL must be local).
+  if (process.env.NODE_ENV === 'production' && !isInsecureLocalProd()) notFound();
 
   return (
     <>

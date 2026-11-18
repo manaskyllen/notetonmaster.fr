@@ -1,6 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
 import { waitForHydration } from './helpers';
-import { STACK } from './stack';
 
 /**
  * Brief, section 4: with « prefers-reduced-motion: reduce », everything is switched off or
@@ -36,8 +35,7 @@ async function movingAnimations(page: Page) {
 }
 
 test('reduced motion: no transform is animated in the design system', async ({ page }) => {
-  // The design system page exists in development only (404 on a production build).
-  test.skip(STACK, 'design system: development only');
+  // The design system page: development and local production builds (never a real deployment).
   // Every component animation, triggered by hand.
   await page.goto('/design-system');
   await waitForHydration(page);

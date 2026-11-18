@@ -4,7 +4,7 @@
 # - read-only smoke test of notetonmaster.fr, once the site is live (repository variable
 #   SITE_LIVE=true); GitHub mails the owner of the repository when a scheduled run fails;
 # - pnpm audit and gitleaks on the whole history;
-# - the complete end-to-end suite (Chromium, visual project included), as on main.
+# - the complete end-to-end suite (Chromium), as on main.
 name: Nuit
 
 on:
@@ -73,20 +73,38 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # This job stays on the runner (ZAP runs in Docker next to the site, --network host). The
+      # headless shell only (what headless tests use), cached per Playwright version; the cache is
+      # saved even when the job fails (actions/cache alone saves on success only), and apt-get
+      # runs only when Chromium does not start on the runner image as it is.
+      - id: pw
+        run: echo "version=$(jq -r '.devDependencies["@playwright/test"]' package.json)" >> "$GITHUB_OUTPUT"
       - name: Navigateur Playwright (cache)
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: pw-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-chromium-${{ hashFiles('pnpm-lock.yaml') }}
-      - run: pnpm exec playwright install --with-deps chromium
-      - name: Base de démonstration, build et démarrage
+          key: playwright-shell-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --only-shell chromium
+      - name: Dépendances système de Chromium, seulement s'il ne démarre pas
+        run: |
+          node -e "require('@playwright/test').chromium.launch().then((b) => b.close())" 2>/dev/null \
+            || pnpm exec playwright install-deps chromium-headless-shell
+      - if: always() && steps.pw-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-shell-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - name: Base de démonstration, build et démarrage (serveur standalone)
         run: |
           mkdir -p "$RAW_DATA_DIR" "$UPLOADS_DIR"
           pnpm prisma generate && pnpm prisma migrate deploy && pnpm db:seed
           pnpm build
-          NODE_ENV=production nohup pnpm next start -p 3002 > /tmp/next.log 2>&1 &
+          sh scripts/standalone-site.sh /tmp/nm-site
+          (cd /tmp/nm-site && PORT=3002 HOSTNAME=0.0.0.0 NODE_ENV=production nohup node server.js > /tmp/next.log 2>&1 &)
           NODE_ENV=production nohup node dist/worker.js > /tmp/worker.log 2>&1 &
-          for i in $(seq 1 60); do curl -sf http://localhost:3002/api/health > /dev/null && exit 0; sleep 2; done
+          for _ in $(seq 1 60); do curl -sf http://localhost:3002/api/health > /dev/null && exit 0; sleep 2; done
           cat /tmp/next.log; exit 1
       - name: OWASP ZAP baseline (build local uniquement)
         run: |
@@ -115,10 +133,10 @@ jobs:
           name: zap
           path: zap/
           retention-days: 7
-      - name: Bout en bout complet (visuels compris), une base et un serveur par processus
+      - name: Bout en bout complet, une base et un serveur par processus
         env:
           E2E_SERVERS: '4'
-        run: sh scripts/e2e-stack.sh run
+        run: sh scripts/e2e-stack.sh run --project=e2e
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

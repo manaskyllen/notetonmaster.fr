@@ -16,7 +16,9 @@ export function snapshotPath(sourceKey: string, fileName: string, at = new Date(
     basename(fileName)
       .replace(/[^\w.-]+/g, '_')
       .slice(0, 120) || 'fichier';
-  return join(rawDir(), sourceKey, day, safe);
+  // turbopackIgnore: a path of the private volume, read at run time. Without it the build tracer
+  // cannot bound `join(…, '..')` and copies the whole project into .next/standalone.
+  return join(/* turbopackIgnore: true */ rawDir(), sourceKey, day, safe);
 }
 
 export async function sha256File(path: string): Promise<string> {
@@ -49,7 +51,7 @@ export interface SnapshotInput {
 export async function saveSnapshot(input: SnapshotInput) {
   const source = await prisma.dataSource.findUniqueOrThrow({ where: { key: input.sourceKey } });
   const path = snapshotPath(input.sourceKey, input.fileName);
-  await mkdir(join(path, '..'), { recursive: true });
+  await mkdir(join(/* turbopackIgnore: true */ path, '..'), { recursive: true });
   if (input.body) await writeFile(path, input.body);
   else if (input.file && input.file !== path) await rename(input.file, path);
   else if (!input.file) throw new Error('saveSnapshot: ni contenu ni fichier');

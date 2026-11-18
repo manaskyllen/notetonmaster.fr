@@ -1,11 +1,12 @@
 #!/bin/sh
-# Parallel stack of the end-to-end tests: one production build, served E2E_SERVERS times.
+# Parallel stack of the end-to-end tests: one production build, served E2E_SERVERS times by its
+# standalone server (`node server.js`, as in production: scripts/standalone-site.sh).
 #   sh scripts/e2e-stack.sh start    databases + servers + worker processes (after `pnpm build`)
 #   sh scripts/e2e-stack.sh stop
 #   sh scripts/e2e-stack.sh run [playwright arguments]    start, playwright test, stop
 # Server i: http://localhost:$((E2E_BASE_PORT + i)), database notetonmaster_test_<i>, its own copy
-# of .next (the data cache of Next.js lives on disk: shared, it would mix the databases), its own
-# worker process and its own mail sender. Playwright worker i talks to server i only
+# of the build (the data cache of Next.js lives on disk: shared, it would mix the databases), its
+# own worker process and its own mail sender. Playwright worker i talks to server i only
 # (tests/e2e/stack.ts). Needs DATABASE_URL (server and credentials), the variables of the CI and
 # node_modules; no pnpm, so it also runs in the Playwright image (make e2e-full).
 set -eu
@@ -19,22 +20,18 @@ export E2E_SERVERS E2E_BASE_PORT
 db_url() { node -e 'const u = new URL(process.env.DATABASE_URL); u.pathname = "/notetonmaster_test_" + process.argv[1]; console.log(u.toString())' "$1"; }
 
 start() {
-  [ -f .next/BUILD_ID ] && [ -f dist/worker.js ] || { echo "No production build: run pnpm build first." >&2; exit 1; }
+  [ -f .next/standalone/server.js ] && [ -f dist/worker.js ] || { echo "No production build: run pnpm build first." >&2; exit 1; }
   "$BIN/tsx" scripts/e2e-db.ts "$N"
   rm -rf "$DIR" && mkdir -p "$DIR"
   i=0
   while [ "$i" -lt "$N" ]; do
     port=$((PORT0 + i))
     site="$DIR/site-$i"
-    mkdir -p "$site"
-    # The project through links (not its dot files: no local .env), and its own copy of the build.
-    for f in "$ROOT"/*; do ln -s "$f" "$site/"; done
-    mkdir "$site/.next"
-    tar -C "$ROOT/.next" --exclude=./cache -cf - . | tar -C "$site/.next" -xf -
+    sh scripts/standalone-site.sh "$site"
     url=$(db_url "$i")
-    (cd "$site" && DATABASE_URL="$url" APP_URL="http://localhost:$port" \
+    (cd "$site" && DATABASE_URL="$url" APP_URL="http://localhost:$port" PORT="$port" HOSTNAME=0.0.0.0 \
       MAIL_FROM="notetonmaster <ne-pas-repondre+w$i@notetonmaster.example>" NODE_ENV=production \
-      nohup "$BIN/next" start -p "$port" > "$DIR/next-$i.log" 2>&1 & echo $! >> "$DIR/pids")
+      nohup node server.js > "$DIR/next-$i.log" 2>&1 & echo $! >> "$DIR/pids")
     DATABASE_URL="$url" INTERNAL_APP_URL="http://localhost:$port" APP_URL="http://localhost:$port" \
       MAIL_FROM="notetonmaster <ne-pas-repondre+w$i@notetonmaster.example>" NODE_ENV=production \
       NM_PROCESS=worker nohup node dist/worker.js > "$DIR/worker-$i.log" 2>&1 &

@@ -3,10 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { controlClass } from '@/components/ui/form/Controls';
+import { cancelUrlUpdate, hrefFrom, liveParams } from '@/lib/url-update';
 
 /**
  * « Trier par » of a program list. A GET form (works without JavaScript, with its button); with
- * JavaScript the change applies at once and goes back to page 1.
+ * JavaScript the change applies at once and goes back to page 1, from the address as it is now
+ * (a search still waiting is dropped, lib/url-update.ts).
  */
 export function SortSelect({
   value,
@@ -33,9 +35,9 @@ export function SortSelect({
           name="tri"
           defaultValue={value}
           onChange={(e) => {
-            const p = new URLSearchParams(hidden);
-            p.set('tri', e.target.value);
-            start(() => router.push(`${pathname}?${p}`, { scroll: false }));
+            cancelUrlUpdate();
+            const href = hrefFrom(pathname, liveParams(), { tri: e.target.value });
+            start(() => router.push(href, { scroll: false }));
           }}
           className={`${controlClass} w-auto`}
         >

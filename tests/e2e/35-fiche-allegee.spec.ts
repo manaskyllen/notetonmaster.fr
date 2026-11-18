@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { sql, waitForHydration } from './helpers';
+import { E2E_EXTRAS } from './fixtures/names';
 
 /** Fiche parcours: reviews first, identity at the bottom. */
 const VNP = 'valorisation-des-nouveaux-patrimoines';
@@ -76,14 +77,13 @@ test('« Même mention, ailleurs »: same city first, never the current parcours
 test('« Même mention, ailleurs » is hidden when the mention has a single parcours', async ({
   page,
 }) => {
-  const [p] = await sql<{ slug: string }>(
-    `SELECT i.slug FROM "ProgramSearchIndex" i
-      WHERE i."isPublicSector"
-        AND (SELECT count(*) FROM "ProgramSearchIndex" j WHERE j."mentionId" = i."mentionId" AND j."isPublicSector") = 1
-      ORDER BY i.slug LIMIT 1`,
-  );
-  test.skip(!p, 'no mention with a single parcours in this database');
-  await page.goto(`/parcours/${p!.slug}`);
+  // « Études nordiques », a mention with a single parcours: tests/e2e/fixtures/extras.ts.
+  const [{ n }] = (await sql<{ n: number }>(
+    `SELECT count(*)::int n FROM "ProgramSearchIndex" WHERE "mentionSlug" = $1`,
+    [E2E_EXTRAS.single.mention],
+  )) as [{ n: number }];
+  expect(n).toBe(1);
+  await page.goto(`/parcours/${E2E_EXTRAS.single.program}`);
   await expect(page.getByRole('heading', { name: 'Fiche d’identité' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Même mention, ailleurs' })).toHaveCount(0);
 });
@@ -131,7 +131,7 @@ test('Fiche d’identité: an unknown line is left out', async ({ page }) => {
     `SELECT i.slug FROM "ProgramSearchIndex" i JOIN "Program" p ON p.id = i."programId"
       WHERE i."isPublicSector" AND p."componentId" IS NULL ORDER BY i.slug LIMIT 1`,
   );
-  test.skip(!p, 'every parcours has a component in this database');
+  expect(p, 'a published parcours without component (fixtures)').toBeTruthy();
   await page.goto(`/parcours/${p!.slug}`);
   const id = page.getByRole('region', { name: 'Fiche d’identité' });
   await expect(id.locator('dt', { hasText: 'Université' })).toBeVisible();

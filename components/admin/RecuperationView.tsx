@@ -18,6 +18,7 @@ import type { ConflictGroup, ConflictItem } from '@/lib/admin/conflict-groups';
 import type { CollectError, NoProfile, RunRow } from '@/lib/admin/recuperation';
 import { cn } from '@/lib/cn';
 import { useListUrl } from './useListUrl';
+import { cancelUrlUpdate } from '@/lib/url-update';
 
 const BTN =
   'inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-pill border-[1.5px] px-4 text-[13px] font-bold whitespace-nowrap no-underline disabled:cursor-not-allowed disabled:opacity-40';
@@ -35,10 +36,13 @@ export function UrlTabs({
 }) {
   const router = useRouter();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const go = (k: string) =>
+  const go = (k: string) => {
+    // A search typed in the previous tab and still waiting must not bring that tab back.
+    cancelUrlUpdate();
     router.replace(k === tabs[0]!.key ? '/admin/recuperation' : `/admin/recuperation?onglet=${k}`, {
       scroll: false,
     });
+  };
   return (
     <div
       role="tablist"
@@ -180,7 +184,7 @@ export function ConflictGroupCard({ g, canEdit }: { g: ConflictGroup; canEdit: b
       <div
         className={cn(
           'flex flex-wrap items-center gap-x-4 gap-y-2.5 px-3.5 py-3',
-          rule ? 'bg-[#f4fbf6] dark:bg-success-bg' : 'bg-surface-0',
+          rule ? 'bg-success-subtle' : 'bg-surface-0',
         )}
       >
         <span className="flex min-w-0 flex-[1_1_320px] flex-col gap-0.75">
@@ -544,7 +548,7 @@ export function RunList({
         <p className="m-0 p-6 text-center text-ink-muted">Aucun passage avec ces filtres.</p>
       )}
       {next && (
-        <div className="bg-[#fbfafd] px-3.5 py-2.5 text-center dark:bg-surface-50">
+        <div className="bg-surface-subtle px-3.5 py-2.5 text-center">
           <button
             type="button"
             className={cn(GHOST, 'min-h-8.5')}
