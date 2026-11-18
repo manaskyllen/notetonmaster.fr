@@ -27,6 +27,23 @@ function isLocalUrl(url: string | undefined): boolean {
   }
 }
 
+/** Placeholder domains of this repository and local hosts: never a real identity. */
+const PLACEHOLDER_HOST = /(^|\.)(example|test|invalid|local|localhost)$|^127\.|^\[::1\]$/i;
+
+function isPublicHttpsUrl(url: string | undefined): boolean {
+  try {
+    const u = new URL(url ?? '');
+    return u.protocol === 'https:' && !PLACEHOLDER_HOST.test(u.hostname);
+  } catch {
+    return false;
+  }
+}
+
+function isRealEmail(email: string | undefined): boolean {
+  const ok = z.string().email().safeParse(email);
+  return ok.success && !PLACEHOLDER_HOST.test(ok.data.split('@')[1] ?? '');
+}
+
 const base = z.object({
   APP_URL: z.string().url({ error: 'APP_URL doit être une adresse complète' }),
   DATABASE_URL: z.string().min(1, 'DATABASE_URL manque'),
@@ -55,6 +72,8 @@ export function validateEnv(env: Env = process.env): { ok: boolean; errors: stri
   if (local) return { ok: errors.length === 0, errors };
 
   // A real deployment.
+  for (const [k, v] of Object.entries(env))
+    if (v && /a-remplacer/.test(v)) errors.push(`${k} : valeur factice de .env.prod.example`);
   if (!(env.APP_URL ?? '').startsWith('https://')) errors.push('APP_URL : https:// obligatoire');
   if (env.SESSION_SECRET && KNOWN_SESSION_SECRETS.some((re) => re.test(env.SESSION_SECRET!)))
     errors.push('SESSION_SECRET : valeur de développement, à régénérer (openssl rand -base64 48)');
@@ -70,9 +89,25 @@ export function validateEnv(env: Env = process.env): { ok: boolean; errors: stri
   }
   if (!env.SMTP_HOST || env.SMTP_HOST === 'mailpit')
     errors.push('SMTP_HOST : serveur de mail réel obligatoire');
-  if (!env.MAIL_FROM) errors.push('MAIL_FROM manque');
-  if (env.CONNECTORS_MODE === 'mock')
-    errors.push('CONNECTORS_MODE : « mock » interdit en production');
+  if (env.SMTP_HOST && !env.SMTP_USER?.trim())
+    errors.push('SMTP_USER : identifiant de la boîte d’envoi, obligatoire avec SMTP_HOST');
+  // « notetonmaster <ne-pas-repondre@notetonmaster.fr> » or the bare address.
+  const from = /<([^>]+)>\s*$/.exec(env.MAIL_FROM ?? '')?.[1] ?? env.MAIL_FROM?.trim();
+  if (!isRealEmail(from)) errors.push('MAIL_FROM : adresse d’envoi réelle du domaine, obligatoire');
+  if (!isRealEmail(env.CONTACT_EMAIL?.trim()))
+    errors.push(
+      'CONTACT_EMAIL : adresse de contact réelle (Reply-To des mails, pages légales), obligatoire',
+    );
+  if (env.CONNECTORS_MODE !== 'live')
+    errors.push('CONNECTORS_MODE : « live » obligatoire en production (vrais connecteurs)');
+  // Identity of the robot, sent with every request of the collector (lib/data/http.ts).
+  if (!isPublicHttpsUrl(env.CRAWLER_INFO_URL))
+    errors.push('CRAWLER_INFO_URL : page publique https:// qui présente le robot, obligatoire');
+  // Optional: CONTACT_EMAIL otherwise (lib/contact.ts).
+  if (env.CRAWLER_CONTACT_EMAIL && !isRealEmail(env.CRAWLER_CONTACT_EMAIL))
+    errors.push('CRAWLER_CONTACT_EMAIL : adresse réelle, ou vide pour utiliser CONTACT_EMAIL');
+  if (env.PUBLIC_INDEXING && !['true', 'false'].includes(env.PUBLIC_INDEXING))
+    errors.push('PUBLIC_INDEXING : « true » ou « false »');
   if (env.SEED_ON_START === 'true') errors.push('SEED_ON_START : interdit en production');
   if (env.DEMO_DATA && env.DEMO_DATA !== 'false') errors.push('DEMO_DATA : interdit en production');
   if (env.RATE_LIMIT_MULTIPLIER && Number(env.RATE_LIMIT_MULTIPLIER) !== 1)

@@ -1,6 +1,7 @@
 'use server';
 
 import { reportAckMail } from '@/emails/templates';
+import { notifyIncoming } from '@/lib/admin/notify';
 import { encrypt, hmac, normalizeEmail } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { fieldErrors } from '@/lib/form';
@@ -53,6 +54,7 @@ export async function submitReport(input: unknown): Promise<ReportResult> {
   );
   await autoHideIfNeeded(review.id);
   await logConnection('REPORT', report.reference);
+  await notifyIncoming('review.reported', report.reference, '/admin/moderation?file=signal');
   if (email)
     await sendMailSafe(email, reportAckMail({ reference: report.reference, formal: false }));
   return { ok: true, reference: report.reference, formal: false, programSlug: review.program.slug };
@@ -85,6 +87,7 @@ export async function submitNotice(input: unknown): Promise<ReportResult> {
     }),
   );
   await logConnection('LEGAL_NOTICE', req.reference);
+  await notifyIncoming('legal.received', req.reference, '/admin/moderation?file=legal');
   await sendMailSafe(d.email, reportAckMail({ reference: req.reference, formal: true, deadline }));
   return { ok: true, reference: req.reference, formal: true };
 }

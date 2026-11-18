@@ -1,6 +1,7 @@
 import { render, toPlainText } from '@react-email/render';
 import nodemailer, { type Transporter } from 'nodemailer';
 import type { Mail } from '@/emails/templates';
+import { contactEmail } from '@/lib/contact';
 
 let transporter: Transporter | null | undefined;
 
@@ -28,7 +29,9 @@ export interface Attachment {
 
 /**
  * Renders a template (HTML + text) and sends it. Without SMTP_HOST, mails are only logged
- * (never with their body, which may contain personal data).
+ * (never with their body, which may contain personal data). Sent from MAIL_FROM (the sending
+ * mailbox, checked at startup by lib/env.ts), with CONTACT_EMAIL as Reply-To: an answer reaches
+ * the team, never the sending mailbox.
  */
 export async function sendMail(
   to: string,
@@ -44,7 +47,8 @@ export async function sendMail(
     return;
   }
   await t.sendMail({
-    from: process.env.MAIL_FROM ?? 'notetonmaster <ne-pas-repondre@notetonmaster.example>',
+    from: process.env.MAIL_FROM,
+    replyTo: contactEmail(),
     to,
     subject: mail.subject,
     html,

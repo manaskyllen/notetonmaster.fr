@@ -14,6 +14,7 @@ design-reference/
 .env
 .env.*
 !.env.example
+!.env.prod.example
 
 # Test and measurement outputs
 playwright-report/

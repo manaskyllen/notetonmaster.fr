@@ -6,8 +6,9 @@
  * - security headers present (CSP with nonce, frame-ancestors, nosniff, Referrer-Policy,
  *   Permissions-Policy, COOP, CORP; HSTS sent once over HTTPS);
  * - no demo, debug or seed route;
- * - on https://notetonmaster.fr: robots.txt opens the public site, no public page is noindex,
- *   the sitemap answers.
+ * - on https://notetonmaster.fr, consistent with PUBLIC_INDEXING: indexing open (robots.txt
+ *   opens the public site, no public page is noindex, the sitemap lists its files) or closed
+ *   (robots.txt disallows everything, every page is noindex, the sitemap is empty).
  * Prints ✅ / ❌ per check and exits with 1 on any failure.
  */
 const arg = (name: string, fallback: string) =>
@@ -109,27 +110,26 @@ async function main() {
     check(`${p} n’est pas exposé`, !exposed, String(r.status));
   }
 
-  // Indexing, on the production site only.
+  // Indexing, on the production site only: consistent with PUBLIC_INDEXING, whichever it is.
   if (PRODUCTION) {
     const robots = await (await get('/robots.txt')).text();
     const star = robots.split(/User-agent:/i).find((b) => /^\s*\*/.test(b)) ?? '';
-    check(
-      'robots.txt ouvre le site public',
-      !/^\s*Disallow:\s*\/\s*$/im.test(star),
-      star.trim().split('\n')[1],
-    );
+    const open = !/^\s*Disallow:\s*\/\s*$/im.test(star);
+    console.log(`Indexation ${open ? 'ouverte' : 'fermée'} (PUBLIC_INDEXING=${open})`);
     for (const p of PUBLIC_PAGES.filter((x) => x !== '/connexion' && x !== '/signaler')) {
       const r = await get(p);
       const html = await r.text();
       const noindex =
         /noindex/i.test(r.headers.get('x-robots-tag') ?? '') ||
         /<meta[^>]+name="robots"[^>]+noindex/i.test(html);
-      check(`${p} indexable (pas de noindex)`, !noindex);
+      check(open ? `${p} indexable (pas de noindex)` : `${p} : noindex`, open ? !noindex : noindex);
     }
     const sm = await get('/sitemap.xml');
+    const xml = await sm.text();
+    check('sitemap.xml répond en XML', sm.status === 200 && /<sitemapindex|<urlset/.test(xml));
     check(
-      'sitemap.xml répond en XML',
-      sm.status === 200 && /<sitemapindex|<urlset/.test(await sm.text()),
+      open ? 'sitemap.xml liste les sitemaps' : 'sitemap.xml vide',
+      open === /<sitemap>/.test(xml),
     );
   }
 

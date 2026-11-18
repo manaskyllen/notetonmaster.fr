@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { marked } from 'marked';
 import { brandHtml } from '@/components/ui/BrandName';
+import { contactEmail } from '@/lib/contact';
 
 export const LEGAL_DOCS = [
   { slug: 'charte', label: 'Charte de modération' },
@@ -18,7 +19,8 @@ const escapeHtml = (s: string) =>
 
 /**
  * Reads content/legal/<slug>.md. Front matter: title, updated. Raw HTML in the source is escaped;
- * "[À compléter …]" placeholders are rendered as highlighted <mark>.
+ * "[À compléter …]" placeholders are rendered as highlighted <mark>. {{CONTACT_EMAIL}} is the
+ * team's address (CONTACT_EMAIL, lib/contact.ts), read at request time.
  */
 export async function readLegalDoc(slug: LegalSlug) {
   const raw = await readFile(join(process.cwd(), 'content/legal', `${slug}.md`), 'utf8');
@@ -26,7 +28,7 @@ export async function readLegalDoc(slug: LegalSlug) {
   const meta = Object.fromEntries(
     (fm?.[1] ?? '').split('\n').map((l) => l.split(/:\s*/, 2) as [string, string]),
   );
-  const body = fm ? raw.slice(fm[0].length) : raw;
+  const body = (fm ? raw.slice(fm[0].length) : raw).replaceAll('{{CONTACT_EMAIL}}', contactEmail());
   let html = await marked.parse(escapeHtml(body).replace(/&quot;/g, '"'), { async: true });
   html = html.replace(/\[(À compléter[^\]]*)\]/g, '<mark class="todo">[$1]</mark>');
   // the name written like the logo, in the text only (not in the addresses)

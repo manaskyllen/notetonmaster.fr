@@ -30,4 +30,4 @@ L’équipe de notetonmaster seulement. Ton adresse n’est jamais affichée, ve
 
 ## Tes droits
 
-Tu peux accéder à tes données, les rectifier, les effacer, t’opposer à un traitement, en limiter l’usage ou les récupérer. Depuis [Mon espace](/espace), tu peux recevoir une copie de tes données et supprimer ton compte. Pour le reste, écris à [contact@notetonmaster.fr](mailto:contact@notetonmaster.fr). Si la réponse ne te convient pas, tu peux saisir la CNIL.
+Tu peux accéder à tes données, les rectifier, les effacer, t’opposer à un traitement, en limiter l’usage ou les récupérer. Depuis [Mon espace](/espace), tu peux recevoir une copie de tes données et supprimer ton compte. Pour le reste, écris à [{{CONTACT_EMAIL}}](mailto:{{CONTACT_EMAIL}}). Si la réponse ne te convient pas, tu peux saisir la CNIL.

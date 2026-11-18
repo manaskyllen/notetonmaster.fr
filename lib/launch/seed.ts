@@ -18,7 +18,7 @@ interface ZoneFixture {
  * when the table is empty: the seed (which truncates everything) and the production bootstrap
  * (the migration already inserted them; never overwritten).
  */
-export async function ensureLaunchZones(): Promise<number> {
+export async function ensureLaunchZones(opts: { open?: boolean } = {}): Promise<number> {
   if (await prisma.launchZone.count()) return 0;
   const file = join(import.meta.dirname, '../../prisma/fixtures/launch-zones.json');
   const { zones } = JSON.parse(readFileSync(file, 'utf8')) as { zones: ZoneFixture[] };
@@ -31,9 +31,9 @@ export async function ensureLaunchZones(): Promise<number> {
         epciName: z.epciName,
         communeCodes: z.communes.map((c) => c.code).sort(),
         communesRefreshedAt: new Date('2026-11-16T00:00:00Z'),
-        open: z.open,
+        open: opts.open ?? z.open,
         order: z.order,
-        openedAt: z.open ? new Date() : null,
+        openedAt: (opts.open ?? z.open) ? new Date() : null,
       },
     });
   return zones.length;

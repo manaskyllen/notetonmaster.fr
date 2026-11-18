@@ -28,10 +28,8 @@ export type SettingsValues = {
   'moderation.watchTerms': string[];
   'turnstile.forms': Record<TurnstileForm, boolean>;
   'notifications.matrix': NotificationMatrix;
-  'legal.contactEmail': string;
   'legal.internalDelayDays': number;
   'legal.inactiveAccountYears': number;
-  'legal.rgpdContactEmail': string;
 };
 
 export interface SourceSetting {
@@ -126,7 +124,7 @@ export function SettingsForm({
   initialTab?: string;
   initial: SettingsValues;
   sources: SourceSetting[];
-  fixed: { connectionLogs: string; documents: string; messages: string };
+  fixed: { contactEmail: string; connectionLogs: string; documents: string; messages: string };
   /** « Bandeau d'information »: its own form and save (BannerForm). */
   bannerTab?: React.ReactNode;
   /** « Villes ouvertes »: its own form and save (ZonesForm). */
@@ -368,11 +366,12 @@ export function SettingsForm({
         )}
         {tab === 'legal' && (
           <div className="grid gap-4 sm:grid-cols-2">
+            {/* CONTACT_EMAIL, fixed at deployment (lib/contact.ts): Reply-To, legal pages. */}
             <TextField
-              label="Contact légal (notifications de contenu)"
-              type="email"
-              value={v['legal.contactEmail']}
-              onChange={(e) => set('legal.contactEmail', e.target.value)}
+              label="Adresse de contact (CONTACT_EMAIL, fixée au déploiement)"
+              value={fixed.contactEmail}
+              readOnly
+              disabled
             />
             {num(
               'legal.internalDelayDays',
@@ -384,12 +383,6 @@ export function SettingsForm({
               'Suppression des comptes inactifs (années)',
               'Un mail de rappel part 30 jours avant.',
             )}
-            <TextField
-              label="Contact RGPD"
-              type="email"
-              value={v['legal.rgpdContactEmail']}
-              onChange={(e) => set('legal.rgpdContactEmail', e.target.value)}
-            />
             <TextField
               label="Conservation des données de connexion"
               value={fixed.connectionLogs}

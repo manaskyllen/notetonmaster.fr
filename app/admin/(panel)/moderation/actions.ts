@@ -11,6 +11,7 @@ import {
   verificationResultMail,
 } from '@/emails/templates';
 import { audit } from '@/lib/audit';
+import { shortRef } from '@/lib/admin/notify';
 import { guard, guardSensitive, type Admin } from '@/lib/auth/admin';
 import { decrypt } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
@@ -29,7 +30,7 @@ import { TAGS } from '@/lib/cache/tags';
 type Result = { ok: true; message: string } | { ok: false; error: string };
 
 const input = z.object({
-  kind: z.enum(['avis', 'justif', 'msg', 'signal', 'reponses', 'questions', 'legal']),
+  kind: z.enum(['avis', 'justif', 'msg', 'signal', 'reponses', 'questions', 'contact', 'legal']),
   id: z.string().min(1),
   action: z.string().min(1),
   reason: z.string().trim().max(1000).default(''),
@@ -62,6 +63,8 @@ export async function moderate(raw: unknown): Promise<Result> {
         if (r.ok) expireTags([TAGS.program(r.programId)]);
         return r.ok ? { ok: true, message: r.message } : r;
       }
+      case 'contact':
+        return decideContact(admin, id, action);
       case 'legal':
         return decideLegal(admin, id, action, reason);
     }
@@ -373,6 +376,18 @@ async function decideReported(
     `Signalements traités (${reports.length}) : ${decision} · motif : ${reason}`,
   );
   return { ok: true, message };
+}
+
+/** A message of the contact form, answered from the contact mailbox: marked as handled. */
+async function decideContact(admin: Admin, id: string, action: string): Promise<Result> {
+  if (action !== 'handled') return { ok: false, error: 'Action inconnue.' };
+  const r = await prisma.contactMessage.updateMany({
+    where: { id, handledAt: null },
+    data: { handledAt: new Date() },
+  });
+  if (!r.count) return { ok: false, error: 'Message déjà traité.' };
+  await audit(admin, 'MODERATION', shortRef('CON', id), 'Message de contact traité');
+  return { ok: true, message: 'Message marqué comme traité.' };
 }
 
 async function decideLegal(

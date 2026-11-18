@@ -18,6 +18,24 @@ export function isProductionSite(origin = siteOrigin()): boolean {
   return origin === CANONICAL_ORIGIN;
 }
 
+/**
+ * Search engines welcome: the production site with PUBLIC_INDEXING=true. Off by default, so that
+ * the site can be filled and checked before its cities open: robots.txt then disallows
+ * everything, every answer carries X-Robots-Tag: noindex, the sitemaps are empty and IndexNow
+ * stays silent. Read at run time: switching it is a restart, not a build.
+ */
+export function publicIndexing(origin = siteOrigin()): boolean {
+  return isProductionSite(origin) && process.env.PUBLIC_INDEXING === 'true';
+}
+
+/**
+ * The production site waiting for PUBLIC_INDEXING: its sitemaps are empty. Elsewhere (local, CI)
+ * they keep their pages for the SEO check, robots.txt and noindex already keeping engines out.
+ */
+export function sitemapsWithheld(origin = siteOrigin()): boolean {
+  return isProductionSite(origin) && !publicIndexing(origin);
+}
+
 /** « /parcours/x » → « https://notetonmaster.fr/parcours/x ». */
 export function absoluteUrl(path: string, origin = siteOrigin()): string {
   if (/^https?:\/\//.test(path)) return path;

@@ -19,8 +19,12 @@ const good = {
   TURNSTILE_SITE_KEY: `0x4${'A'.repeat(7)}site`,
   TURNSTILE_SECRET_KEY: `0x4${'A'.repeat(7)}secret`,
   SMTP_HOST: 'smtp.example.net',
+  SMTP_USER: 'ne-pas-repondre@notetonmaster.fr',
   MAIL_FROM: 'notetonmaster <ne-pas-repondre@notetonmaster.fr>',
+  CONTACT_EMAIL: 'contact@notetonmaster.fr',
   CONNECTORS_MODE: 'live',
+  CRAWLER_INFO_URL: 'https://notetonmaster.fr/a-propos#notre-robot',
+  CRAWLER_CONTACT_EMAIL: 'robot@notetonmaster.fr',
 };
 
 const errorsOf = (env: Record<string, string | undefined>) => validateEnv(env).errors.join('\n');
@@ -46,6 +50,26 @@ describe('environment validation in production', () => {
     ['SMTP_HOST', undefined],
     ['SMTP_HOST', 'mailpit'],
     ['CONNECTORS_MODE', 'mock'],
+    ['CONNECTORS_MODE', undefined],
+    ['CRAWLER_INFO_URL', undefined],
+    ['CRAWLER_INFO_URL', 'http://notetonmaster.fr/a-propos'],
+    ['CRAWLER_INFO_URL', 'https://notetonmaster.example/a-propos#sources'],
+    ['CRAWLER_INFO_URL', 'https://localhost/a-propos'],
+    ['CRAWLER_CONTACT_EMAIL', 'robot@notetonmaster.example'],
+    ['CRAWLER_CONTACT_EMAIL', 'pas-une-adresse'],
+    ['PUBLIC_INDEXING', 'oui'],
+    ['MAIL_FROM', undefined],
+    ['MAIL_FROM', 'notetonmaster <ne-pas-repondre@notetonmaster.example>'],
+    ['MAIL_FROM', 'ne-pas-repondre@notetonmaster.local'],
+    ['MAIL_FROM', 'notetonmaster'],
+    ['CONTACT_EMAIL', undefined],
+    ['CONTACT_EMAIL', ''],
+    ['CONTACT_EMAIL', 'contact@notetonmaster.example'],
+    ['CONTACT_EMAIL', 'pas-une-adresse'],
+    ['SMTP_USER', undefined],
+    ['SMTP_USER', ' '],
+    ['TURNSTILE_SECRET_KEY', 'a-remplacer'],
+    ['SMTP_PASS', 'a-remplacer'],
     ['SEED_ON_START', 'true'],
     ['DEMO_DATA', 'true'],
     ['RATE_LIMIT_MULTIPLIER', '20'],
@@ -85,10 +109,41 @@ describe('environment validation in production', () => {
     expect(readFileSync('worker/index.ts', 'utf8')).toMatch(/assertEnv\(/);
   });
 
+  it('MAIL_FROM: with a display name or the bare address', () => {
+    expect(validateEnv({ ...good, MAIL_FROM: 'ne-pas-repondre@notetonmaster.fr' }).ok).toBe(true);
+  });
+
+  it('CRAWLER_CONTACT_EMAIL is optional (CONTACT_EMAIL then), but real when set', () => {
+    expect(validateEnv({ ...good, CRAWLER_CONTACT_EMAIL: undefined }).ok).toBe(true);
+    expect(validateEnv({ ...good, CRAWLER_CONTACT_EMAIL: '' }).ok).toBe(true);
+  });
+
+  it('PUBLIC_INDEXING accepts true and false', () => {
+    expect(validateEnv({ ...good, PUBLIC_INDEXING: 'true' }).ok).toBe(true);
+    expect(validateEnv({ ...good, PUBLIC_INDEXING: 'false' }).ok).toBe(true);
+  });
+
   it('the production compose file has no test key or development default', () => {
     const prod = readFileSync('docker-compose.prod.yml', 'utf8');
     expect(prod).not.toMatch(/1x0000000000000000000000000000000AA|1x00000000000000000000AA/);
     expect(prod).not.toMatch(/TURNSTILE_MODE: \$\{PROD_TURNSTILE_MODE:-mock/);
+    expect(prod).not.toMatch(/CONNECTORS_MODE: .*mock|DEMO_DATA|SEED_ON_START: 'true'/);
+  });
+
+  it('.env.prod.example lists every variable the production configuration requires', () => {
+    const example = readFileSync('.env.prod.example', 'utf8');
+    const keys = new Set([...example.matchAll(/^([A-Z][A-Z0-9_]*)=/gm)].map((m) => m[1]));
+    for (const k of [
+      ...Object.keys(good).filter((k) => !['NODE_ENV', 'DATABASE_URL'].includes(k)),
+      'POSTGRES_PASSWORD',
+      'APP_DB_PASSWORD',
+      'TRUSTED_PROXY_HOPS',
+      'PUBLIC_INDEXING',
+      'BACKUP_AGE_RECIPIENT',
+    ])
+      expect(keys, k).toContain(k);
+    expect(example).toMatch(/^PUBLIC_INDEXING=false$/m);
+    expect(example).toMatch(/^CONNECTORS_MODE=live$/m);
   });
 });
 

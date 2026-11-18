@@ -9,6 +9,8 @@ ARG PNPM_VERSION=12.18.0
 
 FROM node:${NODE_VERSION}-slim AS base
 ARG PNPM_VERSION
+# Lets scripts/deploy.sh remove this project's dangling images, never another application's.
+LABEL org.opencontainers.image.title="notetonmaster"
 RUN apt-get update \
   && apt-get install -y --no-install-recommends openssl ca-certificates \
   && apt-get clean \
@@ -41,6 +43,7 @@ RUN pnpm prisma generate && pnpm build
 
 # ---------- runner ----------
 FROM node:${NODE_VERSION}-slim AS runner
+LABEL org.opencontainers.image.title="notetonmaster"
 ENV NODE_ENV=production \
   NEXT_TELEMETRY_DISABLED=1 \
   PORT=3000 \
@@ -58,6 +61,9 @@ COPY --from=build --chown=node:node /app/prisma/fixtures ./prisma/fixtures
 COPY --from=build --chown=node:node /app/fixtures/schemas ./fixtures/schemas
 COPY --from=build --chown=node:node /app/fixtures/live/esr-etablissements/etablissements-composantes-candidats.json ./fixtures/live/esr-etablissements/
 COPY --from=build --chown=node:node /app/fixtures/decisions ./fixtures/decisions
+# Commit of the image (scripts/deploy.sh), shown by /api/health. Last, so it never busts the cache.
+ARG APP_VERSION=dev
+ENV APP_VERSION=${APP_VERSION}
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=3 \

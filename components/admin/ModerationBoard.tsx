@@ -19,6 +19,7 @@ const TABS: { id: QueueKind; label: string }[] = [
   { id: 'signal', label: 'Signalements' },
   { id: 'reponses', label: 'Réponses des formations' },
   { id: 'questions', label: 'Questions publiques' },
+  { id: 'contact', label: 'Contact' },
   { id: 'legal', label: 'Demandes légales' },
 ];
 const TONE = {
@@ -222,33 +223,35 @@ export function ModerationBoard({
                 </div>
               ))}
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="motif" className="nm-label">
-                Motif communiqué à l’auteur ou au demandeur
-              </label>
-              <select
-                id="motif"
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className={controlClass}
-              >
-                <option value="">Choisir un motif…</option>
-                {cur.reasons.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="motif-note" className="nm-label mt-1">
-                Précisions (facultatif, envoyées avec le motif)
-              </label>
-              <textarea
-                id="motif-note"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className={controlClass}
-              />
-            </div>
+            {cur.reasons.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="motif" className="nm-label">
+                  Motif communiqué à l’auteur ou au demandeur
+                </label>
+                <select
+                  id="motif"
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  className={controlClass}
+                >
+                  <option value="">Choisir un motif…</option>
+                  {cur.reasons.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="motif-note" className="nm-label mt-1">
+                  Précisions (facultatif, envoyées avec le motif)
+                </label>
+                <textarea
+                  id="motif-note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className={controlClass}
+                />
+              </div>
+            )}
             {cur.alsoPrograms && cur.alsoPrograms.length > 0 && (
               <fieldset className="m-0 flex flex-col gap-1.5 border-0 p-0">
                 <legend className="nm-label mb-1">

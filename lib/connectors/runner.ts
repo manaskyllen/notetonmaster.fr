@@ -118,7 +118,12 @@ export async function executeRun(run: NonNullable<Awaited<ReturnType<typeof clai
       action: 'a échoué à lire',
       target: { type: 'SOURCE', id: run.source.key },
     });
-    await notifyAdmins('sync.failed', `Échec de la récupération « ${run.source.name} »`, message);
+    await notifyAdmins(
+      'sync.failed',
+      `Échec de la récupération « ${run.source.name} »`,
+      message,
+      '/admin/recuperation',
+    );
     const last = await prisma.syncRun.findMany({
       where: {
         sourceId: run.sourceId,

@@ -1,6 +1,8 @@
 # notetonmaster — everything runs in Docker.
 DC      := docker compose
-DC_PROD := docker compose -f docker-compose.prod.yml
+# The production stack tried on this machine: its own project name (the dev stack is also
+# « notetonmaster ») and .env.prod (cp .env.prod.example .env.prod, local values).
+DC_PROD := docker compose -p notetonmaster-prod --env-file .env.prod -f docker-compose.prod.yml
 RUN     := $(DC) run --rm --no-deps app
 
 .PHONY: budget analyze e2e-full test-int seo-check data-univ-sites-preview data-replay-origins prod-local perf vitals lhci sectors prod-logs data-national-preview data-replay-pilot totp help env dev down logs install seed reset migration restart test check typecheck lint e2e shell tokens prod-build prod-up prod-down
@@ -104,18 +106,19 @@ totp: env ## Current TOTP code of a demo admin: make totp email=alexis@notetonma
 shell: env ## Shell in the app container
 	$(DC) run --rm app sh
 
-prod-build: env ## Build the production images
-	$(DC_PROD) build
+prod-build: ## Build the production images (on the server: scripts/deploy.sh)
+	$(DC_PROD) build app migrate
 
-prod-up: env ## Start the production stack locally (site :3001)
-	$(DC_PROD) up -d
-	@echo "Production stack: http://localhost:$${PROD_PORT:-3001}"
+prod-up: ## Start the production stack locally (no published port: reached through the PROXY_NETWORK network)
+	docker network inspect $${PROXY_NETWORK:-gateway} >/dev/null 2>&1 || docker network create $${PROXY_NETWORK:-gateway}
+	$(DC_PROD) up -d --wait postgres
+	$(DC_PROD) run --rm migrate
+	$(DC_PROD) up -d app worker
 
-prod-logs: ## Logs of the production stack (the generated admin password is in the « migrate » logs)
-	$(DC_PROD) logs --no-log-prefix migrate
+prod-logs: ## Logs of the local production stack
 	$(DC_PROD) logs -f app worker
 
-prod-down: ## Stop the production stack
+prod-down: ## Stop the local production stack
 	$(DC_PROD) down
 
 data-national-preview: env ## Real connectors, PREVIEW only (nothing published): establishments then Mon Master, whole France

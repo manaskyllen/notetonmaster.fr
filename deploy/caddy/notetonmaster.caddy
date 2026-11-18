@@ -1,0 +1,21 @@
+# notetonmaster on the shared Caddy gateway: copy to /opt/gateway/conf/sites/ on the server, then
+# ./reload.sh (docs/deploiement.md). The gateway's Caddyfile defines the (maintenance) snippet.
+#
+# - No trusted_proxies: Caddy replaces X-Forwarded-For with the client's address, which the app
+#   reads with TRUSTED_PROXY_HOPS=1 (lib/ip.ts).
+# - No HSTS and no other security header here: the app sends them (next.config.ts, proxy.ts).
+# - No log directive: no access log for this site.
+# - max_size: the app's largest request, a 10 MiB proof of study plus 1 MiB of multipart
+#   envelope (app/api/espace/justificatif/route.ts).
+notetonmaster.fr {
+	encode zstd gzip
+	request_body {
+		max_size 11MiB
+	}
+	reverse_proxy notetonmaster-app:3000
+	import maintenance
+}
+
+www.notetonmaster.fr, notetonmaster.com, www.notetonmaster.com {
+	redir https://notetonmaster.fr{uri} permanent
+}

@@ -299,6 +299,11 @@ describe('admin routes', () => {
         }),
     ],
     [
+      '/api/admin/diagnostic/ip',
+      'team.manage',
+      async () => (await import('@/app/api/admin/diagnostic/ip/route')).GET(),
+    ],
+    [
       '/api/sync-runs/[id]',
       'dashboard.view',
       async () =>

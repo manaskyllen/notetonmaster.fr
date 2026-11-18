@@ -21,15 +21,15 @@ describe('official domains of the establishment', () => {
     });
   });
   it('refuses student sub-domains, other domains and look-alikes', () => {
-    expect(checkStaffEmail('anna.l@etu.univ-nantes.fr', nantes)).toEqual({
+    expect(checkStaffEmail('demo.fictif@etu.univ-nantes.fr', nantes)).toEqual({
       ok: false,
       reason: 'student',
     });
-    expect(checkStaffEmail('anna.l@etudiant.univ-nantes.fr', nantes)).toEqual({
+    expect(checkStaffEmail('demo.fictif@etudiant.univ-nantes.fr', nantes)).toEqual({
       ok: false,
       reason: 'student',
     });
-    expect(checkStaffEmail('anna.l@etud.univ-nantes.fr', nantes)).toEqual({
+    expect(checkStaffEmail('demo.fictif@etud.univ-nantes.fr', nantes)).toEqual({
       ok: false,
       reason: 'student',
     });

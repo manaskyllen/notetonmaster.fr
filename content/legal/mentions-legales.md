@@ -7,7 +7,7 @@ updated: 2026-11-17
 
 notetonmaster est édité par une personne physique, à titre non professionnel. Comme le permet l’article 6, III, 2 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique, elle a choisi de ne pas publier son identité. Ses coordonnées ont été communiquées à l’hébergeur indiqué ci-dessous.
 
-Contact : [contact@notetonmaster.fr](mailto:contact@notetonmaster.fr).
+Contact : [{{CONTACT_EMAIL}}](mailto:{{CONTACT_EMAIL}}).
 
 ## Directeur·rice de la publication
 

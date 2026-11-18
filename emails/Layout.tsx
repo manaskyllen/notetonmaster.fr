@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { Body, Container, Head, Html, Link, Preview, Section, Text } from '@react-email/components';
 import { BRAND_IN_TEXT } from '@/components/ui/BrandName';
+import { contactEmail } from '@/lib/contact';
 
 /** Light-theme literal colors: mail clients do not support CSS variables. */
 export const C = {
@@ -66,6 +67,7 @@ export function Layout({
   footer?: React.ReactNode;
 }) {
   const base = appUrl();
+  const contact = contactEmail();
   return (
     <Html lang="fr">
       <Head />
@@ -135,8 +137,14 @@ export function Layout({
               ·{' '}
               <Link href={`${base}/legal/confidentialite`} style={{ color: C.violet }}>
                 Confidentialité
-              </Link>{' '}
-              · Merci de ne pas répondre à ce mail.
+              </Link>
+              <br />
+              {/* The Reply-To of every mail is the same address (lib/mail/send.ts). */}
+              Une question ? Écris-nous à{' '}
+              <Link href={`mailto:${contact}`} style={{ color: C.violet }}>
+                {contact}
+              </Link>
+              .
             </Text>
           </Section>
         </Container>

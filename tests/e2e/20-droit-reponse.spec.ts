@@ -26,7 +26,7 @@ test('a teaching team replies once under a review, after moderation', async ({ p
 
     const field = page.getByLabel('Adresse universitaire');
     const send = page.getByRole('button', { name: 'Recevoir un code' });
-    await field.fill('anna.l@etu.univ-nantes.fr');
+    await field.fill('demo.fictif@etu.univ-nantes.fr');
     await expect(
       page.getByText('Les adresses étudiantes ne sont pas acceptées', { exact: false }),
     ).toBeVisible();

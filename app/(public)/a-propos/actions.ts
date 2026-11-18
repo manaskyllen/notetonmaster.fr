@@ -1,5 +1,6 @@
 'use server';
 
+import { notifyIncoming, shortRef } from '@/lib/admin/notify';
 import { prisma } from '@/lib/db';
 import { encrypt } from '@/lib/crypto';
 import { fieldErrors, formValues, type FormState } from '@/lib/form';
@@ -20,13 +21,19 @@ export async function sendContact(_prev: FormState, fd: FormData): Promise<FormS
       message: 'Trop de messages envoyés. Réessaie dans une heure.',
       values,
     };
-  await prisma.contactMessage.create({
+  const message = await prisma.contactMessage.create({
     data: {
       subject: CONTACT_SUBJECTS[parsed.data.subject],
       emailEnc: encrypt(parsed.data.email),
       link: parsed.data.link || null,
       body: parsed.data.message,
     },
+    select: { id: true },
   });
+  await notifyIncoming(
+    'contact.received',
+    shortRef('CON', message.id),
+    '/admin/moderation?file=contact',
+  );
   return { status: 'success' };
 }
