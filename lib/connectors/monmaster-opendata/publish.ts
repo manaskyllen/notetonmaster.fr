@@ -124,6 +124,36 @@ const uniqueSlug = (base: string, taken: Set<string>) => {
   return slug;
 };
 
+type NewUniversity = Extract<MMOps['university'], { id: null }>;
+
+/**
+ * Universities to create in this batch. Two UAIs with the same Paysage id are one establishment (a
+ * merged university seen under its former UAI in an older session): the second becomes a UAI of
+ * the first (in the database or earlier in the batch), never a second row. paysageId is unique:
+ * createMany would silently skip that row and leave its identifiers pointing to nothing.
+ */
+export function planUniversities(
+  todo: Map<string, NewUniversity>,
+  aliases: Map<string, Set<string>>,
+  byPaysage: Map<string, string>,
+  newId: () => string = randomUUID,
+) {
+  const extraUais: { universityId: string; uai: string }[] = [];
+  const created: [uai: string, u: NewUniversity, id: string][] = [];
+  for (const [uai, u] of todo) {
+    const owner = u.paysage ? byPaysage.get(u.paysage) : undefined;
+    if (owner) {
+      for (const a of [uai, ...(aliases.get(u.uai) ?? [])])
+        extraUais.push({ universityId: owner, uai: a });
+      continue;
+    }
+    const id = newId();
+    if (u.paysage) byPaysage.set(u.paysage, id);
+    created.push([uai, u, id]);
+  }
+  return { created, extraUais };
+}
+
 export async function publishMonMaster(
   ctx: PipelineContext,
 ): Promise<PublishCounters & Record<string, unknown>> {
@@ -189,15 +219,14 @@ export async function publishMonMaster(
   // 1. universities
   await phase(0, async () => {
     const existing = await uniByUai();
-    const paysages = new Set(
-      (await prisma.university.findMany({ select: { paysageId: true } }))
-        .map((u) => u.paysageId)
-        .filter(Boolean),
-    );
+    /** Paysage id → university id, in the database and then in this batch (unique column). */
+    const byPaysage = new Map<string, string>();
+    for (const u of await prisma.university.findMany({ select: { id: true, paysageId: true } }))
+      if (u.paysageId) byPaysage.set(u.paysageId, u.id);
     const slugs = new Set(
       (await prisma.university.findMany({ select: { slug: true } })).map((u) => u.slug),
     );
-    const todo = new Map<string, Extract<MMOps['university'], { id: null }>>();
+    const todo = new Map<string, NewUniversity>();
     const aliases = new Map<string, Set<string>>();
     for (const i of items) {
       const u = i.ops.university;
@@ -206,16 +235,17 @@ export async function publishMonMaster(
         if (a !== u.uai) (aliases.get(u.uai) ?? aliases.set(u.uai, new Set()).get(u.uai)!).add(a);
       if (!existing.has(normCode(u.uai))) todo.set(normCode(u.uai), u);
     }
-    const rows = [...todo.entries()].map(([uai, u]) => {
+    const { created, extraUais } = planUniversities(todo, aliases, byPaysage);
+    const rows = created.map(([uai, u, id]) => {
       const ref = u.ref;
       return {
-        id: randomUUID(),
+        id,
         name: u.name,
         slug: slugs.has(u.slug)
           ? uniqueSlug(`${u.slug}-${uai.toLowerCase()}`, slugs)
           : (slugs.add(u.slug), u.slug),
         uai,
-        paysageId: u.paysage && !paysages.has(u.paysage) ? u.paysage : null,
+        paysageId: u.paysage,
         shortName: ref?.shortName ?? null,
         city: ref?.comName ?? '',
         cities: ref?.comName ? [ref.comName] : [],
@@ -229,10 +259,21 @@ export async function publishMonMaster(
       };
     });
     for (const part of chunks(rows)) {
-      await prisma.$transaction([
-        prisma.university.createMany({ data: part, skipDuplicates: true }),
-        prisma.identifier.createMany({
-          data: part.flatMap((u) => [
+      await prisma.university.createMany({ data: part, skipDuplicates: true });
+      // Identifiers only for the rows really written: an identifier pointing to a university that
+      // does not exist would send the next phases to a missing id.
+      const written = new Set(
+        (
+          await prisma.university.findMany({
+            where: { id: { in: part.map((u) => u.id) } },
+            select: { id: true },
+          })
+        ).map((u) => u.id),
+      );
+      await prisma.identifier.createMany({
+        data: part
+          .filter((u) => written.has(u.id))
+          .flatMap((u) => [
             {
               entityType: 'UNIVERSITY' as const,
               entityId: u.id,
@@ -260,11 +301,20 @@ export async function publishMonMaster(
                 ]
               : []),
           ]),
-          skipDuplicates: true,
-        }),
-      ]);
+        skipDuplicates: true,
+      });
+      counters.universitiesCreated = Number(counters.universitiesCreated ?? 0) + written.size;
     }
-    counters.universitiesCreated = rows.length;
+    await prisma.identifier.createMany({
+      data: extraUais.map((x) => ({
+        entityType: 'UNIVERSITY' as const,
+        entityId: x.universityId,
+        kind: 'UAI' as const,
+        value: x.uai,
+        label: 'UAI (même Paysage)',
+      })),
+      skipDuplicates: true,
+    });
   });
 
   // 2. mentions (names from the RNCP when found, decided at simulation time)
