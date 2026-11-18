@@ -1,0 +1,5 @@
+{
+  "$comment": "JavaScript of the main pages at first load, gzip (scripts/perf.mjs, CI job build-budget). Target of the performance brief: 150 KB; about 197 KB today, 160 KB of it the framework (docs/performance.md). The CI fails above jsKbMax: a guard against regressions until the target is reached.",
+  "jsKbTarget": 150,
+  "jsKbMax": 215
+}

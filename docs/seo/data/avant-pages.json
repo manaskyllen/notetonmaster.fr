@@ -1,0 +1,420 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "notetonmaster · La brochure promet, les étudiant·es racontent.",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques à 8 villes, parcours par parcours.",
+    "h1": [
+      "La brochure promet, les étudiant·es racontent."
+    ],
+    "canonical": "http://localhost:3002",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 8,
+    "jsKb": 229.3
+  },
+  {
+    "path": "/?q=droit",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "notetonmaster · La brochure promet, les étudiant·es racontent.",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques à 8 villes, parcours par parcours.",
+    "h1": [
+      "La brochure promet, les étudiant·es racontent."
+    ],
+    "canonical": "http://localhost:3002/?q=droit",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 8,
+    "jsKb": 229.3
+  },
+  {
+    "path": "/?page=2",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "notetonmaster · La brochure promet, les étudiant·es racontent. — page 2",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques à 8 villes, parcours par parcours.",
+    "h1": [
+      "La brochure promet, les étudiant·es racontent."
+    ],
+    "canonical": "http://localhost:3002/?page=2",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 8,
+    "jsKb": 229.3
+  },
+  {
+    "path": "/explorer",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Explorer les masters à 8 villes · notetonmaster",
+    "titleInHead": true,
+    "description": "Filtre, trie et compare les parcours de master des universités publiques à 8 villes, avec les avis des étudiant·es.",
+    "h1": [
+      "Explorer les masters"
+    ],
+    "canonical": "http://localhost:3002/explorer",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [
+      "h1→h3"
+    ],
+    "og": 18,
+    "jsKb": 237.7
+  },
+  {
+    "path": "/explorer?domaine=droit-economie-gestion",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Explorer les masters à 8 villes · notetonmaster",
+    "titleInHead": true,
+    "description": "Filtre, trie et compare les parcours de master des universités publiques à 8 villes, avec les avis des étudiant·es.",
+    "h1": [
+      "Explorer les masters"
+    ],
+    "canonical": "http://localhost:3002/explorer?domaine=droit-economie-gestion",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [
+      "h1→h3"
+    ],
+    "og": 18,
+    "jsKb": 237.7
+  },
+  {
+    "path": "/explorer?page=2",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Explorer les masters à 8 villes — page 2 · notetonmaster",
+    "titleInHead": true,
+    "description": "Filtre, trie et compare les parcours de master des universités publiques à 8 villes, avec les avis des étudiant·es.",
+    "h1": [
+      "Explorer les masters"
+    ],
+    "canonical": "http://localhost:3002/explorer?page=2",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [
+      "h1→h3"
+    ],
+    "og": 18,
+    "jsKb": 237.7
+  },
+  {
+    "path": "/parcours/valorisation-des-nouveaux-patrimoines",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Valorisation des nouveaux patrimoines · Nantes Université · notetonmaster",
+    "titleInHead": false,
+    "description": "Master Culture, patrimoine et médiation, parcours Valorisation des nouveaux patrimoines (Nantes Université, Nantes) : avis d’étudiant·es, programme et admission.",
+    "h1": [
+      "Valorisation des nouveaux patrimoines"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 242.4
+  },
+  {
+    "path": "/parcours/valorisation-des-nouveaux-patrimoines?onglet=programme",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Valorisation des nouveaux patrimoines · Nantes Université · notetonmaster",
+    "titleInHead": false,
+    "description": "Master Culture, patrimoine et médiation, parcours Valorisation des nouveaux patrimoines (Nantes Université, Nantes) : avis d’étudiant·es, programme et admission.",
+    "h1": [
+      "Valorisation des nouveaux patrimoines"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 242.4
+  },
+  {
+    "path": "/parcours/sciences-analytiques-universite-de-strasbourg",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Sciences analytiques · Université de Strasbourg · notetonmaster",
+    "titleInHead": false,
+    "description": "Master Chimie, parcours Sciences analytiques (Université de Strasbourg, Strasbourg) : avis d’étudiant·es, programme et admission.",
+    "h1": [
+      "Sciences analytiques"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 242.4
+  },
+  {
+    "path": "/mentions",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Les mentions de master · notetonmaster",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques, parcours par parcours.",
+    "h1": [
+      "Les mentions"
+    ],
+    "canonical": "http://localhost:3002/mentions",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 234
+  },
+  {
+    "path": "/mentions/droit",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Master Droit · notetonmaster",
+    "titleInHead": true,
+    "description": "Mention nationale Droit : 10 parcours dans 4 établissements, avis d’étudiant·es et programmes.",
+    "h1": [
+      "Droit"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 237.7
+  },
+  {
+    "path": "/mentions/droit?page=2",
+    "status": 307,
+    "location": "/mentions/droit",
+    "xRobots": null,
+    "title": "Master Droit · notetonmaster",
+    "titleInHead": false,
+    "description": "Mention nationale Droit : 10 parcours dans 4 établissements, avis d’étudiant·es et programmes.",
+    "h1": [],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 171.3
+  },
+  {
+    "path": "/universites",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Les universités et établissements · notetonmaster",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques, parcours par parcours.",
+    "h1": [
+      "Les universités"
+    ],
+    "canonical": "http://localhost:3002/universites",
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 233.7
+  },
+  {
+    "path": "/universites/nantes-universite",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Nantes Université · notetonmaster",
+    "titleInHead": true,
+    "description": "Les masters de Nantes Université : parcours, avis d’étudiant·es et programmes.",
+    "h1": [
+      "Nantes Université"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 237.7
+  },
+  {
+    "path": "/a-propos",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "À propos · notetonmaster",
+    "titleInHead": true,
+    "description": "D’où viennent les données, comment un avis est publié, questions fréquentes et contact.",
+    "h1": [
+      "Choisir un master avec autre chose qu’une plaquette."
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 229.7
+  },
+  {
+    "path": "/legal/charte",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Charte de modération · notetonmaster",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques, parcours par parcours.",
+    "h1": [
+      "Charte de modération"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 228.3
+  },
+  {
+    "path": "/comparer",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Comparer des parcours · notetonmaster",
+    "titleInHead": true,
+    "description": "Jusqu’à 3 parcours de master côte à côte : places, candidatures, sélectivité, stages, insertion, avis.",
+    "h1": [
+      "Comparer"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 229.5
+  },
+  {
+    "path": "/connexion",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Se connecter · notetonmaster",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques, parcours par parcours.",
+    "h1": [
+      "Accède à ton espace"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 230.9
+  },
+  {
+    "path": "/avis/nouveau",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Donner mon avis · notetonmaster",
+    "titleInHead": true,
+    "description": "Donne ton avis sur ton master en 3 minutes, avec ou sans compte. Anonyme et relu avant publication.",
+    "h1": [
+      "Ton master"
+    ],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 239.7
+  },
+  {
+    "path": "/parcours/n-existe-pas",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": "Parcours introuvable · notetonmaster",
+    "titleInHead": false,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques, parcours par parcours.",
+    "h1": [],
+    "canonical": null,
+    "robots": "noindex",
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 242.4
+  },
+  {
+    "path": "/robots.txt",
+    "status": 404,
+    "location": null,
+    "xRobots": null,
+    "title": "Page introuvable · notetonmaster",
+    "titleInHead": true,
+    "description": "Programmes, admission et vrais retours d’étudiant·es : compare les masters des universités publiques, parcours par parcours.",
+    "h1": [
+      "Cette page a quitté la fac."
+    ],
+    "canonical": null,
+    "robots": "noindex",
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 18,
+    "jsKb": 228.3
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "location": null,
+    "xRobots": null,
+    "title": null,
+    "titleInHead": false,
+    "description": null,
+    "h1": [],
+    "canonical": null,
+    "robots": null,
+    "jsonLd": [],
+    "jsonLdErrors": [],
+    "headingJumps": [],
+    "og": 0,
+    "jsKb": 0
+  }
+]

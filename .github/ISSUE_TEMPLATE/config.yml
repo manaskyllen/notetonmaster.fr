@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Signaler une faille de sécurité
+    url: https://github.com/manaskyllen/notetonmaster.fr/security/advisories/new
+    about: En privé, jamais dans un ticket public (SECURITY.md).
+  - name: Retirer un avis, exercer un droit sur tes données
+    url: https://notetonmaster.fr/signaler
+    about: Le formulaire du site, pas un ticket public.

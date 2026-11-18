@@ -1,0 +1,213 @@
+{
+  "$comment": "Data sources, real data-quality alerts and conflicts (brief sections 9.1 and 10).",
+  "sources": [
+    {
+      "key": "esr-etablissements",
+      "name": "Établissements et campus",
+      "host": "data.enseignementsup-recherche.gouv.fr · geo.api.gouv.fr",
+      "method": "Export open data",
+      "schedule": "40 2 1 * *",
+      "scheduleLabel": "Mensuelle · le 1er à 02:40",
+      "enabled": true,
+      "note": "Universités (UAI, Paysage, site, adresse), communes par code INSEE. Établissements-composantes saisis à la main."
+    },
+    {
+      "key": "monmaster-opendata",
+      "name": "Mon Master · données ouvertes",
+      "host": "data.enseignementsup-recherche.gouv.fr",
+      "method": "Export open data",
+      "schedule": "10 3 * * 1",
+      "scheduleLabel": "Hebdo · lun. 03:10 (si le jeu a changé)",
+      "enabled": true,
+      "note": "Catalogue national (universités, mentions, parcours, lieux, alternance) et admissions par session (2023, 2024, 2025)."
+    },
+    {
+      "key": "rncp",
+      "name": "France Compétences · RNCP",
+      "host": "www.data.gouv.fr · static.data.gouv.fr",
+      "method": "Export open data (XML v4.1)",
+      "schedule": "25 3 * * *",
+      "scheduleLabel": "Quotidienne · 03:25 (téléchargement au plus une fois par semaine)",
+      "enabled": true,
+      "note": "Fiches de master (niveau 7) : état, dates, blocs, métiers, codes ROME, ancienne et nouvelle fiche."
+    },
+    {
+      "key": "insersup",
+      "name": "InserSup · insertion pro",
+      "host": "data.enseignementsup-recherche.gouv.fr",
+      "method": "Export open data",
+      "schedule": "10 3 * * 2",
+      "scheduleLabel": "Hebdo · mar. 03:10",
+      "enabled": true,
+      "note": "Taux d’emploi à 6, 12, 18, 24 et 30 mois, salaires, par mention et établissement. Secret statistique : n.c., jamais 0."
+    },
+    {
+      "key": "sise-diplomes",
+      "name": "SISE · diplômes préparés",
+      "host": "data.enseignementsup-recherche.gouv.fr",
+      "method": "Export open data",
+      "schedule": "40 2 2 * *",
+      "scheduleLabel": "Mensuelle · le 2 à 02:40",
+      "enabled": true,
+      "note": "Code SISE national des mentions, inscrit·es par établissement et commune."
+    },
+    {
+      "key": "m2-selectifs",
+      "name": "Masters à entrée en M2",
+      "host": "data.enseignementsup-recherche.gouv.fr",
+      "method": "Export open data",
+      "schedule": "40 2 2 * *",
+      "scheduleLabel": "Désactivée",
+      "enabled": false,
+      "blockedReason": "Jeu figé depuis 2019, au niveau mention : désactivé.",
+      "note": "Les parcours qui commencent en M2 viennent des sites des universités."
+    },
+    {
+      "key": "onisep-ideo",
+      "name": "Onisep · Idéo-Formations",
+      "host": "data.onisep.fr",
+      "method": "Export open data (ODbL)",
+      "schedule": null,
+      "scheduleLabel": "Désactivée",
+      "enabled": false,
+      "blockedReason": "Licence ODbL (partage à l’identique) : désactivée par défaut.",
+      "note": "Si on l’active : identifiant FOR.xxxx et lien seulement, avec attribution."
+    },
+    {
+      "key": "univ-sites",
+      "name": "Sites des universités",
+      "host": "3 universités pilotes",
+      "method": "Pages formation et livrets PDF",
+      "schedule": "0 1 * * *",
+      "scheduleLabel": "Une université par nuit, 01:00–05:00",
+      "enabled": true,
+      "note": "Programme, stages, frais, débouchés, admission. Profils : Paris-Saclay (Drupal), Nantes (sites des UFR), URCA à retester depuis le serveur."
+    },
+    {
+      "key": "monmaster-fiches",
+      "name": "Mon Master · fiches détaillées",
+      "host": "monmaster.gouv.fr",
+      "method": "robots.txt seulement",
+      "schedule": "50 4 * * 1",
+      "scheduleLabel": "Hebdo · lun. 04:50 (robots.txt)",
+      "enabled": true,
+      "blockedReason": "robots.txt : Disallow: /. Seule la vérification du robots.txt tourne, rien n’est collecté.",
+      "note": "Attendus et critères : saisie manuelle dans l’admin (section Admission)."
+    }
+  ],
+  "alerts": [
+    {
+      "key": "monmaster-fiches-blocked",
+      "severity": "ERROR",
+      "title": "Mon Master : fiches détaillées inaccessibles",
+      "detail": "robots.txt de monmaster.gouv.fr : Disallow: /. Attendus et critères d’examen à saisir à la main (section Admission des fiches).",
+      "link": "/admin/recuperation",
+      "linkLabel": "Voir la source"
+    },
+    {
+      "key": "emas-capacity-conflict",
+      "severity": "WARNING",
+      "title": "Conflit : nombre de places",
+      "detail": "EMAS (Paris-Saclay) : 24 places sur le site de l’université, 22 dans Mon Master 2025.",
+      "link": "/admin/recuperation#conflits",
+      "linkLabel": "Arbitrer"
+    },
+    {
+      "key": "acpci-entries-conflict",
+      "severity": "WARNING",
+      "title": "Doublon d’entrées Mon Master",
+      "detail": "ACPCI (Paris-Saclay) a deux numéros : 2000144GJ2FE et 2000144GHGRB. Fusionner sous une seule fiche ?",
+      "link": "/admin/recuperation#conflits",
+      "linkLabel": "Arbitrer"
+    },
+    {
+      "key": "vnp-component-conflict",
+      "severity": "WARNING",
+      "title": "Composante divergente",
+      "detail": "Valorisation des nouveaux patrimoines : « UFR Histoire » (livret 2022-2023) contre « Faculté des Langues et cultures étrangères (FLCE) » (lieu Mon Master 2025).",
+      "link": "program:valorisation-des-nouveaux-patrimoines",
+      "linkLabel": "Ouvrir la fiche"
+    },
+    {
+      "key": "vnp-stale-programme",
+      "severity": "WARNING",
+      "title": "Programme ancien",
+      "detail": "Valorisation des nouveaux patrimoines : programme issu du livret 2022-2023, aucun plus récent trouvé.",
+      "link": "program:valorisation-des-nouveaux-patrimoines",
+      "linkLabel": "Ouvrir la fiche"
+    },
+    {
+      "key": "rncp35804-replaced",
+      "severity": "INFO",
+      "title": "Certification remplacée",
+      "detail": "RNCP35804 inactive depuis le 15/07/2026, remplacée par RNCP42684. Rattachement mis à jour pour la mention.",
+      "link": "mention:culture-patrimoine-et-mediation",
+      "linkLabel": "Voir"
+    }
+  ],
+  "conflicts": [
+    {
+      "key": "emas-capacity",
+      "program": "evenementiel-mediation-des-arts-et-des-sciences",
+      "field": "capacity",
+      "title": "Places en M1 · EMAS",
+      "detail": "Mon Master 2025 annonce 22 places, le site de l’université 24.",
+      "options": [
+        {
+          "id": "monmaster",
+          "label": "22 places",
+          "value": 22,
+          "source": "Mon Master · données ouvertes 2025"
+        },
+        {
+          "id": "univ",
+          "label": "24 places",
+          "value": 24,
+          "source": "Site de l’Université Paris-Saclay"
+        }
+      ]
+    },
+    {
+      "key": "acpci-entries",
+      "program": "administration-culturelle-projets-culturels-internationaux",
+      "field": "monMasterEntries",
+      "title": "Deux numéros Mon Master · ACPCI",
+      "detail": "2000144GJ2FE et 2000144GHGRB décrivent le même parcours (9 + 9 places).",
+      "options": [
+        {
+          "id": "merge",
+          "label": "Fusionner sous une seule fiche",
+          "value": "merge",
+          "source": "Mon Master · données ouvertes 2025"
+        },
+        {
+          "id": "split",
+          "label": "Garder deux fiches",
+          "value": "split",
+          "source": "Mon Master · données ouvertes 2025"
+        }
+      ]
+    },
+    {
+      "key": "vnp-component",
+      "program": "valorisation-des-nouveaux-patrimoines",
+      "field": "component",
+      "title": "Composante · Valorisation des nouveaux patrimoines",
+      "detail": "Le livret pédagogique 2022-2023 indique l’UFR Histoire ; Mon Master 2025 place le parcours à la Faculté des Langues et cultures étrangères (FLCE).",
+      "options": [
+        {
+          "id": "livret",
+          "label": "UFR Histoire, histoire de l’art et archéologie",
+          "value": "UFR Histoire, histoire de l’art et archéologie",
+          "source": "Livret pédagogique 2022-2023"
+        },
+        {
+          "id": "monmaster",
+          "label": "Faculté des Langues et cultures étrangères (FLCE)",
+          "value": "Faculté des Langues et cultures étrangères (FLCE)",
+          "source": "Mon Master · données ouvertes, session 2025 (lieu)"
+        }
+      ]
+    }
+  ]
+}

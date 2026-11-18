@@ -1,0 +1,316 @@
+{
+ "source": "onisep-ideo",
+ "license": "ODbL",
+ "datasets": {
+  "formations": {
+   "dataset": "Idéo-Formations initiales en France",
+   "observedAt": "2026-11-13",
+   "rowCount": 5799,
+   "columns": [
+    {
+     "name": "code NSF",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0666
+    },
+    {
+     "name": "code scolarité",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.4446
+    },
+    {
+     "name": "sigle type formation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6375
+    },
+    {
+     "name": "libellé type formation",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "libellé formation principal",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "sigle formation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.7208
+    },
+    {
+     "name": "durée",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "niveau de sortie indicatif",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "code RNCP",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.3339
+    },
+    {
+     "name": "niveau de certification",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "libellé niveau de certification",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "tutelle",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "URL et ID Onisep",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "domaine/sous-domaine",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "date création",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "date de modification",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    }
+   ],
+   "keys": {
+    "formation": "URL et ID Onisep (FOR.xxxx)",
+    "rncp": "code RNCP (sans préfixe)"
+   }
+  },
+  "actions-sup": {
+   "dataset": "Idéo-Actions de formation initiale-Univers enseignement supérieur",
+   "observedAt": "2026-11-13",
+   "rowCount": 28499,
+   "columns": [
+    {
+     "name": "Action de Formation (AF) identifiant Onisep",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "Formation (FOR) libellé",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "FOR URL et ID Onisep",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "FOR indexation domaine web Onisep",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "FOR type",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "FOR nature du certificat",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "FOR URL référentiel",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1211
+    },
+    {
+     "name": "FOR niveau de sortie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "Lieu d'enseignement (ENS) libellé",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS URL et ID Onisep",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS code UAI",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0112
+    },
+    {
+     "name": "ENS statut",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS adresse",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0015
+    },
+    {
+     "name": "ENS code postal",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS commune",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS département",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS académie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS région",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS latitude",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS longitude",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS n° téléphone",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0115
+    },
+    {
+     "name": "ENS site web",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0016
+    },
+    {
+     "name": "ENS hébergement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ENS accessibilité",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.479
+    },
+    {
+     "name": "AF durée cycle standard",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "AF modalités scolarité",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "AF éléments d'enseignement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.7507
+    },
+    {
+     "name": "AF coût scolarité",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6339
+    },
+    {
+     "name": "AF modalités accueil",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9965
+    },
+    {
+     "name": "AF page web",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4507
+    },
+    {
+     "name": "AF date de création",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "AF date de modification",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    }
+   ],
+   "keys": {
+    "action": "Action de Formation (AF) identifiant Onisep",
+    "lieu": "ENS code UAI (UAI de la composante, pas de l établissement)"
+   }
+  }
+ }
+}

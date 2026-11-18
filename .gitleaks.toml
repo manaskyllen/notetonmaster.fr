@@ -1,0 +1,24 @@
+# gitleaks: the default rules, with targeted exceptions for values that are public on purpose.
+# Each exception names an exact value or a pattern limited to one file: a real secret added
+# anywhere (fixtures included) is still reported.
+title = "notetonmaster"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Clé de chiffrement de développement de .env.example et de la CI (base64 de « dev-only-key-change-me-32-bytes! »), refusée en production par lib/env.ts"
+regexTarget = "secret"
+regexes = ['''^ZGV2LW9ubHkta2V5LWNoYW5nZS1tZS0zMi1ieXRlcyE=$''']
+
+[[allowlists]]
+description = "Secrets TOTP des comptes admin de démonstration (publics, refusés en production par lib/auth/demo.ts)"
+condition = "AND"
+paths = ['''(^|/)prisma/fixtures/demo\.json$''']
+regexTarget = "line"
+regexes = ['''"totpSecret": "[A-Z2-7]{32}"''']
+
+[[allowlists]]
+description = "Clé d'alerte de la source RNCP (identifiant, pas un secret)"
+regexTarget = "line"
+regexes = ['''rncp35804-replaced''']

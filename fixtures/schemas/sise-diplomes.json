@@ -1,0 +1,472 @@
+{
+ "source": "sise-diplomes",
+ "datasets": {
+  "principaux-diplomes": {
+   "dataset": "fr-esr-principaux-diplomes-et-formations-prepares-etablissements-publics (filtre : typ_diplome_lib like 'Master%', annee_universitaire = 2024-25)",
+   "observedAt": "2026-11-13",
+   "rowCount": 7008,
+   "columns": [
+    {
+     "name": "annee_universitaire",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_type",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_typologie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0417
+    },
+    {
+     "name": "etablissement_id_paysage",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_compos_id_paysage",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6186
+    },
+    {
+     "name": "etablissement_compos_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.6186
+    },
+    {
+     "name": "form_ens_id_paysage",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9287
+    },
+    {
+     "name": "form_ens_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9287
+    },
+    {
+     "name": "etablissement_id_wikidata",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0652
+    },
+    {
+     "name": "etablissement_id_ror",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0345
+    },
+    {
+     "name": "etablissement_id_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_localisation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_localisation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "dn_de",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "dn_de_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "cursus_lmd",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "cursus_lmd_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "diplome_rgp",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "diplome",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "diplome_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "typ_diplome",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "typ_diplome_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "diplom",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "libelle_intitule_1",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "libelle_intitule_2",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.9999
+    },
+    {
+     "name": "niveau",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "niveau_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "degetu",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "degetu_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "disciplines_selection",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "gd_disciscipline",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "gd_disciscipline_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "discipline",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "discipline_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "sect_disciplinaire",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "sect_disciplinaire_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "spec_iut_rgp_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "spec_iut",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "spec_iut_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "iut_id_paysage",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "correspondance_iut",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "effectif_sans_cpge",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "femmes",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "hommes",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "effectif",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "effectif_total_sans_cpge",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "effectif_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "effectif_dei",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_code_commune",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_commune",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_id_uucr",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_uucr",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_id_departement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_departement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_id_academie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_academie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_id_region",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_region",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_code_commune",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_commune",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_id_uucr",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_uucr",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_id_departement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_departement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_id_academie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_academie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_id_region",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "implantation_region",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_id_uai_source",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_id_paysage_source",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_id_paysage_actuel",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement_actuel_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "rentree",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "annee",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    }
+   ],
+   "keys": {
+    "mentionNationale": "diplom",
+    "record": [
+     "annee_universitaire",
+     "etablissement_id_uai",
+     "diplom",
+     "niveau",
+     "implantation_code_commune"
+    ]
+   }
+  }
+ }
+}

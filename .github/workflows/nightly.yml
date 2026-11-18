@@ -1,0 +1,163 @@
+# Every night (never deploys anything):
+# - OWASP ZAP baseline against a production build started in the job, with the demo data (never
+#   against notetonmaster.fr); an issue is opened on a high alert, without exploit detail;
+# - read-only smoke test of notetonmaster.fr, once the site is live (repository variable
+#   SITE_LIVE=true); GitHub mails the owner of the repository when a scheduled run fails;
+# - pnpm audit and gitleaks on the whole history;
+# - the complete end-to-end suite (Chromium, visual project included), as on main.
+name: Nuit
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+env:
+  DATABASE_URL: postgresql://notetonmaster:notetonmaster@localhost:5432/notetonmaster
+  APP_URL: http://localhost:3002
+  SESSION_SECRET: ci-only-session-secret-change-me-0123456789abcdef
+  APP_ENCRYPTION_KEY: ZGV2LW9ubHkta2V5LWNoYW5nZS1tZS0zMi1ieXRlcyE=
+  ALLOW_INSECURE_LOCAL_PROD: '1'
+  CONNECTORS_MODE: mock
+  TURNSTILE_MODE: mock
+  SMTP_HOST: localhost
+  SMTP_PORT: '1025'
+  MAIL_FROM: 'notetonmaster <ne-pas-repondre@notetonmaster.example>'
+  CRAWLER_INFO_URL: http://localhost:3002/a-propos#notre-robot
+  CRAWLER_CONTACT_EMAIL: robot@notetonmaster.example
+  RAW_DATA_DIR: /tmp/nm/raw
+  UPLOADS_DIR: /tmp/nm/uploads
+  RATE_LIMIT_MULTIPLIER: '20'
+  NEXT_TELEMETRY_DISABLED: '1'
+  PRISMA_HIDE_UPDATE_MESSAGE: '1'
+
+jobs:
+  build-zap-e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: write
+    services:
+      db:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: notetonmaster
+          POSTGRES_PASSWORD: notetonmaster
+          POSTGRES_DB: notetonmaster
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U notetonmaster -d notetonmaster"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+      mailpit:
+        image: axllent/mailpit:v1.27
+        ports: ['1025:1025', '8025:8025']
+    env:
+      MAILPIT_URL: http://localhost:8025
+      BASE_URL: http://localhost:3002
+      CI: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Navigateur Playwright (cache)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Base de démonstration, build et démarrage
+        run: |
+          mkdir -p "$RAW_DATA_DIR" "$UPLOADS_DIR"
+          pnpm prisma generate && pnpm prisma migrate deploy && pnpm db:seed
+          pnpm build
+          NODE_ENV=production nohup pnpm next start -p 3002 > /tmp/next.log 2>&1 &
+          NODE_ENV=production nohup node dist/worker.js > /tmp/worker.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:3002/api/health > /dev/null && exit 0; sleep 2; done
+          cat /tmp/next.log; exit 1
+      - name: OWASP ZAP baseline (build local uniquement)
+        run: |
+          mkdir -p zap && chmod 777 zap
+          docker run --rm --network host -v "$PWD/zap":/zap/wrk:rw zaproxy/zap-stable:2.16.1 \
+            zap-baseline.py -t http://localhost:3002 -m 3 -J zap.json -r zap.html -I || true
+          node -e "const r=require('./zap/zap.json');const high=r.site.flatMap(s=>s.alerts).filter(a=>a.riskcode==='3');require('fs').writeFileSync('zap/high.txt',String(high.length));console.log('Alertes hautes :',high.length)"
+      - name: Issue en cas d'alerte haute (sans détail d'exploitation)
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const n = Number(require('fs').readFileSync('zap/high.txt', 'utf8'));
+            if (!n) return;
+            const title = 'Scan de sécurité nocturne : alerte à examiner';
+            const open = await github.rest.issues.listForRepo({ ...context.repo, state: 'open', labels: 'sécurité' });
+            if (open.data.some((i) => i.title === title)) return;
+            await github.rest.issues.create({
+              ...context.repo,
+              title,
+              labels: ['sécurité'],
+              body: `Le scan ZAP baseline de la nuit signale ${n} alerte(s) de niveau haut sur le build local. Le rapport est dans les artefacts du passage ${context.runId} (conservé 7 jours, accès réservé).`,
+            });
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: zap
+          path: zap/
+          retention-days: 7
+      - name: Bout en bout complet (visuels compris), une base et un serveur par processus
+        env:
+          E2E_SERVERS: '4'
+        run: sh scripts/e2e-stack.sh run
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: rapport-playwright-nuit
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  audit-history:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --prod --audit-level=high
+      - name: gitleaks sur tout l'historique
+        run: docker run --rm -v "$PWD":/repo zricethezav/gitleaks:v8.28.0 git /repo --config /repo/.gitleaks.toml --redact --log-opts="--all"
+
+  smoke-production:
+    if: vars.SITE_LIVE == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Fumée en lecture seule sur notetonmaster.fr
+        run: pnpm smoke --url=https://notetonmaster.fr

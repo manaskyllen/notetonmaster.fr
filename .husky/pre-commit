@@ -1,0 +1,7 @@
+# Pre-commit (Husky): quick checks of the staged files, in the Docker containers (the host only
+# needs Docker and git). Under 10 seconds. Bypass in an emergency: git commit --no-verify.
+set -e
+# Secrets in what is about to be committed.
+docker run --rm -v "$PWD":/repo:ro zricethezav/gitleaks:v8.28.0 git /repo --staged --config /repo/.gitleaks.toml --redact --no-banner
+# ESLint and Prettier on the staged files, then typing (incremental).
+docker compose run --rm --no-deps -T app sh -c "git config --global --add safe.directory /app && pnpm -s exec lint-staged"

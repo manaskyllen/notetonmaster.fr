@@ -1,0 +1,405 @@
+# Tests, typing, security and accessibility on every pull request and every push to main.
+# The jobs below are the required checks of the protected main branch (CONTRIBUTING.md).
+#
+# - No secret is used anywhere: every value below is a public test value, and the database is the
+#   service of the job. Pull requests from forks run with the same values.
+# - Never `pull_request_target`.
+# - Actions pinned by commit SHA, updated by Dependabot (.github/dependabot.yml).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Public test values only (the same as .env.example): never a real secret.
+  DATABASE_URL: postgresql://notetonmaster:notetonmaster@localhost:5432/notetonmaster
+  APP_URL: http://localhost:3002
+  SESSION_SECRET: ci-only-session-secret-change-me-0123456789abcdef
+  APP_ENCRYPTION_KEY: ZGV2LW9ubHkta2V5LWNoYW5nZS1tZS0zMi1ieXRlcyE=
+  # A production build on the runner itself, with the demo data (lib/env.ts).
+  ALLOW_INSECURE_LOCAL_PROD: '1'
+  CONNECTORS_MODE: mock
+  TURNSTILE_MODE: mock
+  SMTP_HOST: localhost
+  SMTP_PORT: '1025'
+  MAIL_FROM: 'notetonmaster <ne-pas-repondre@notetonmaster.example>'
+  CRAWLER_INFO_URL: http://localhost:3002/a-propos#notre-robot
+  CRAWLER_CONTACT_EMAIL: robot@notetonmaster.example
+  RAW_DATA_DIR: /tmp/nm/raw
+  UPLOADS_DIR: /tmp/nm/uploads
+  RATE_LIMIT_MULTIPLIER: '20'
+  NEXT_TELEMETRY_DISABLED: '1'
+  PRISMA_HIDE_UPDATE_MESSAGE: '1'
+
+jobs:
+  # What changed in a pull request: the public site (seo job) and what the end-to-end tests
+  # exercise (e2e job). On main and by hand, everything runs.
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    outputs:
+      site: ${{ steps.diff.outputs.site }}
+      e2e: ${{ steps.diff.outputs.e2e }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: diff
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE" 2>/dev/null; then
+            echo "site=true" >> "$GITHUB_OUTPUT"; echo "e2e=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          files=$(git diff --name-only "$BASE" HEAD)
+          match() { echo "$files" | grep -qE "$1" && echo true || echo false; }
+          echo "site=$(match '^(app/|components/|lib/|styles/|public/|prisma/|package\.json$|pnpm-lock\.yaml$|next\.config\.|lighthouserc\.cjs$)')" >> "$GITHUB_OUTPUT"
+          echo "e2e=$(match '^(app/|components/|lib/|styles/|public/|prisma/|worker/|proxy\.ts$|package\.json$|pnpm-lock\.yaml$|next\.config\.|tests/e2e/|playwright\.config\.ts$|scripts/e2e-)')" >> "$GITHUB_OUTPUT"
+
+  lint-type:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma generate
+      - name: ESLint (dont eslint-plugin-security)
+        run: pnpm lint
+      - name: TypeScript
+        run: pnpm typecheck
+      - name: Prettier
+        run: pnpm format:check
+
+  unit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma generate
+      # Coverage and its thresholds per folder: integration job (both projects together).
+      - name: Tests unitaires (sans base)
+        run: pnpm test
+
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      db: &postgres
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: notetonmaster
+          POSTGRES_PASSWORD: notetonmaster
+          POSTGRES_DB: notetonmaster
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U notetonmaster -d notetonmaster"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          mkdir -p "$RAW_DATA_DIR" "$UPLOADS_DIR"
+          pnpm prisma generate
+      # The integration setup creates notetonmaster_test, applies the migrations, the demo seed
+      # (silent in CI) and the integration fixtures (tests/integration/setup/global.ts).
+      - name: Tests unitaires et d'intégration, couverture (seuils par dossier, vitest.config.ts)
+        env:
+          DATABASE_URL_TEST: postgresql://notetonmaster:notetonmaster@localhost:5432/notetonmaster_test
+        run: pnpm test:coverage --reporter=default --reporter=json --outputFile.json=vitest-report.json
+      # The rights matrix cannot be skipped unseen (a failing setup marks its tests « skipped »).
+      - name: Matrice des droits réellement exécutée (300 tests au moins)
+        if: always()
+        run: node scripts/check-matrix-count.mjs vitest-report.json 300
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: couverture-complete
+          path: coverage/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  migrations:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      db: *postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma migrate deploy
+      - name: Schéma Prisma et migrations synchronisés
+        # The GIN index of the search (created by hand, unknown to Prisma) is the only accepted drift.
+        run: |
+          pnpm -s prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script \
+            | grep -vE '^\s*(--.*)?$' | grep -v 'DROP INDEX "ProgramSearchIndex_tsv_idx";' > drift.sql || true
+          if [ -s drift.sql ]; then
+            echo "::error::Le schéma Prisma et les migrations divergent : crée la migration (make migration name=…)."
+            cat drift.sql
+            exit 1
+          fi
+      - name: Migration destructive (libellé « migration validée » requis)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          VALIDATED: ${{ contains(github.event.pull_request.labels.*.name, 'migration validée') }}
+        run: |
+          files=$(git diff --name-only --diff-filter=AM "$BASE" HEAD -- 'prisma/migrations/*/migration.sql')
+          [ -z "$files" ] && exit 0
+          hits=$(grep -nEi 'DROP[[:space:]]+(TABLE|COLUMN)|ALTER[[:space:]]+TABLE[^;]*DROP[[:space:]]' $files | grep -v 'ProgramSearchIndex_tsv_idx' || true)
+          if [ -n "$hits" ] && [ "$VALIDATED" != "true" ]; then
+            echo "::error::Migration destructive : ajoute le libellé « migration validée » après relecture (sauvegarde, docs/deploiement.md)."
+            echo "$hits"
+            exit 1
+          fi
+
+  # The production build, made once: the e2e, build-budget and seo jobs reuse it.
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Cache du build Next.js
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .next/cache
+          key: next-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: next-${{ hashFiles('pnpm-lock.yaml') }}-
+      - name: Build de production
+        run: |
+          pnpm prisma generate
+          pnpm build
+          tar --exclude=.next/cache -czf build.tgz .next dist
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: build
+          path: build.tgz
+          retention-days: 1
+
+  # End-to-end suite (Chromium), complete: on every pull request that touches the site or its
+  # tests, and always on main. One server and one database per Playwright worker
+  # (scripts/e2e-stack.sh); the setup project logs the demo accounts in once per server.
+  e2e:
+    needs: [changes, build]
+    if: github.event_name != 'pull_request' || needs.changes.outputs.e2e == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      db: *postgres
+      mailpit:
+        image: axllent/mailpit:v1.27
+        ports: ['1025:1025', '8025:8025']
+    env:
+      MAILPIT_URL: http://localhost:8025
+      E2E_SERVERS: '4'
+      CI: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Navigateur Playwright (cache)
+        id: pw-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('pnpm-lock.yaml') }}
+      - if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps chromium
+      - if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: build
+      - name: Bases, serveurs et workers (4 de chaque)
+        run: |
+          tar -xzf build.tgz
+          mkdir -p "$RAW_DATA_DIR" "$UPLOADS_DIR"
+          pnpm prisma generate
+          sh scripts/e2e-stack.sh start
+      - name: Playwright (bout en bout et accessibilité axe)
+        run: pnpm exec playwright test --project=e2e
+      - name: Contrôle de fumée du build (lecture seule)
+        run: pnpm smoke --url=http://localhost:3100
+      - if: failure()
+        run: tail -n 200 /tmp/nm-e2e/*.log
+      # Demo data only: no personal data in the report.
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: rapport-playwright
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: gitleaks sur les commits de la modification
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          range="--all"
+          if [ -n "$BASE" ] && git cat-file -e "$BASE" 2>/dev/null; then range="$BASE..HEAD"; fi
+          docker run --rm -v "$PWD":/repo zricethezav/gitleaks:v8.28.0 git /repo --config /repo/.gitleaks.toml --redact --log-opts="$range"
+      - name: 'pnpm audit (production : échec sur haute ou critique)'
+        run: pnpm audit --prod --audit-level=high
+      - name: Semgrep (OWASP Top 10, Next.js, TypeScript)
+        run: |
+          docker run --rm -v "$PWD":/src semgrep/semgrep:1.140.0 semgrep scan --metrics=off --error \
+            --config p/owasp-top-ten --config p/nextjs --config p/typescript \
+            --exclude lib/db/generated --severity ERROR /src
+      - uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          languages: javascript-typescript
+          build-mode: none
+          queries: security-extended
+      - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+      - name: Nouvelles dépendances (vulnérabilités et licences)
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@bbc44d14a204704ccc493733616cd1e93a0321ec # v5.0.1
+        with:
+          fail-on-severity: moderate
+          # Licences compatibles avec l'AGPL-3.0-or-later du projet.
+          allow-licenses: MIT, ISC, BSD-2-Clause, BSD-3-Clause, Apache-2.0, 0BSD, CC0-1.0, Unlicense, BlueOak-1.0.0, MPL-2.0, LGPL-2.1-or-later, LGPL-3.0-or-later, GPL-3.0-or-later, AGPL-3.0-or-later, OFL-1.1, Python-2.0, CC-BY-4.0, Zlib
+
+  build-budget:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      db: *postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: build
+      - name: Base de démonstration et démarrage du build
+        run: |
+          tar -xzf build.tgz
+          mkdir -p "$RAW_DATA_DIR" "$UPLOADS_DIR"
+          pnpm prisma generate && pnpm prisma migrate deploy && pnpm db:seed
+          NODE_ENV=production nohup pnpm next start -p 3002 > /tmp/next.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:3002/api/health > /dev/null && exit 0; sleep 2; done
+          cat /tmp/next.log; exit 1
+      - name: Poids du JavaScript des pages principales (budget de perf-budget.json)
+        run: node scripts/perf.mjs --base=http://localhost:3002 --n=2 --c=1 --js-only --assert
+
+  seo:
+    needs: [changes, build]
+    if: needs.changes.outputs.site == 'true' || github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      db: *postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: build
+      - name: Base de démonstration et démarrage du build
+        run: |
+          tar -xzf build.tgz
+          mkdir -p "$RAW_DATA_DIR" "$UPLOADS_DIR"
+          pnpm prisma generate && pnpm prisma migrate deploy && pnpm db:seed
+          NODE_ENV=production nohup pnpm next start -p 3002 > /tmp/next.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:3002/api/health > /dev/null && exit 0; sleep 2; done
+          cat /tmp/next.log; exit 1
+      - name: Contrôle SEO (bloquant)
+        run: pnpm seo:check --url=http://localhost:3002 --json=seo-report.json
+      - name: Lighthouse CI, 3 passages (SEO = 100 et CLS < 0,1 bloquants ; performance et LCP indicatifs)
+        env:
+          LHCI_BASE_URL: http://localhost:3002
+          LHCI_RUNNER: github
+        run: pnpm lighthouse --url=http://localhost:3002
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: seo-et-lighthouse
+          path: |
+            seo-report.json
+            .lighthouseci/
+          retention-days: 7
+          if-no-files-found: ignore

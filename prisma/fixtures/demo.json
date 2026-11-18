@@ -1,0 +1,486 @@
+{
+  "$comment": "Fictitious demo data (isDemo = true). Times are relative to the seed run: daysAgo / hoursAgo / minutesAgo.",
+  "students": [
+    {
+      "$comment": "Complete demo space (brief 9.2): every tab of Mon espace shows data.",
+      "key": "anna",
+      "email": "alexis.demo@demo.notetonmaster.local",
+      "acceptsQuestions": true,
+      "verification": {
+        "method": "UNIVERSITY_EMAIL",
+        "program": "valorisation-des-nouveaux-patrimoines",
+        "universityEmail": "anna.l@etu.univ-nantes.fr",
+        "daysAgo": 40
+      },
+      "follows": [
+        "expertise-des-mediations-professions-et-institutions-de-la-culture",
+        "administration-culturelle-projets-culturels-internationaux",
+        "evenementiel-mediation-des-arts-et-des-sciences"
+      ]
+    },
+    {
+      "key": "bastien",
+      "email": "bastien@demo.notetonmaster.local",
+      "acceptsQuestions": true
+    },
+    {
+      "key": "chloe",
+      "email": "chloe@demo.notetonmaster.local",
+      "acceptsQuestions": false
+    },
+    {
+      "key": "diane",
+      "email": "diane@demo.notetonmaster.local",
+      "acceptsQuestions": false,
+      "document": {
+        "program": "evenementiel-mediation-des-arts-et-des-sciences",
+        "level": "GRADUATE",
+        "cohort": 2023,
+        "type": "Attestation de réussite",
+        "name": "attestation-reussite.pdf",
+        "hoursAgo": 3
+      }
+    },
+    {
+      "key": "elias",
+      "email": "elias@demo.notetonmaster.local",
+      "acceptsQuestions": false,
+      "document": {
+        "program": "musees-bibliotheques-archives",
+        "level": "M1",
+        "cohort": 2026,
+        "type": "Certificat de scolarité",
+        "name": "certificat-scolarite-2026.pdf",
+        "hoursAgo": 26
+      }
+    },
+    {
+      "key": "farah",
+      "email": "farah@demo.notetonmaster.local",
+      "acceptsQuestions": false
+    }
+  ],
+  "reviews": [
+    {
+      "ref": "avis-7f3a21",
+      "program": "valorisation-des-nouveaux-patrimoines",
+      "student": "anna",
+      "level": "M2",
+      "cohort": 2025,
+      "rating": 4,
+      "title": "Le terrain avant tout",
+      "pros": "Beaucoup de visites et d’intervenants pros du patrimoine régional. Le stage long en M2 ouvre vraiment des portes.",
+      "cons": "La partie numérique reste assez légère si tu vises la médiation digitale.",
+      "status": "PUBLISHED",
+      "acceptsQuestions": true,
+      "helpful": 14,
+      "daysAgo": 58,
+      "scores": {
+        "CONTENT": 4,
+        "SUPERVISION": 4,
+        "INTERNSHIPS": 5,
+        "ATMOSPHERE": 4,
+        "OUTCOMES": 4
+      },
+      "views": 300
+    },
+    {
+      "ref": "avis-81c02e",
+      "program": "valorisation-des-nouveaux-patrimoines",
+      "student": "bastien",
+      "level": "GRADUATE",
+      "cohort": 2023,
+      "rating": 4,
+      "title": "Un bon tremplin vers les collectivités",
+      "pros": "Mon stage de M2 s’est transformé en contrat. Les cours de droit du patrimoine m’ont servi tout de suite.",
+      "cons": "Mener mémoire et stage en même temps, c’est intense : il faut s’organiser tôt.",
+      "status": "PUBLISHED",
+      "acceptsQuestions": true,
+      "helpful": 9,
+      "daysAgo": 23,
+      "scores": {
+        "CONTENT": 4,
+        "SUPERVISION": 4,
+        "INTERNSHIPS": 5,
+        "OUTCOMES": 4
+      },
+      "employmentStatus": "EMPLOYED",
+      "jobTitle": "chargé de mission patrimoine, collectivité territoriale"
+    },
+    {
+      "ref": "avis-93f0c4",
+      "program": "valorisation-des-nouveaux-patrimoines",
+      "student": "chloe",
+      "level": "M1",
+      "cohort": 2026,
+      "rating": 3,
+      "title": "Programme dense, promo soudée",
+      "pros": "Petite promo, beaucoup d’entraide. On découvre plein de types de patrimoine.",
+      "cons": "Premier semestre très chargé, et il faut chercher son stage de 3 mois dès l’automne.",
+      "status": "PUBLISHED",
+      "acceptsQuestions": false,
+      "helpful": 5,
+      "daysAgo": 6,
+      "scores": {
+        "CONTENT": 4,
+        "SUPERVISION": 3,
+        "ATMOSPHERE": 5,
+        "OUTCOMES": 3
+      }
+    },
+    {
+      "ref": "avis-90b1d3",
+      "program": "evenementiel-mediation-des-arts-et-des-sciences",
+      "student": "diane",
+      "level": "GRADUATE",
+      "cohort": 2023,
+      "rating": 5,
+      "title": "L’alternance change tout",
+      "pros": "Le rythme école-entreprise donne une vraie expérience : à la sortie, on a déjà deux ans de métier sur le CV.",
+      "cons": "Il faut trouver son contrat d’apprentissage avant la rentrée, et l’accompagnement pour ça reste limité.",
+      "status": "PUBLISHED",
+      "acceptsQuestions": false,
+      "helpful": 3,
+      "daysAgo": 10,
+      "scores": {
+        "CONTENT": 4,
+        "INTERNSHIPS": 5,
+        "OUTCOMES": 5
+      },
+      "employmentStatus": "JOB_SEEKING"
+    },
+    {
+      "ref": "avis-91e7aa",
+      "program": "musees-bibliotheques-archives",
+      "student": "elias",
+      "level": "M1",
+      "cohort": 2026,
+      "rating": 4,
+      "title": "Petite promo, grosse entraide",
+      "pros": "Une promo à taille humaine, des cours qui mêlent musées, bibliothèques et archives, et la préparation à la carte de guide-conférencier.",
+      "cons": "Les stages de deux mois sont courts pour vraiment entrer dans un projet.",
+      "status": "PUBLISHED",
+      "acceptsQuestions": false,
+      "helpful": 2,
+      "daysAgo": 8,
+      "scores": {
+        "CONTENT": 4,
+        "ATMOSPHERE": 5
+      }
+    },
+    {
+      "ref": "avis-9e5b08",
+      "program": "valorisation-des-nouveaux-patrimoines",
+      "student": "farah",
+      "level": "M2",
+      "cohort": 2025,
+      "rating": 5,
+      "title": "Stage long, vrai plus",
+      "pros": "Le stage de six mois en M2 permet de mener un vrai projet de valorisation de bout en bout.",
+      "cons": "Le mémoire se rédige pendant le stage : prévoir des soirées et des week-ends occupés.",
+      "status": "PENDING",
+      "acceptsQuestions": false,
+      "helpful": 0,
+      "hoursAgo": 5
+    },
+    {
+      "ref": "avis-9d1a62",
+      "program": "evenementiel-mediation-des-arts-et-des-sciences",
+      "contactEmail": "alternance.emas@demo.notetonmaster.local",
+      "level": "GRADUATE",
+      "cohort": 2023,
+      "rating": 4,
+      "title": "Alternance top, rythme intense",
+      "pros": "L’alternance en musée, les cours de graphisme utiles tout de suite.",
+      "cons": "Trouver un contrat d’apprentissage est stressant, surtout quand on arrive d’une autre région.",
+      "status": "PENDING",
+      "acceptsQuestions": false,
+      "helpful": 0,
+      "daysAgo": 1,
+      "employmentStatus": "EMPLOYED",
+      "jobTitle": "chargée de projets culturels, agence événementielle"
+    },
+    {
+      "ref": "avis-9c77d5",
+      "program": "expertise-des-mediations-professions-et-institutions-de-la-culture",
+      "student": "anna",
+      "level": "M1",
+      "cohort": 2024,
+      "rating": 3,
+      "title": "Exemple fictif : avis à reformuler",
+      "pros": "Texte de démonstration, sans rapport avec la formation réelle.",
+      "cons": "Exemple fictif : une phrase visait un·e enseignant·e nommé·e ([nom masqué]).",
+      "status": "NEEDS_EDIT",
+      "nameFlagged": true,
+      "moderator": "camille",
+      "moderationReason": "Ton avis cite une personne. Reformule la phrase sur ce cours sans nommer l’enseignant·e.",
+      "acceptsQuestions": false,
+      "helpful": 0,
+      "daysAgo": 2
+    },
+    {
+      "ref": "avis-8a44f7",
+      "program": "histoire-de-l-art-et-culture-materielle",
+      "student": "farah",
+      "level": "GRADUATE",
+      "cohort": 2022,
+      "rating": 2,
+      "title": "Exemple fictif : avis masqué après signalements",
+      "pros": "Texte de démonstration, sans rapport avec la formation réelle.",
+      "cons": "Exemple fictif : des affirmations non vérifiées, masquées le temps de la vérification.",
+      "status": "HIDDEN",
+      "hiddenHoursAgo": 20,
+      "publishedDaysAgo": 14,
+      "moderationReason": "Masqué temporairement après 3 signalements en 24 h, en attente de vérification.",
+      "acceptsQuestions": false,
+      "helpful": 4,
+      "daysAgo": 15,
+      "employmentStatus": "FURTHER_STUDY"
+    },
+    {
+      "ref": "avis-9b2e10",
+      "program": "mediation-culturelle-et-communication-internationale",
+      "contactEmail": "anonyme.mcci@demo.notetonmaster.local",
+      "level": "M2",
+      "cohort": 2025,
+      "rating": 1,
+      "title": "Exemple fictif : avis refusé",
+      "pros": "Texte de démonstration, sans rapport avec la formation réelle.",
+      "cons": "Exemple fictif : un message insultant qui ne décrit aucun fait sur la formation.",
+      "status": "REJECTED",
+      "moderator": "camille",
+      "moderationReason": "Hors sujet (ne porte pas sur la formation) : l’avis ne décrit aucun fait sur le contenu, l’organisation ou les débouchés.",
+      "acceptsQuestions": false,
+      "helpful": 0,
+      "daysAgo": 3
+    }
+  ],
+  "conversations": [
+    {
+      "review": "avis-7f3a21",
+      "askerEmail": "question.lyon@demo.notetonmaster.local",
+      "alias": "Étudiant·e anonyme #4F2",
+      "messages": [
+        {
+          "from": "ASKER",
+          "body": "Bonjour ! Je viens de Lyon et j’hésite à candidater. Le stage de M2 est-il facile à trouver quand on ne connaît pas la région ?",
+          "minutesAgo": 120,
+          "read": false
+        }
+      ]
+    },
+    {
+      "review": "avis-7f3a21",
+      "asker": "chloe",
+      "alias": "Étudiant·e anonyme #9B7",
+      "messages": [
+        {
+          "from": "ASKER",
+          "body": "Est-ce qu’il y a beaucoup de cours en anglais ?",
+          "minutesAgo": 1310,
+          "read": true
+        },
+        {
+          "from": "AUTHOR",
+          "body": "Pas beaucoup : un cours d’anglais par semestre, le reste est en français.",
+          "minutesAgo": 1285,
+          "read": false
+        }
+      ]
+    },
+    {
+      "review": "avis-81c02e",
+      "askerEmail": "dossiers.express@demo.notetonmaster.local",
+      "alias": "Étudiant·e anonyme #C31",
+      "messages": [
+        {
+          "from": "ASKER",
+          "body": "Je prépare des dossiers de candidature contre rémunération, contacte-moi au 06 39 98 56 78.",
+          "minutesAgo": 40,
+          "read": true
+        }
+      ]
+    }
+  ],
+  "reports": [
+    {
+      "reference": "SIG-2026-0139",
+      "target": "review:avis-8a44f7",
+      "reason": "Propos diffamatoires",
+      "details": "Exemple fictif de signalement.",
+      "reporterKey": "net-a",
+      "hoursAgo": 22
+    },
+    {
+      "reference": "SIG-2026-0140",
+      "target": "review:avis-8a44f7",
+      "reason": "Propos diffamatoires",
+      "details": null,
+      "reporterKey": "net-a",
+      "hoursAgo": 21
+    },
+    {
+      "reference": "SIG-2026-0141",
+      "target": "review:avis-8a44f7",
+      "reason": "Contenu faux ou trompeur",
+      "details": "Exemple fictif de signalement.",
+      "reporterKey": "net-b",
+      "reporterEmail": "signalement@demo.notetonmaster.local",
+      "hoursAgo": 20
+    },
+    {
+      "reference": "SIG-2026-0142",
+      "target": "message:avis-81c02e:0",
+      "reason": "Démarchage ou spam",
+      "details": "Propose de préparer des dossiers contre rémunération et donne un numéro. Signalé par l’auteur·rice de l’avis.",
+      "reporterKey": "author",
+      "minutesAgo": 35
+    }
+  ],
+  "legal": [
+    {
+      "type": "NOTICE",
+      "reference": "NOT-2026-0017",
+      "requesterName": "Service juridique (exemple)",
+      "requesterQuality": "Service juridique d’un établissement d’enseignement supérieur",
+      "requesterEmail": "juridique.etablissement@demo.notetonmaster.local",
+      "contentUrl": "/parcours/histoire-de-l-art-et-culture-materielle#avis-8a44f7",
+      "grounds": "Exemple fictif : l’avis présenterait comme des faits des affirmations non vérifiées.",
+      "lawReference": "Article 6 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique",
+      "goodFaith": true,
+      "status": "IN_REVIEW",
+      "receivedDaysAgo": 2,
+      "deadlineInDays": 2
+    },
+    {
+      "type": "REQUISITION",
+      "reference": "REQ-2026-0003",
+      "requesterName": "Autorité judiciaire (exemple)",
+      "requesterQuality": "Officier de police judiciaire",
+      "requesterEmail": "requisitions@demo.notetonmaster.local",
+      "contentUrl": "/parcours/mediation-culturelle-et-communication-internationale",
+      "grounds": "Réquisition portant sur les données de connexion associées à un compte auteur. Le contenu des avis reste public ; seuls les journaux techniques sont concernés.",
+      "lawReference": null,
+      "goodFaith": true,
+      "status": "RECEIVED",
+      "receivedDaysAgo": 6,
+      "deadlineInDays": 4
+    }
+  ],
+  "admins": [
+    {
+      "key": "alexis",
+      "name": "Alexis",
+      "email": "alexis@notetonmaster.example",
+      "role": "ADMIN",
+      "totpSecret": "KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD",
+      "lastLoginMinutesAgo": 2
+    },
+    {
+      "key": "camille",
+      "name": "Camille R.",
+      "email": "camille@notetonmaster.example",
+      "role": "MODERATOR",
+      "totpSecret": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "lastLoginMinutesAgo": 420
+    },
+    {
+      "key": "yanis",
+      "name": "Yanis B.",
+      "email": "yanis@notetonmaster.example",
+      "role": "DATA_EDITOR",
+      "totpSecret": null,
+      "lastLoginMinutesAgo": 8640
+    },
+    {
+      "key": "juridique",
+      "name": "Invitation en attente",
+      "email": "juridique@notetonmaster.example",
+      "role": "LEGAL",
+      "invited": true,
+      "invitedDaysAgo": 2
+    }
+  ],
+  "audit": [
+    {
+      "at": "12/11 15:42",
+      "actor": "alexis",
+      "type": "AUTH",
+      "object": "Compte admin",
+      "detail": "Connexion réussie avec double authentification"
+    },
+    {
+      "at": "12/11 14:10",
+      "actor": "camille",
+      "type": "MODERATION",
+      "object": "avis-9b2e10",
+      "detail": "Avis refusé · motif : hors sujet (ne porte pas sur la formation)"
+    },
+    {
+      "at": "12/11 11:05",
+      "actor": "yanis",
+      "type": "DATA",
+      "object": "Valorisation des nouveaux patrimoines",
+      "detail": "Débouchés relus à la main (5 familles de métiers) · champ verrouillé"
+    },
+    {
+      "at": "12/11 09:15",
+      "actor": null,
+      "type": "SYNC",
+      "object": "Mon Master · fiches détaillées",
+      "detail": "Source ignorée : robots.txt interdit la collecte"
+    },
+    {
+      "at": "12/11 04:00",
+      "actor": null,
+      "type": "SYNC",
+      "object": "France Compétences",
+      "detail": "RNCP35804 inactive → rattachement RNCP42684 appliqué"
+    },
+    {
+      "at": "11/11 18:30",
+      "actor": "alexis",
+      "type": "LEGAL",
+      "object": "NOT-2026-0017",
+      "detail": "Notification passée en examen · échéance interne dans 3 jours"
+    },
+    {
+      "at": "11/11 16:02",
+      "actor": null,
+      "type": "MODERATION",
+      "object": "avis-8a44f7",
+      "detail": "Avis masqué temporairement après 3 signalements"
+    },
+    {
+      "at": "10/11 10:44",
+      "actor": "alexis",
+      "type": "TEAM",
+      "object": "juridique@notetonmaster.example",
+      "detail": "Invitation envoyée · rôle Légal"
+    },
+    {
+      "at": "10/11 09:20",
+      "actor": "yanis",
+      "type": "DATA",
+      "object": "Valorisation des nouveaux patrimoines",
+      "detail": "Composante corrigée à la main : UFR Histoire · champ verrouillé"
+    },
+    {
+      "at": "09/11 22:01",
+      "actor": null,
+      "type": "AUTH",
+      "object": "yanis@notetonmaster.example",
+      "detail": "Rappel : double authentification non activée"
+    }
+  ],
+  "activity": [
+    [3, 0],
+    [5, 1],
+    [4, 0],
+    [8, 1],
+    [11, 2],
+    [9, 1],
+    [14, 3],
+    [12, 2]
+  ]
+}

@@ -1,0 +1,117 @@
+{
+ "methode": "Lighthouse 12.8.2, mobile (4G simulée, CPU ×4), médiane de 3 exécutions, build de production local (make prod-local) sur la base de développement (données nationales). SEO hors audit is-crawlable (noindex volontaire hors production).",
+ "avant": {
+  "/explorer": {
+   "perf": 84.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 4.003,
+   "cls": 0.026,
+   "tbt": 203.5,
+   "obsLcp": 765,
+   "runs": 3
+  },
+  "/parcours/sciences-analytiques-universite-de-strasbourg": {
+   "perf": 87.0,
+   "seo": 83.333,
+   "a11y": 100,
+   "lcp": 3.878,
+   "cls": 0.026,
+   "tbt": 115.5,
+   "obsLcp": 469,
+   "runs": 3
+  },
+  "/mentions/droit": {
+   "perf": 95.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 2.87,
+   "cls": 0.026,
+   "tbt": 107,
+   "obsLcp": 206,
+   "runs": 3
+  },
+  "/parcours/valorisation-des-nouveaux-patrimoines": {
+   "perf": 84.0,
+   "seo": 83.333,
+   "a11y": 100,
+   "lcp": 3.905,
+   "cls": 0.026,
+   "tbt": 264.0,
+   "obsLcp": 490,
+   "runs": 3
+  },
+  "/": {
+   "perf": 83.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 4.089,
+   "cls": 0.026,
+   "tbt": 221,
+   "obsLcp": 739,
+   "runs": 3
+  }
+ },
+ "apres": {
+  "/explorer": {
+   "perf": 94.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 2.807,
+   "cls": 0.026,
+   "tbt": 160,
+   "obsLcp": 205,
+   "runs": 3
+  },
+  "/parcours/sciences-analytiques-universite-de-strasbourg": {
+   "perf": 91.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 3.404,
+   "cls": 0.026,
+   "tbt": 152,
+   "obsLcp": 268,
+   "runs": 3
+  },
+  "/mentions/droit": {
+   "perf": 95.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 2.793,
+   "cls": 0.026,
+   "tbt": 109,
+   "obsLcp": 197,
+   "runs": 3
+  },
+  "/parcours/valorisation-des-nouveaux-patrimoines": {
+   "perf": 88.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 2.835,
+   "cls": 0.026,
+   "tbt": 328.5,
+   "obsLcp": 258,
+   "runs": 3
+  },
+  "/masters/nantes": {
+   "perf": 93.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 2.829,
+   "cls": 0.026,
+   "tbt": 175.5,
+   "obsLcp": 322,
+   "runs": 3
+  },
+  "/": {
+   "perf": 90.0,
+   "seo": 100.0,
+   "a11y": 100,
+   "lcp": 3.442,
+   "cls": 0.026,
+   "tbt": 162.0,
+   "obsLcp": 241,
+   "runs": 3
+  }
+ }
+}

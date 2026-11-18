@@ -1,0 +1,69 @@
+[
+ {
+  "command": "settings",
+  "settings": {
+   "pluralDelimiter": "\u0003",
+   "suppressDeprecationErrors": true,
+   "ajaxPageState": {
+    "libraries": "eJwFwQEKgDAIBdALjXYk-agNQ3LoFnX73uNI7ZJ7wg8Od8zSdpq60MjYs4sumBc9cBMsi7sV2PHRHaKdY2cp4cJLK20MzfoBfcYhdA",
+    "theme": "boots",
+    "theme_token": null
+   },
+   "ajaxTrustedUrl": [],
+   "field_group": {
+    "details": {
+     "mode": "default",
+     "context": "view",
+     "settings": {
+      "classes": "",
+      "id": "",
+      "open": true,
+      "description": "",
+      "required_fields": false
+     }
+    },
+    "fieldset": {
+     "mode": "default",
+     "context": "view",
+     "settings": {
+      "classes": "",
+      "show_empty_fields": false,
+      "id": "",
+      "description": ""
+     }
+    }
+   },
+   "user": {
+    "uid": 0,
+    "permissionsHash": "cc527bdf9ca30d139e7e1e4302640790a96e45b587710a8629e88e35be8235e4"
+   }
+  },
+  "merge": true
+ },
+ {
+  "command": "add_css",
+  "data": [
+   {
+    "rel": "stylesheet",
+    "media": "all",
+    "href": "/sites/default/files/css/css_UsPe9GENTzWLKiTKWr2h1cpuzbAoQT1JdQj_7MZEv1c.css?delta=0&language=fr&theme=boots&include=eJxLzi9K1U8pKi1IzNFLzEqsAAA0wAYz"
+   }
+  ]
+ },
+ {
+  "command": "add_js",
+  "selector": "body",
+  "data": [
+   {
+    "src": "/sites/default/files/js/js_aguEhDju-4yquHDFSTDWkvnVKR_9zhkNkkqLjP-kly4.js?scope=footer&delta=0&language=fr&theme=boots&include=eJwFwQEKgDAIBdALjXYk-agNQ3LoFnX73uNI7ZJ7wg8Od8zSdpq60MjYs4sumBc9cBMsi7sV2PHRHaKdY2cp4cJLK20MzfoBfcYhdA"
+   }
+  ]
+ },
+ {
+  "command": "insert",
+  "method": null,
+  "selector": ".program-courses-ajax-placeholder-942813",
+  "data": "\n  <table class=\"table-responsive table-hover table table-borderless\">\n    <thead class=\"thead-light\">\n    <tr>\n      <th>Matières</th>\n      <th>ECTS </th>\n      <th>Semestre</th>\n      <th>Cours</th>\n      <th>TD</th>\n      <th>TP</th>\n      <th>Cours-TD</th>\n      <th>Cours-TP</th>\n      <th>TD-TP</th>\n      <th>A distance</th>\n      <th>Projet</th>\n      <th>Tutorat</th>\n    </tr>\n    </thead>\n    <tbody>\n          \n  <tr  class=\"course-data -ue\" data-copernic-code=\"EN00003270\">\n    <td class=\"label\">\n      <a href=\"#\" class=\"toggl-modal\" data-target=\".c-963662\" aria-haspopup=\"true\">  Approches historiques et perspectives des politiques culturelles\n</a>\n    </td>\n    <td>4</td>\n    <td>Semestre 1</td>\n    <td>24</td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr class=\"modal-row\">\n    <td colspan=\"5\" style=\"padding: 0\">\n      <div class=\"modal fade c-963662\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n        <div class=\"modal-dialog modal-xl\" role=\"document\">\n          <div class=\"modal-content\">\n            <div class=\"modal-body p-0\">\n              <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                <i class=\"ico-close\" aria-hidden=\"true\"></i>\n              </button>\n                            <div class=\"course-modal-ajax-placeholder-963662\">\n                <a\n                  href=\"/node/963662/course-detail-ajax\"\n                  class=\"use-ajax visually-hidden\"\n                  data-course-modal-link\n                >Charger le détail</a>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    </td>\n  </tr>\n  \n\n          \n  <tr  class=\"course-data -ue\" data-copernic-code=\"EN00003271\">\n    <td class=\"label\">\n      <a href=\"#\" class=\"toggl-modal\" data-target=\".c-963663\" aria-haspopup=\"true\">  Anglais professionnel\n</a>\n    </td>\n    <td>2</td>\n    <td>Semestre 1</td>\n    <td></td>\n    <td>15</td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr class=\"modal-row\">\n    <td colspan=\"5\" style=\"padding: 0\">\n      <div class=\"modal fade c-963663\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n        <div class=\"modal-dialog modal-xl\" role=\"document\">\n          <div class=\"modal-content\">\n            <div class=\"modal-body p-0\">\n              <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                <i class=\"ico-close\" aria-hidden=\"true\"></i>\n              </button>\n                            <div class=\"course-modal-ajax-placeholder-963663\">\n                <a\n                  href=\"/node/963663/course-detail-ajax\"\n                  class=\"use-ajax visually-hidden\"\n                  data-course-modal-link\n                >Charger le détail</a>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    </td>\n  </tr>\n  \n\n          \n  <tr  class=\"course-data -ue\" data-copernic-code=\"EN00006345\">\n    <td class=\"label\">\n      <a href=\"#\" class=\"toggl-modal\" data-target=\".c-963664\" aria-haspopup=\"true\">  Initiation au journalisme culturel et atelier de rédaction/d’écriture(s)\n</a>\n    </td>\n    <td>4</td>\n    <td>Semestre 1</td>\n    <td>16</td>\n    <td>8</td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr class=\"modal-row\">\n    <td colspan=\"5\" style=\"padding: 0\">\n      <div class=\"modal fade c-963664\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n        <div class=\"modal-dialog modal-xl\" role=\"document\">\n          <div class=\"modal-content\">\n            <div class=\"modal-body p-0\">\n              <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                <i class=\"ico-close\" aria-hidden=\"true\"></i>\n              </button>\n                            <div class=\"course-modal-ajax-placeholder-963664\">\n                <a\n                  href=\"/node/963664/course-detail-ajax\"\n                  class=\"use-ajax visually-hidden\"\n                  data-course-modal-link\n                >Charger le détail</a>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    </td>\n  </tr>\n  \n\n        </tbody>\n  </table>\n",
+  "settings": null
+ }
+]

@@ -1,0 +1,35 @@
+# Weekly updates, through the same CI as any pull request. Security fixes are opened as soon as
+# they are published. Automatic merging is not enabled (docs/deploiement.md, « Mises à jour »).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Europe/Paris
+    open-pull-requests-limit: 10
+    labels: [dépendances]
+    groups:
+      mineures-et-correctifs:
+        update-types: [minor, patch]
+      outillage-dev:
+        dependency-type: development
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Europe/Paris
+    labels: [dépendances]
+    groups:
+      actions:
+        patterns: ['*']
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    labels: [dépendances]

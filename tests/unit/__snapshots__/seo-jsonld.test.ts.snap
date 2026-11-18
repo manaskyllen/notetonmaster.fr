@@ -1,0 +1,178 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`every public page > Organization and WebSite, no SearchAction, no rating 1`] = `
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@id": "https://notetonmaster.fr/#organisation",
+      "@type": "Organization",
+      "logo": {
+        "@type": "ImageObject",
+        "height": 512,
+        "url": "https://notetonmaster.fr/icons/icon-512.png",
+        "width": 512,
+      },
+      "name": "notetonmaster",
+      "url": "https://notetonmaster.fr/",
+    },
+    {
+      "@id": "https://notetonmaster.fr/#site",
+      "@type": "WebSite",
+      "inLanguage": "fr-FR",
+      "name": "notetonmaster",
+      "publisher": {
+        "@id": "https://notetonmaster.fr/#organisation",
+      },
+      "url": "https://notetonmaster.fr/",
+    },
+  ],
+}
+`;
+
+exports[`fiche parcours > EducationalOccupationalProgram with provider, credential, duration, credits; no aggregateRating 1`] = `
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@id": "https://notetonmaster.fr/parcours/valorisation-des-nouveaux-patrimoines#programme",
+      "@type": "EducationalOccupationalProgram",
+      "description": "Master Culture, patrimoine et médiation, parcours Valorisation des nouveaux patrimoines, à Nantes.",
+      "educationalCredentialAwarded": "Master",
+      "name": "Valorisation des nouveaux patrimoines",
+      "numberOfCredits": 120,
+      "programPrerequisites": "Licence d’histoire, d’histoire de l’art ou de géographie.",
+      "provider": {
+        "@id": "https://notetonmaster.fr/universites/nantes-universite#etablissement",
+        "@type": "CollegeOrUniversity",
+        "name": "Nantes Université",
+        "url": "https://www.univ-nantes.fr",
+      },
+      "timeToComplete": "P2Y",
+      "url": "https://notetonmaster.fr/parcours/valorisation-des-nouveaux-patrimoines",
+    },
+  ],
+}
+`;
+
+exports[`fiche parcours > breadcrumb Accueil › Nantes › Mention › Parcours, the last without item 1`] = `
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "item": "https://notetonmaster.fr/",
+      "name": "Accueil",
+      "position": 1,
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://notetonmaster.fr/masters/nantes",
+      "name": "Nantes",
+      "position": 2,
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://notetonmaster.fr/mentions/culture-patrimoine-et-mediation",
+      "name": "Culture, patrimoine et médiation",
+      "position": 3,
+    },
+    {
+      "@type": "ListItem",
+      "name": "Valorisation des nouveaux patrimoines",
+      "position": 4,
+    },
+  ],
+}
+`;
+
+exports[`mention, university, city pages > city and city × mention: breadcrumb 1`] = `
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": "https://notetonmaster.fr/",
+        "name": "Accueil",
+        "position": 1,
+      },
+      {
+        "@type": "ListItem",
+        "name": "Nantes",
+        "position": 2,
+      },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": "https://notetonmaster.fr/",
+        "name": "Accueil",
+        "position": 1,
+      },
+      {
+        "@type": "ListItem",
+        "item": "https://notetonmaster.fr/masters/nantes",
+        "name": "Nantes",
+        "position": 2,
+      },
+      {
+        "@type": "ListItem",
+        "name": "Droit",
+        "position": 3,
+      },
+    ],
+  },
+]
+`;
+
+exports[`mention, university, city pages > mention: breadcrumb 1`] = `
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "item": "https://notetonmaster.fr/",
+      "name": "Accueil",
+      "position": 1,
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://notetonmaster.fr/mentions",
+      "name": "Mentions",
+      "position": 2,
+    },
+    {
+      "@type": "ListItem",
+      "name": "Droit",
+      "position": 3,
+    },
+  ],
+}
+`;
+
+exports[`mention, university, city pages > university: breadcrumb and CollegeOrUniversity, never rated 1`] = `
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@id": "https://notetonmaster.fr/universites/nantes-universite#etablissement",
+      "@type": "CollegeOrUniversity",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "FR",
+        "addressLocality": "Nantes",
+      },
+      "name": "Nantes Université",
+      "url": "https://www.univ-nantes.fr",
+    },
+  ],
+}
+`;

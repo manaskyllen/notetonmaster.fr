@@ -1,0 +1,48 @@
+# Dependencies and builds
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+coverage/
+lib/db/generated/
+*.tsbuildinfo
+next-env.d.ts
+design-reference/
+
+# Local configuration: real secrets live only in .env
+.env
+.env.*
+!.env.example
+
+# Test and measurement outputs
+playwright-report/
+blob-report/
+test-results/
+/tests/e2e/.auth/
+.shots/
+.lighthouseci/
+
+# Local data: raw snapshots, reconnaissance extracts of university pages (scripts/recon)
+/data/
+# JSON exports of dropped tables (scripts/backup-tables.ts): personal data, never committed
+/backups/
+
+# System files
+.DS_Store
+# Windows download metadata (alternate data streams copied by WSL)
+*:Zone.Identifier
+
+# Private notes (security audit, internal decisions): never committed, the repository is public
+/.private/
+/DECISIONS.md
+
+# Assistant and editor settings of each machine
+/.claude/
+/.claude*
+CLAUDE.md
+CLAUDE.local.md
+/.mcp.json
+.vscode/
+.idea/
+*.code-workspace

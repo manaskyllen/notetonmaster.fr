@@ -1,0 +1,9 @@
+# Relecture obligatoire de toute modification (branche main protégée).
+*                         @manaskyllen
+
+# Sécurité, données personnelles, CI : relecture attentive.
+/lib/auth/                @manaskyllen
+/lib/security/            @manaskyllen
+/lib/db/                  @manaskyllen
+/prisma/migrations/       @manaskyllen
+/.github/                 @manaskyllen

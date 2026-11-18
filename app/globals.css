@@ -1,0 +1,293 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+@import '../styles/forms.css';
+@import '../styles/overlays.css';
+/* All motion (transitions, keyframes, reduced motion): see docs/animations.md. */
+@import '../styles/motion.css';
+
+/* Dark mode follows the same rules as tokens.css: system preference unless forced by data-theme. */
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *) {
+      @slot;
+    }
+  }
+}
+
+/*
+ * Tailwind theme wired to the design tokens. Only design-system colors exist
+ * (bg-surface-0, text-ink-muted, bg-violet-500…); the default palette is removed.
+ * Spacing keeps Tailwind's 4px base, which matches space-1…space-18 (p-4 = space-4).
+ */
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-surface-50: var(--surface-50);
+  --color-surface-0: var(--surface-0);
+  --color-surface-100: var(--surface-100);
+  --color-border: var(--border);
+  --color-border-control: var(--border-control);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  /* Secondary text (#3B3648), between ink and ink-muted in both themes. */
+  --color-ink-soft: color-mix(in srgb, var(--ink) 50%, var(--ink-muted));
+  --color-night: var(--night);
+  --color-on-night: var(--on-night);
+  --color-on-night-muted: var(--on-night-muted);
+  --color-violet-500: var(--violet-500);
+  --color-on-violet: var(--on-violet);
+  --color-violet-100: var(--violet-100);
+  --color-violet-700: var(--violet-700);
+  --color-lime-400: var(--lime-400);
+  --color-on-lime: var(--on-lime);
+  --color-lime-100: var(--lime-100);
+  --color-lime-800: var(--lime-800);
+  --color-coral-300: var(--coral-300);
+  --color-coral-100: var(--coral-100);
+  --color-coral-800: var(--coral-800);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-focus: var(--focus);
+  --color-focus-halo: var(--focus-halo);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --text-display-xl: var(--text-display-xl);
+  --text-display-xl--line-height: var(--text-display-xl--line-height);
+  --text-display-xl--font-weight: var(--text-display-xl--font-weight);
+  --text-display-xl--letter-spacing: var(--text-display-xl--letter-spacing);
+  --text-display-l: var(--text-display-l);
+  --text-display-l--line-height: var(--text-display-l--line-height);
+  --text-display-l--font-weight: var(--text-display-l--font-weight);
+  --text-display-l--letter-spacing: var(--text-display-l--letter-spacing);
+  --text-stat: var(--text-stat);
+  --text-stat--line-height: var(--text-stat--line-height);
+  --text-stat--font-weight: var(--text-stat--font-weight);
+  --text-stat--letter-spacing: var(--text-stat--letter-spacing);
+  --text-h2: var(--text-h2);
+  --text-h2--line-height: var(--text-h2--line-height);
+  --text-h2--font-weight: var(--text-h2--font-weight);
+  --text-h2--letter-spacing: var(--text-h2--letter-spacing);
+  --text-h3: var(--text-h3);
+  --text-h3--line-height: var(--text-h3--line-height);
+  --text-h3--font-weight: var(--text-h3--font-weight);
+  --text-h3--letter-spacing: var(--text-h3--letter-spacing);
+  --text-body-l: var(--text-body-l);
+  --text-body-l--line-height: var(--text-body-l--line-height);
+  --text-body: var(--text-body);
+  --text-body--line-height: var(--text-body--line-height);
+  --text-body-s: var(--text-body-s);
+  --text-body-s--line-height: var(--text-body-s--line-height);
+  --text-label: var(--text-label);
+  --text-label--line-height: var(--text-label--line-height);
+  --text-label--font-weight: var(--text-label--font-weight);
+  --text-label--letter-spacing: var(--text-label--letter-spacing);
+  --text-caption: var(--text-caption);
+  --text-caption--line-height: var(--text-caption--line-height);
+  --text-code: var(--text-code);
+  --text-code--line-height: var(--text-code--line-height);
+  --text-code--font-weight: var(--text-code--font-weight);
+
+  --radius-*: initial;
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-*: initial;
+  --shadow-lift: var(--shadow-lift);
+  --shadow-search: var(--shadow-search);
+
+  --container-page: var(--container);
+  --spacing-tap: var(--tap-min);
+  --spacing-control-l: var(--control-l);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--surface-50);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  a {
+    color: var(--violet-500);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility font-display-tight {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+/* Highlighted word in titles. */
+@utility nm-highlight {
+  background: var(--lime-400);
+  color: var(--on-lime);
+  border-radius: 0.18em;
+  padding: 0 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Long-form documents (legal pages). */
+.nm-doc h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  margin: 28px 0 10px;
+}
+.nm-doc h2:first-child {
+  margin-top: 0;
+}
+.nm-doc p,
+.nm-doc li {
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 68ch;
+}
+.nm-doc p {
+  margin: 0 0 12px;
+}
+.nm-doc ul {
+  margin: 0 0 12px;
+  padding-left: 22px;
+  list-style: disc;
+}
+mark.todo {
+  padding: 1px 8px;
+  border-radius: 6px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font-weight: 600;
+}
+
+/* The name written like the logo (components/ui/BrandName.tsx: .brand / .brand-s).
+   The gaps are margins: the text stays « notetonmaster », one word. Large: titles, 20px and up,
+   « master » in a lime block tilted −3°. Small: running text, a discreet badge. */
+.brand,
+.brand-s {
+  white-space: nowrap;
+}
+.brand .brand__g,
+.brand-s .brand__g {
+  margin-left: 0.14em;
+}
+/* The tilted block is painted as the background of the word (a rounded rectangle turned −3°,
+   stretched to the box): an inline-block « master » (to rotate it) or a positioned ::before
+   would make screen readers say « noteton master ». The vertical padding gives the turned block
+   room without moving the line. */
+.brand .brand__m {
+  margin-left: 0.1em;
+  padding: 0.07em 0.16em 0.18em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 100' preserveAspectRatio='none'%3E%3Crect x='5' y='9' width='230' height='82' rx='9' fill='%23d4f75a' transform='rotate(-3 120 50)'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  color: var(--on-lime);
+}
+.brand-s {
+  font-weight: 700;
+}
+/* Small: the same lime block tilted −3° as the logo. */
+.brand-s .brand__m {
+  margin-left: 0.12em;
+  padding: 0.12em 0.26em 0.16em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 100' preserveAspectRatio='none'%3E%3Crect x='6' y='16' width='228' height='68' rx='14' fill='%23d4f75a' transform='rotate(-3 120 50)'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  color: var(--on-lime);
+}
+
+/* « Trouvé par RNCP · RNCP42684 » (.codehit). */
+.nm-codehit {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: var(--lime-100);
+  color: var(--lime-800);
+  font: 700 12px var(--font-mono);
+}
+
+/* Home page without a query: a type filter hides the other rows of the server-rendered list. */
+[data-kind-filter='parcours'] li:not([data-kind='parcours']),
+[data-kind-filter='mention'] li:not([data-kind='mention']),
+[data-kind-filter='universite'] li:not([data-kind='universite']) {
+  display: none;
+}
+
+/* Keyboard key (.kbd). */
+:root {
+  --kbd-border: #d7d3e0;
+  --kbd-bg: #f5f4f8;
+  --kbd-ink: #3b3648;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --kbd-border: var(--border-control);
+    --kbd-bg: var(--surface-100);
+    --kbd-ink: var(--ink);
+  }
+}
+:root[data-theme='dark'] {
+  --kbd-border: var(--border-control);
+  --kbd-bg: var(--surface-100);
+  --kbd-ink: var(--ink);
+}
+.nm-kbd {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 7px;
+  border-radius: 7px;
+  border: 1px solid var(--kbd-border);
+  border-bottom-width: 2px;
+  background: var(--kbd-bg);
+  color: var(--kbd-ink);
+  font: 700 12px var(--font-sans);
+  line-height: 1.2;
+  white-space: nowrap;
+}

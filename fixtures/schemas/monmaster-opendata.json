@@ -1,0 +1,1488 @@
+{
+ "source": "monmaster-opendata",
+ "datasets": {
+  "fr-esr-mon_master": {
+   "dataset": "fr-esr-mon_master",
+   "observedAt": "2026-11-13",
+   "rowCount": 16257,
+   "columns": [
+    {
+     "name": "session",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "pp",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "pc",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "eta_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "eta_nom",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "acad",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "acad_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "acad_reg",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "acad_reg_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ifc",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "inm",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "mention",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "inmp",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1169
+    },
+    {
+     "name": "parcours",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.118
+    },
+    {
+     "name": "alternance",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "modalite_enseignement",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0147
+    },
+    {
+     "name": "lieux",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "lieu_acad",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "lieu_acad_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "lieu_reg_acad",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "lieu_reg_acad_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "disci_master",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "discipline",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "disci_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "secteur_disci",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "secteur_disci_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "col",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_pp",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_etab_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lieu_acad_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lieu_acad_reg_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lg3_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_lg3_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lp3_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_lp3_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_but3_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_but3_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_master_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_master_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_autre_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_autre_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_noninscri_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_noninscri_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_pc",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_etab_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lieu_acad_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lieu_acad_reg_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lg3_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_lg3_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lp3_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_lp3_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_but3_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_but3_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_master_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_master_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_autre_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_autre_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_noninscri_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_noninscri_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_total",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_etab",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_lieu_acad",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_lieu_acad_reg",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_lg3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_lg3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_lp3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_lp3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_but3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_but3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_master_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_master_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_autre_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_autre_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_noninscri_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_noninscri_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_total",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_etab",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_lieu_acad",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_lieu_acad_reg",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_lg3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_lg3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_lp3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_lp3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_but3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_but3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_master_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_master_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_autre_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_autre_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_noninscri_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_noninscri_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_total",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_etab",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_lieu_acad",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_lieu_acad_reg",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_debut_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_fin_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_pc",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_lg3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_lg3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_lp3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_lp3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_but3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_but3_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_master_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_master_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_autre_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_autre_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_noninscri_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_noninscri_total",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "rang_dernier_appele_pp",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0353
+    },
+    {
+     "name": "rang_dernier_appele_pc",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.6673
+    },
+    {
+     "name": "n_recrut_comp",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.8319
+    },
+    {
+     "name": "pct_accept_femme",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_etab",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_lieu_acad",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_lieu_acad_reg",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_debut_pp",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_fin_pp",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_lg3",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_lp3",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_but3",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_master",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_autre",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "pct_accept_noninscri",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0637
+    },
+    {
+     "name": "id_paysage",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "id_paysage_actuel",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uo_lib_actuel",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    }
+   ],
+   "keys": {
+    "record": [
+     "session",
+     "ifc"
+    ],
+    "formation": "ifc",
+    "mention": "inm",
+    "parcours": "inmp",
+    "etablissement": "eta_uai"
+   },
+   "sessions": [
+    "2024",
+    "2025"
+   ]
+  },
+  "fr-esr-mon_master_2023": {
+   "dataset": "fr-esr-mon_master_2023",
+   "observedAt": "2026-11-13",
+   "rowCount": 7694,
+   "columns": [
+    {
+     "name": "session",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "eta_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "eta_nom",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0003
+    },
+    {
+     "name": "ifc",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "inm",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "mention",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "inmp",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1538
+    },
+    {
+     "name": "parcours",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1538
+    },
+    {
+     "name": "alternance",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "modalite_enseignement",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0166
+    },
+    {
+     "name": "lieux_formation",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "disci_master",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "discipline",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "secteur_disci",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "col",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_etab",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_acad",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_acad_reg",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_can_femme_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_etab",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_acad",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_acad_reg",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_clas_femme_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_etab",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_acad",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_acad_reg",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_prop_femme_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_etab",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_acad",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_acad_reg",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_debut_pp",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_lg3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_lp3",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_master",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_autre",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_accept_femme_noninscri",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "n_recrut_comp",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.5556
+    },
+    {
+     "name": "rang_dernier",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "pct_accept_femme",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_etab",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_acad",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_acad_reg",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_debut_pp",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_lg3",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_lp3",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_master",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_autre",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "pct_accept_noninscri",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.0737
+    },
+    {
+     "name": "id_paysage",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "id_paysage_actuel",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0003
+    },
+    {
+     "name": "uo_lib_actuel",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0003
+    },
+    {
+     "name": "disci_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "secteur_disci_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "acad",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0003
+    },
+    {
+     "name": "acad_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0003
+    },
+    {
+     "name": "acad_reg",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0003
+    },
+    {
+     "name": "acad_reg_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0003
+    }
+   ],
+   "keys": {
+    "record": [
+     "session",
+     "ifc"
+    ]
+   },
+   "sessions": [
+    "2023"
+   ]
+  }
+ }
+}

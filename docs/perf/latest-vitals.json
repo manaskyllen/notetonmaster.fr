@@ -1,0 +1,30 @@
+{
+  "base": "http://nm-prodlocal:3000",
+  "at": "2026-11-14T00:28:52.622Z",
+  "pages": [
+    {
+      "label": "Accueil",
+      "path": "/",
+      "lcp": 1100,
+      "inp": 32
+    },
+    {
+      "label": "Explorer (avec filtres)",
+      "path": "/explorer?domaine=droit-economie-gestion&modalite=alternance",
+      "lcp": 1188,
+      "inp": 0
+    },
+    {
+      "label": "Fiche parcours",
+      "path": "/parcours/droit-des-affaires-applique-aix-marseille-universite",
+      "lcp": 1224,
+      "inp": 24
+    },
+    {
+      "label": "À propos",
+      "path": "/a-propos",
+      "lcp": 1052,
+      "inp": 48
+    }
+  ]
+}

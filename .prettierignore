@@ -1,0 +1,12 @@
+lib/db/generated
+pnpm-lock.yaml
+styles/tokens.css
+.next
+dist
+# Data, not code: kept exactly as produced (fixtures read by the tests, measures, legal texts).
+fixtures
+prisma/fixtures
+docs/perf
+docs/seo/data
+content
+public

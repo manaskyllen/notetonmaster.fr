@@ -1,0 +1,74 @@
+{
+ "/": {
+  "blocks": 1,
+  "objects": 1,
+  "errors": 0,
+  "warnings": 0,
+  "types": [
+   "WebSite"
+  ]
+ },
+ "/mentions/droit": {
+  "blocks": 2,
+  "objects": 2,
+  "errors": 0,
+  "warnings": 0,
+  "types": [
+   "BreadcrumbList",
+   "WebSite"
+  ]
+ },
+ "/universites/nantes-universite": {
+  "blocks": 3,
+  "objects": 3,
+  "errors": 0,
+  "warnings": 0,
+  "types": [
+   "BreadcrumbList",
+   "CollegeOrUniversity",
+   "WebSite"
+  ]
+ },
+ "/masters/nantes": {
+  "blocks": 2,
+  "objects": 2,
+  "errors": 0,
+  "warnings": 0,
+  "types": [
+   "BreadcrumbList",
+   "WebSite"
+  ]
+ },
+ "/masters/nantes/sciences-du-medicament-et-des-produits-sante": {
+  "blocks": 2,
+  "objects": 2,
+  "errors": 0,
+  "warnings": 0,
+  "types": [
+   "BreadcrumbList",
+   "WebSite"
+  ]
+ },
+ "/parcours/valorisation-des-nouveaux-patrimoines": {
+  "blocks": 3,
+  "objects": 3,
+  "errors": 0,
+  "warnings": 0,
+  "types": [
+   "BreadcrumbList",
+   "EducationalOccupationalProgram",
+   "WebSite"
+  ]
+ },
+ "/parcours/sciences-analytiques-universite-de-strasbourg": {
+  "blocks": 3,
+  "objects": 3,
+  "errors": 0,
+  "warnings": 0,
+  "types": [
+   "BreadcrumbList",
+   "EducationalOccupationalProgram",
+   "WebSite"
+  ]
+ }
+}

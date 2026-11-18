@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FICHES>
+<FICHE>
+  <ID_FICHE>30587</ID_FICHE>
+  <NUMERO_FICHE>RNCP42684</NUMERO_FICHE>
+  <ANCIENNES_CERTIFICATIONS>
+    <ANCIENNE_CERTIFICATION>
+      <ID_FICHE_ANCIENNE_CERTIFICATION>RNCP35804</ID_FICHE_ANCIENNE_CERTIFICATION>
+    </ANCIENNE_CERTIFICATION>
+  </ANCIENNES_CERTIFICATIONS>
+  <INTITULE>Culture, patrimoine et médiation (fiche nationale)</INTITULE>
+  <ABREGE>
+    <CODE>MASTER</CODE>
+    <LIBELLE>Master</LIBELLE>
+  </ABREGE>
+  <ETAT_FICHE>Publiée</ETAT_FICHE>
+  <FORMACODES>
+    <FORMACODE>
+      <CODE>46382</CODE>
+      <LIBELLE>Documentation audiovisuelle et multimédia</LIBELLE>
+    </FORMACODE>
+    <FORMACODE>
+      <CODE>44035</CODE>
+      <LIBELLE>Médiation socioculturelle</LIBELLE>
+    </FORMACODE>
+    <FORMACODE>
+      <CODE>32096</CODE>
+      <LIBELLE>Gestion entreprise culturelle</LIBELLE>
+    </FORMACODE>
+    <FORMACODE>
+      <CODE>14215</CODE>
+      <LIBELLE>Sciences et techniques patrimoine</LIBELLE>
+    </FORMACODE>
+  </FORMACODES>
+  <NOMENCLATURE_EUROPE>
+    <NIVEAU>NIV7</NIVEAU>
+    <LIBELLE>Niveau 7</LIBELLE>
+  </NOMENCLATURE_EUROPE>
+  <CODES_NSF>
+    <NSF>
+      <CODE>134g</CODE>
+      <LIBELLE>Art et patrimoine ; Art et communication</LIBELLE>
+    </NSF>
+    <NSF>
+      <CODE>335p</CODE>
+      <LIBELLE>Direction des centres de loisirs ou culturels</LIBELLE>
+    </NSF>
+    <NSF>
+      <CODE>342n</CODE>
+      <LIBELLE>Etudes et projets d expositions et de musées</LIBELLE>
+    </NSF>
+  </CODES_NSF>
+  <CERTIFICATEURS>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>11004401300040</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>MINISTERE DE L'ENSEIGNEMENT SUPERIEUR ET DE LA RECHERCHE</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2026</DATE_DERNIERE_MODIFICATION_ETAT>
+    </CERTIFICATEUR>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>13002974700016</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>NANTES UNIVERSITE</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2026</DATE_DERNIERE_MODIFICATION_ETAT>
+    </CERTIFICATEUR>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>19511296600799</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>UNIVERSITE DE REIMS CHAMPAGNE-ARDENNE (URCA)</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2026</DATE_DERNIERE_MODIFICATION_ETAT>
+    </CERTIFICATEUR>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>13002602400054</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>UNIVERSITE PARIS-SACLAY</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2026</DATE_DERNIERE_MODIFICATION_ETAT>
+      <SITE_INTERNET>https://www.universite-paris-saclay.fr/</SITE_INTERNET>
+    </CERTIFICATEUR>
+  </CERTIFICATEURS>
+  <EXISTENCE_PARTENAIRES>Oui</EXISTENCE_PARTENAIRES>
+  <PARTENAIRES>
+    <PARTENAIRE>
+      <NOM_PARTENAIRE>AGEFASUP</NOM_PARTENAIRE>
+      <SIRET_PARTENAIRE>83401260100029</SIRET_PARTENAIRE>
+      <HABILITATION_PARTENAIRE>HABILITATION_FORMER</HABILITATION_PARTENAIRE>
+      <ETAT_HABILITATION>Actif</ETAT_HABILITATION>
+      <DATE_ACTIF>22/07/2026</DATE_ACTIF>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2026</DATE_DERNIERE_MODIFICATION_ETAT>
+    </PARTENAIRE>
+    <PARTENAIRE>
+      <NOM_PARTENAIRE>UNION UNIVERSITE ECONOMIE</NOM_PARTENAIRE>
+      <SIRET_PARTENAIRE>41197343100033</SIRET_PARTENAIRE>
+      <HABILITATION_PARTENAIRE>HABILITATION_FORMER</HABILITATION_PARTENAIRE>
+      <ETAT_HABILITATION>Actif</ETAT_HABILITATION>
+      <DATE_ACTIF>15/09/2026</DATE_ACTIF>
+      <DATE_DERNIERE_MODIFICATION_ETAT>15/09/2026</DATE_DERNIERE_MODIFICATION_ETAT>
+    </PARTENAIRE>
+    <PARTENAIRE>
+      <NOM_PARTENAIRE>UNIVERSITE VERSAILLES ST QUENTIN YVELINE</NOM_PARTENAIRE>
+      <SIRET_PARTENAIRE>19781944400013</SIRET_PARTENAIRE>
+      <HABILITATION_PARTENAIRE>HABILITATION_ORGA_FORM</HABILITATION_PARTENAIRE>
+      <ETAT_HABILITATION>Actif</ETAT_HABILITATION>
+      <DATE_ACTIF>22/07/2026</DATE_ACTIF>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2026</DATE_DERNIERE_MODIFICATION_ETAT>
+    </PARTENAIRE>
+  </PARTENAIRES>
+  <ACTIVITES_VISEES>-Administration (gestion financière et budgétaire) des projets multi partenariaux culturels, de médiation des savoirs artistiques, scientifiques en France et à l’international.  - Gestion des projets multi partenariaux culturels, de médiation des savoirs artistiques, scientifiques en France et à l’international.  - Élaboration, planification et conduite des actions visant à créer des passerelles entre culture et public, ou entre différents publics dont les publics empêchés.  - Production et mise en œuvre d’actions de médiation culturelle, artistique et scientifique. Conduite des actions de diffusion et de communication de projets culturels, artistiques et scientifiques.  - Valorisation des savoirs scientifiques culturels et patrimoniaux, médiation et communications internes et externes.  - Synthèse de documents, maitrise et pratique du discours didactique et critique, communication dans au moins une langue étrangère (anglais).</ACTIVITES_VISEES>
+  <CAPACITES_ATTESTEES>- Identifier les usages numériques et les impacts de leur évolution sur le ou les domaines concernés par la mention  - Se servir de façon autonome des outils numériques avancés pour un ou plusieurs métiers ou secteurs de recherche du domaine  - Mobiliser des savoirs hautement spécialisés, dont certains sont à l’avant-garde du savoir dans un domaine de travail ou d’études, comme base d’une pensée originale   - Développer une conscience critique des savoirs dans un domaine et/ou à l’interface de plusieurs domaines   - Résoudre des problèmes pour développer de nouveaux savoirs et de nouvelles procédures et intégrer les savoirs de différents domaines  - Apporter des contributions novatrices dans le cadre d’échanges de haut niveau, et dans des contextes internationaux  - Conduire une analyse réflexive et distanciée prenant en compte les enjeux, les problématiques et la complexité d’une demande ou d’une situation afin de proposer des solutions adaptées et/ou innovantes en respect des évolutions de la règlementation  - Identifier, sélectionner et analyser avec esprit critique diverses ressources spécialisées pour documenter un sujet et synthétiser ces données en vue de leur exploitation  - Communiquer à des fins de formation ou de transfert de connaissances, par oral et par écrit, en français et dans au moins une langue étrangère  - Gérer des contextes professionnels ou d’études complexes, imprévisibles et qui nécessitent des approches stratégiques nouvelles  - Prendre des responsabilités pour contribuer aux savoirs et aux pratiques professionnelles et/ou pour réviser la performance stratégique d'une équipe  - Conduire un projet (conception, pilotage, coordination d’équipe, mise en œuvre et gestion, évaluation, diffusion) pouvant mobiliser des compétences pluridisciplinaires dans un cadre collaboratif   - Analyser ses actions en situation professionnelle, s’autoévaluer pour améliorer sa pratique dans le cadre d'une démarche qualité  - Respecter les principes d’éthique, de déontologie et de responsabilité sociale et environnementale  - Prendre en compte la problématique du handicap et de l'accessibilité dans chacune de ses actions professionnelles    - Analyser la faisabilité et concevoir un projet culturel, l'argumenter, en définir les phases, le calendrier et les moyens de mise en œuvre  - Définir la programmation en lien avec l’équipe de direction artistique et/ou scientifique  - Piloter la gestion financière, logistique et juridique d’une structure culturelle d’une structure culturelle  - Assurer l’interface avec les autres services  - Analyser les publics de la culture et les pratiques culturelles (conditions de production et de réception des biens culturels, publics éloignés et publics empêchés en se concentrant sur les dispositifs de médiation)   - Valoriser, sensibiliser et communiquer sur les patrimoines matériels et immatériels versus la diversité des publics (jeunes publics, publics adultes, publics empêchés...)  - Analyser les relations arts-sciences sous l'angle des processus de recherche, de découverte et de création  - Étudier la médiation culturelle dans ses aspects les plus généraux (historique de la médiation ; médiation et territoires sensibilisateurs et sociétaux ; médiation, médiateurs et espaces intermédiaires)  - Identifier les différents types de médias, spécialisés dans la culture, les arts, les sciences  - Médier les savoirs (approches formelles et informelles) et sensibiliser aux connaissances spécifiques  - Développer une médiation scientifique adaptée et souvent spécifiques de la médiation scientifique en vue d’une « mise en culture des Sciences » (approche historique et problèmes théoriques, dispositifs contemporains de médiation de la science et leurs enjeux)  - Concevoir et organiser un cycle de conférences et de débats, une animation, un atelier, un dispositif de médiation, et mettre en œuvre un dispositif d'évaluation</CAPACITES_ATTESTEES>
+  <SECTEURS_ACTIVITE>90.0 : Activités créatives, artistiques et de spectacle (section R)  91 : Bibliothèques, archives, musées et autres activités culturelles  Section P : Enseignement  Section J : Information et communication    Secteur culturel et patrimonial : grands organismes, entreprises (services d’archives, services culturels ou services de communication, de médiation artistique, scientifique et culturelle), administrations publiques centrales et territoriales, établissements publics, institutions culturelles, bibliothèques, archives nationales ou départementales, musées, salles de spectacles, maisons d’édition.    Secteur de l'éducation et de la formation : éducation nationale, enseignement supérieur, éducation privée.    Secteur de l'information et de la communication : entreprises (service documentation, communication multimédia, diffusion, archivage, médiation culturelle, artistique ou scientifique).</SECTEURS_ACTIVITE>
+  <TYPE_EMPLOI_ACCESSIBLES>Chargé de médiation culturelle dans des structures privées ou publiques  Responsable relations publiques, presse et médiation scientifique  Médiateur culturel, médiateur scientifique, responsable des activités scolaires   Chargé communication institutionnelle privée ou publique  Animateur scientifique   Animateur pédagogique   Régisseur des expositions  Chargé de communication auprès des ministères  Chargé de mission éducation artistique et culturelle  Adjoint à la direction de l'accueil et des relations avec les publics  Chargé de développement culturel  Chargé de communication scientifique  Chef de projet artistique, scientifique et de médiation  Chargé de projets arts-sciences et de médiation scientifique  Consultant en ingénierie culturelle  Chargé de valorisation des patrimoines  Chargé de coopération et d’action culturelle    Après 3 à 5 années d’expérience professionnelle, les diplômés pourront accéder à des postes de :  Chef de projets culturels  Chef d’un service d’action culturelle et/ou de médiation culturelle  Administrateur de festival ou d’équipement culturel    Sous réserve de réussite au concours de la catégorie A de la Fonction publique (MEAE) les diplômés pourront accéder à des postes de :   Attaché culturel </TYPE_EMPLOI_ACCESSIBLES>
+  <CODES_ROME>
+    <ROME>
+      <CODE>E1106</CODE>
+      <LIBELLE>Journalisme et information média</LIBELLE>
+    </ROME>
+    <ROME>
+      <CODE>K1601</CODE>
+      <LIBELLE>Gestion de l'information et de la documentation</LIBELLE>
+    </ROME>
+    <ROME>
+      <CODE>K1602</CODE>
+      <LIBELLE>Gestion de patrimoine culturel</LIBELLE>
+    </ROME>
+    <ROME>
+      <CODE>L1302</CODE>
+      <LIBELLE>Production et administration spectacle, cinéma et audiovisuel</LIBELLE>
+    </ROME>
+  </CODES_ROME>
+  <SI_JURY_FI>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :  - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation   - des professionnels qualifiés ayant contribué aux enseignements  - des professionnels qualifiés n'ayant pas contribué aux enseignements</COMPOSITION>
+  </SI_JURY_FI>
+  <SI_JURY_CA>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :  - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation   - des professionnels qualifiés ayant contribué aux enseignements  - des professionnels qualifiés n'ayant pas contribué aux enseignements</COMPOSITION>
+  </SI_JURY_CA>
+  <SI_JURY_FC>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :  - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation   - des professionnels qualifiés ayant contribué aux enseignements  - des professionnels qualifiés n'ayant pas contribué aux enseignements</COMPOSITION>
+  </SI_JURY_FC>
+  <SI_JURY_CQ>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :  - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation   - des professionnels qualifiés ayant contribué aux enseignements  - des professionnels qualifiés n'ayant pas contribué aux enseignements</COMPOSITION>
+  </SI_JURY_CQ>
+  <SI_JURY_CL>
+    <ACTIF>Non</ACTIF>
+  </SI_JURY_CL>
+  <SI_JURY_VAE>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend au moins deux personnes, dont au moins une personne qualifiée au titre de la certification visée.  Un président ou un responsable de jury est désigné parmi ses membres.  Les membres du jury ne doivent entretenir ou avoir entretenu aucune relation professionnelle ou personnelle avec le candidat, ni avoir accompagné le candidat dans sa démarche de validation des acquis de l'expérience.</COMPOSITION>
+  </SI_JURY_VAE>
+  <ACCESSIBLE_NOUVELLE_CALEDONIE>Non</ACCESSIBLE_NOUVELLE_CALEDONIE>
+  <ACCESSIBLE_POLYNESIE_FRANCAISE>Non</ACCESSIBLE_POLYNESIE_FRANCAISE>
+  <PUBLICATION_DECRET_GENERAL>
+    <PUBLICATION_JO>
+      <TITRE>.Code de l'éducation et notamment les articles L611-1 à L612-1-1, L612-2 à L612-4, D612-2 à R612-32-6, L613-1, D613-1, D613-6 et D613-7  Arrêté du 22 janvier 2014 fixant les modalités d'accréditation des établissements d'enseignement supérieur  Arrêté du 22 janvier 2014 fixant le cadre national des formations conduisant à la délivrance des diplômes nationaux de licence, de licence professionnelle et de master modifié  Arrêté du 30 juillet 2018 relatif au diplôme national de licence  Arrêté du 22 janvier 2014 fixant la nomenclature des mentions du diplôme national de licence modifié</TITRE>
+    </PUBLICATION_JO>
+  </PUBLICATION_DECRET_GENERAL>
+  <PUBLICATION_DECRET_CREATION>
+    <PUBLICATION_JO>
+      <TITRE>.</TITRE>
+    </PUBLICATION_JO>
+    <PUBLICATION_JO>
+      <TITRE>NANTES UNIVERSITE, Arrêté du : 10/04/2025    UNIVERSITE PARIS SACLAY, Arrêté du : 13/03/2026    UNIVERSITE DE REIMS, Arrêté du: 28/03/2024</TITRE>
+    </PUBLICATION_JO>
+  </PUBLICATION_DECRET_CREATION>
+  <PUBLICATION_DECRET_AUTRE>
+    <PUBLICATION_JO>
+      <TITRE>.</TITRE>
+    </PUBLICATION_JO>
+    <PUBLICATION_JO>
+      <TITRE>NANTES UNIVERSITE, Arrêté du : 10/04/2025    UNIVERSITE PARIS SACLAY, Arrêté du : 13/03/2026    UNIVERSITE DE REIMS, Arrêté du: 28/03/2024</TITRE>
+    </PUBLICATION_JO>
+  </PUBLICATION_DECRET_AUTRE>
+  <DATE_FIN_ENREGISTREMENT>05/06/2031</DATE_FIN_ENREGISTREMENT>
+  <DATE_EFFET>06/06/2026</DATE_EFFET>
+  <TYPE_ENREGISTREMENT>Enregistrement de droit</TYPE_ENREGISTREMENT>
+  <BLOCS_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP42684BC01</CODE>
+      <LIBELLE>Mettre en œuvre les usages avancés et spécialisés des outils numériques</LIBELLE>
+      <LISTE_COMPETENCES>- Identifier les usages numériques et les impacts de leur évolution sur le ou les domaines concernés par la mention  - Se servir de façon autonome des outils numériques avancés pour un ou plusieurs métiers ou secteurs de recherche du domaine</LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc.   Ces modalités d’évaluation peuvent être adaptées en fonction de la voie d’accès à la certification.</MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP42684BC02</CODE>
+      <LIBELLE>Mobiliser et produire des savoirs hautement spécialisés</LIBELLE>
+      <LISTE_COMPETENCES>- Mobiliser des savoirs hautement spécialisés, dont certains sont à l’avant-garde du savoir dans un domaine de travail ou d’études, comme base d’une pensée originale  - Développer une conscience critique des savoirs dans un domaine et/ou à l’interface de plusieurs domaines   - Résoudre des problèmes pour développer de nouveaux savoirs et de nouvelles procédures et intégrer les savoirs de différents domaines  - Apporter des contributions novatrices dans le cadre d’échanges de haut niveau, et dans des contextes internationaux  - Conduire une analyse réflexive et distanciée prenant en compte les enjeux, les problématiques et la complexité d’une demande ou d’une situation afin de proposer des solutions adaptées et/ou innovantes en respect des évolutions de la réglementation</LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc.   Ces modalités d’évaluation peuvent être adaptées en fonction de la voie d’accès à la certification.</MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP42684BC03</CODE>
+      <LIBELLE>Mettre en œuvre une communication spécialisée pour le transfert de connaissances</LIBELLE>
+      <LISTE_COMPETENCES>- Identifier, sélectionner et analyser avec esprit critique diverses ressources spécialisées pour documenter un sujet et synthétiser ces données en vue de leur exploitation  - Communiquer à des fins de formation ou de transfert de connaissances, par oral et par écrit, en français et dans au moins une langue étrangère</LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc.   Ces modalités d’évaluation peuvent être adaptées en fonction de la voie d’accès à la certification.</MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP42684BC04</CODE>
+      <LIBELLE>Contribuer à la transformation en contexte professionnel</LIBELLE>
+      <LISTE_COMPETENCES>- Gérer des contextes professionnels ou d’études complexes, imprévisibles et qui nécessitent des approches stratégiques nouvelles  - Prendre des responsabilités pour contribuer aux savoirs et aux pratiques professionnelles et/ou pour réviser la performance stratégique d'une équipe  - Conduire un projet (conception, pilotage, coordination d’équipe, mise en œuvre et gestion, évaluation, diffusion) pouvant mobiliser des compétences pluridisciplinaires dans un cadre collaboratif   - Analyser ses actions en situation professionnelle, s’autoévaluer pour améliorer sa pratique dans le cadre d'une démarche qualité  - Respecter les principes d’éthique, de déontologie et de responsabilité sociale et environnementale  - Prendre en compte la problématique du handicap et de l'accessibilité dans chacune de ses actions professionnelles</LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc.   Ces modalités d’évaluation peuvent être adaptées en fonction de la voie d’accès à la certification.</MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP42684BC05</CODE>
+      <LIBELLE>Administrer et gérer des structures</LIBELLE>
+      <LISTE_COMPETENCES>- Analyser la faisabilité et concevoir un projet culturel, l'argumenter, en définir les phases, le calendrier et les moyens de mise en œuvre  - Définir la programmation en lien avec l’équipe de direction artistique et/ou scientifique  - Piloter la gestion financière, logistique et juridique d’une structure culturelle   - Assurer l’interface avec les autres services</LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc.   Ces modalités d’évaluation peuvent être adaptées en fonction de la voie d’accès à la certification.</MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP42684BC06</CODE>
+      <LIBELLE>Concevoir, élaborer et planifier des projets de médiation culturelle</LIBELLE>
+      <LISTE_COMPETENCES>- Analyser les publics de la culture et les pratiques culturelles (conditions de production et de réception des biens culturels, publics éloignés et publics empêchés en se concentrant sur les dispositifs de médiation)   - Valoriser, sensibiliser et communiquer sur les patrimoines matériels et immatériels versus la diversité des publics (jeunes publics, publics adultes, publics empêchés...)  - Analyser les relations arts-sciences sous l'angle des processus de recherche, de découverte et de création  - Étudier la médiation culturelle dans ses aspects les plus généraux (historique de la médiation ; médiation et territoires sensibilisateurs et sociétaux ; médiation, médiateurs et espaces intermédiaires)</LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc.   Ces modalités d’évaluation peuvent être adaptées en fonction de la voie d’accès à la certification.</MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP42684BC07</CODE>
+      <LIBELLE>Valoriser des patrimoines culturels et effectuer des actions de médiation</LIBELLE>
+      <LISTE_COMPETENCES>- Identifier les différents types de médias, spécialisés dans la culture, les arts, les sciences  - Médier les savoirs (approches formelles et informelles) et sensibiliser aux connaissances spécifiques  - Développer une médiation scientifique adaptée et souvent spécifiques de la médiation scientifique en vue d’une « mise en culture des Sciences » (JM Levy-Leblond) (approche historique et problèmes théoriques, dispositifs contemporains de médiation de la science et leurs enjeux)  - Concevoir et organiser un cycle de conférences et de débats, une animation, un atelier, un dispositif de médiation, et mettre en œuvre un dispositif d'évaluation</LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc.   Ces modalités d’évaluation peuvent être adaptées en fonction de la voie d’accès à la certification.</MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+  </BLOCS_COMPETENCES>
+  <OBJECTIFS_CONTEXTE>Les industries culturelles et créatives, qui représentaient en 2024 2,9% du PIB en France, reposent sur des métiers très structurés et spécialisés : administration, gestion, production, conception, médiation.    Dans cette optique, la mention Culture, Patrimoine et Médiation est une formation alliant recherche universitaire dans le domaine des humanités, sciences du patrimoine et études culturelles, et acquisition de compétences professionnelles. Les intervenants sont des enseignants-chercheurs ainsi que des professionnels du monde de la culture dont l’apport garantit l’adéquation de la formation aux évolutions du secteur.</OBJECTIFS_CONTEXTE>
+  <ACTIF>Oui</ACTIF>
+  <PREREQUIS_ENTREE_FORMATION>Les prérequis pour l'entrée en 1ère année du cycle de formation sont précisés dans MonMaster :     </PREREQUIS_ENTREE_FORMATION>
+  <DATE_DE_PUBLICATION>22/07/2026</DATE_DE_PUBLICATION>
+  <DATE_LIMITE_DELIVRANCE>05/06/2034</DATE_LIMITE_DELIVRANCE>
+</FICHE>
+    
+<FICHE>
+  <ID_FICHE>21485</ID_FICHE>
+  <NUMERO_FICHE>RNCP35804</NUMERO_FICHE>
+  <NOUVELLES_CERTIFICATIONS>
+    <NOUVELLE_CERTIFICATION>
+      <ID_FICHE_NOUVELLE_CERTIFICATION>RNCP42684</ID_FICHE_NOUVELLE_CERTIFICATION>
+    </NOUVELLE_CERTIFICATION>
+  </NOUVELLES_CERTIFICATIONS>
+  <INTITULE>Culture, patrimoine et médiation (fiche nationale)</INTITULE>
+  <ABREGE>
+    <CODE>MASTER</CODE>
+    <LIBELLE>Master</LIBELLE>
+  </ABREGE>
+  <ETAT_FICHE>Publiée</ETAT_FICHE>
+  <FORMACODES>
+    <FORMACODE>
+      <CODE>14215</CODE>
+      <LIBELLE>Sciences et techniques patrimoine</LIBELLE>
+    </FORMACODE>
+    <FORMACODE>
+      <CODE>32096</CODE>
+      <LIBELLE>Gestion entreprise culturelle</LIBELLE>
+    </FORMACODE>
+    <FORMACODE>
+      <CODE>46382</CODE>
+      <LIBELLE>Documentation audiovisuelle et multimédia</LIBELLE>
+    </FORMACODE>
+    <FORMACODE>
+      <CODE>44035</CODE>
+      <LIBELLE>Médiation socioculturelle</LIBELLE>
+    </FORMACODE>
+  </FORMACODES>
+  <NOMENCLATURE_EUROPE>
+    <NIVEAU>NIV7</NIVEAU>
+    <LIBELLE>Niveau 7</LIBELLE>
+  </NOMENCLATURE_EUROPE>
+  <CODES_NSF>
+    <NSF>
+      <CODE>335p</CODE>
+      <LIBELLE>Direction des centres de loisirs ou culturels</LIBELLE>
+    </NSF>
+    <NSF>
+      <CODE>342n</CODE>
+      <LIBELLE>Etudes et projets d expositions et de musées</LIBELLE>
+    </NSF>
+    <NSF>
+      <CODE>134g</CODE>
+      <LIBELLE>Art et patrimoine ; Art et communication</LIBELLE>
+    </NSF>
+  </CODES_NSF>
+  <CERTIFICATEURS>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>11004401300040</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>MINISTERE DE L'ENSEIGNEMENT SUPERIEUR ET DE LA RECHERCHE</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2021</DATE_DERNIERE_MODIFICATION_ETAT>
+    </CERTIFICATEUR>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>13002974700016</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>NANTES UNIVERSITE</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>28/04/2025</DATE_DERNIERE_MODIFICATION_ETAT>
+    </CERTIFICATEUR>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>19511296600799</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>UNIVERSITE DE REIMS CHAMPAGNE-ARDENNE (URCA)</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>12/12/2024</DATE_DERNIERE_MODIFICATION_ETAT>
+    </CERTIFICATEUR>
+    <CERTIFICATEUR>
+      <SIRET_CERTIFICATEUR>13002602400054</SIRET_CERTIFICATEUR>
+      <NOM_CERTIFICATEUR>UNIVERSITE PARIS-SACLAY</NOM_CERTIFICATEUR>
+      <ETAT_CERTIFICATEUR>Actif</ETAT_CERTIFICATEUR>
+      <DATE_DERNIERE_MODIFICATION_ETAT>22/07/2021</DATE_DERNIERE_MODIFICATION_ETAT>
+      <SITE_INTERNET>https://www.universite-paris-saclay.fr/</SITE_INTERNET>
+    </CERTIFICATEUR>
+  </CERTIFICATEURS>
+  <EXISTENCE_PARTENAIRES>Oui</EXISTENCE_PARTENAIRES>
+  <PARTENAIRES>
+    <PARTENAIRE>
+      <NOM_PARTENAIRE>AGEFASUP</NOM_PARTENAIRE>
+      <SIRET_PARTENAIRE>83401260100029</SIRET_PARTENAIRE>
+      <HABILITATION_PARTENAIRE>HABILITATION_FORMER</HABILITATION_PARTENAIRE>
+      <ETAT_HABILITATION>Actif</ETAT_HABILITATION>
+      <DATE_ACTIF>09/12/2025</DATE_ACTIF>
+      <DATE_DERNIERE_MODIFICATION_ETAT>09/12/2025</DATE_DERNIERE_MODIFICATION_ETAT>
+    </PARTENAIRE>
+    <PARTENAIRE>
+      <NOM_PARTENAIRE>UNION UNIVERSITE ECONOMIE</NOM_PARTENAIRE>
+      <SIRET_PARTENAIRE>41197343100033</SIRET_PARTENAIRE>
+      <HABILITATION_PARTENAIRE>HABILITATION_FORMER</HABILITATION_PARTENAIRE>
+      <ETAT_HABILITATION>Actif</ETAT_HABILITATION>
+      <DATE_ACTIF>21/08/2025</DATE_ACTIF>
+      <DATE_DERNIERE_MODIFICATION_ETAT>21/08/2025</DATE_DERNIERE_MODIFICATION_ETAT>
+    </PARTENAIRE>
+    <PARTENAIRE>
+      <NOM_PARTENAIRE>UNIVERSITE VERSAILLES ST QUENTIN YVELINE</NOM_PARTENAIRE>
+      <SIRET_PARTENAIRE>19781944400013</SIRET_PARTENAIRE>
+      <HABILITATION_PARTENAIRE>HABILITATION_ORGA_FORM</HABILITATION_PARTENAIRE>
+      <ETAT_HABILITATION>Actif</ETAT_HABILITATION>
+      <DATE_ACTIF>02/02/2023</DATE_ACTIF>
+      <DATE_DERNIERE_MODIFICATION_ETAT>02/02/2023</DATE_DERNIERE_MODIFICATION_ETAT>
+    </PARTENAIRE>
+  </PARTENAIRES>
+  <ACTIVITES_VISEES>- Administration (gestion financière et budgétaire) des projets multi partenariaux culturels, de médiation des savoirs artistiques, scientifiques en France et à l’international.  - Gestion des projets multi partenariaux culturels, de médiation des savoirs artistiques, scientifiques en France et à l’international.    - Elaboration, planification et conduite des actions visant à créer des passerelles entre culture et public, ou entre différents publics dont les publics empêchés.  - Production et mise en œuvre d’actions de médiation culturelles, artistiques et scientifiques. Conduite des actions de diffusion et de communication de projets culturels, artistiques et scientifiques.  - Valorisation des savoirs scientifiques culturels et patrimoniaux, médiation et communications internes et externes.  - Synthèse de documents, maitrise et pratique du discours didactique et critique, communication dans une langue étrangère (anglais).   </ACTIVITES_VISEES>
+  <CAPACITES_ATTESTEES>  Compétences transversales   - Identifier les usages numériques et les impacts de leur évolution sur le ou les domaines concernés par la mention  - Se servir de façon autonome des outils numériques avancés pour un ou plusieurs métiers ou secteurs de recherche du domaine  - Mobiliser des savoirs hautement spécialisés, dont certains sont à l’avant-garde du savoir dans un domaine de travail ou d’études, comme base d’une pensée originale    - Développer une conscience critique des savoirs dans un domaine et/ou à l’interface de plusieurs domaines    - Résoudre des problèmes pour développer de nouveaux savoirs et de nouvelles procédures et intégrer les savoirs de différents domaines  - Apporter des contributions novatrices dans le cadre d’échanges de haut niveau, et dans des contextes internationaux  - Conduire une analyse réflexive et distanciée prenant en compte les enjeux, les problématiques et la complexité d’une demande ou d’une situation afin de proposer des solutions adaptées et/ou innovantes en respect des évolutions de la règlementation  - Identifier, sélectionner et analyser avec esprit critique diverses ressources spécialisées pour documenter un sujet et synthétiser ces données en vue de leur exploitation  - Communiquer à des fins de formation ou de transfert de connaissances, par oral et par écrit, en français et dans au moins une langue étrangère  - Gérer des contextes professionnels ou d’études complexes, imprévisibles et qui nécessitent des approches stratégiques nouvelles  - Prendre des responsabilités pour contribuer aux savoirs et aux pratiques professionnelles et/ou pour réviser la performance stratégique d'une équipe  - Conduire un projet (conception, pilotage, coordination d’équipe, mise en œuvre et gestion, évaluation, diffusion) pouvant mobiliser des compétences pluridisciplinaires dans un cadre collaboratif    - Analyser ses actions en situation professionnelle, s’autoévaluer pour améliorer sa pratique dans le cadre d'une démarche qualité  - Respecter les principes d’éthique, de déontologie et de responsabilité environnementale       Dans certains établissements, d'autres compétences spécifiques peuvent permettre de décliner, préciser ou compléter celles proposées dans le cadre de la mention au niveau national. Pour en savoir plus se reporter au site de l'établissement.    Compétences spécifiques  - Analyser les relations arts-sciences sous l'angle des processus de recherche, de découverte et de création.  - Étudier la médiation culturelle dans ses aspects les plus généraux (historique de la médiation ; médiation et territoires sensibilisateurs et sociétaux ; médiation, médiateurs et espaces intermédiaires).  - Médier les savoirs (approches formelles et informelles) et sensibiliser aux connaissances spécifiques.  - Analyser la faisabilité et concevoir un projet culturel, l'argumenter, construire une médiation, construire des interventions face public, en définir les phases, le calendrier et les moyens de mise en œuvre.  - Valoriser, sensibiliser et communiquer sur les patrimoines matériels et immatériels versus la diversité des publics (jeunes publics, publics adultes, publics empêchés...).  - Développer une médiation scientifique adaptée et souvent spécifique de la médiation scientifique en vue d’une « mise en culture des Sciences » (JM Levy-Leblond) (approche historique et problèmes théoriques, dispositifs contemporains de médiation de la science et leurs enjeux).  - Concevoir et organiser un cycle de conférences et de débats, une animation, un atelier, un dispositif de médiation, et mettre en œuvre un dispositif d'évaluation.  - Identifier les différents types de médias, spécialisés dans la culture, les arts, les sciences.  - Analyser les publics de la culture et les pratiques culturelles (conditions de production et de réception des biens culturels, publics éloignés et publics empêchés en se concentrant sur les dispositifs de médiation).  - Disposer d’une solide culture générale, notamment en matière de mouvements culturels et artistiques, d’histoires des politiques et institutions culturelles.  - Identifier la structuration, les acteurs principaux et l’actualité du monde de la culture.  - Maîtriser l’environnement juridique, économique, politique et organisationnel des métiers de la culture, du patrimoine et de la médiation.  - Maîtriser les savoirs et les compétences en matière d’administration, de production, de gestion d’équipes, de gestion budgétaire, de pilotage et de diffusion (recherche de partenaires, élaboration de planning, élaboration d’un plan de communication).  - Maîtrise les méthodologies de la recherche universitaire.  - Analyser un objet de recherche.  - Conduire un projet de recherche.  - Communiquer sur son objet de recherche.  - Rédiger un mémoire de recherche.  - Rédiger des synthèses de document.  - Maîtriser le discours critique.  - Produire, planifier et mettre en œuvre des actions culturelles ou artistiques.  - Produire des évènements culturels.  - Maîtriser les étapes du montage d’un projet culturel, d’un plan de médiation culturelle et d’un plan de valorisation.  - Produire et collaborer au montage de projets culturels (recherche de partenaires, de lieux) en France et à l’international.  - Administrer et gérer des projets.  - Elaborer et conduire des actions de médiation culturelle, de médiation des savoirs artistiques ou scientifiques en France ou à l’étranger.  - Conduire des actions de diffusion et de communication de projets culturels.  - Maîtriser l’anglais.  - Evoluer dans un milieu professionnel interculturel.  - Utiliser de façon autonome et créative des outils de graphisme et du multimédia en usage dans le secteur culturel.   </CAPACITES_ATTESTEES>
+  <SECTEURS_ACTIVITE>90.0 : Activités créatives, artistiques et de spectacle  91 : Bibliothèques, archives, musées et autres activités culturelles  Section P : Enseignement  Section J : Information et communication       Secteur culturel et patrimonial : grands organismes, entreprises (services d’archives, services culturels ou services de communication, de médiation artistique, scientifique et culturelle), administrations publiques centrales et territoriales, établissements publics, institutions culturelles, bibliothèques, archives nationales ou départementales, musées, salles de spectacles, maisons d’édition  Secteur de l'éducation et de la formation : éducation nationale, enseignement supérieur, éducation privée  Secteur de l'information et de la communication : entreprises (service documentation, communication multimédia, diffusion, archivage, médiation culturelle, artistique ou scientifique)  </SECTEURS_ACTIVITE>
+  <TYPE_EMPLOI_ACCESSIBLES>Chargé de médiation culturelle dans des structures privées ou publiques  Responsable relations publiques, presse et médiation scientifique  Au sein de Centres de culture scientifique, technique et industrielle : responsable des activités scolaires et des formations, médiateur scientifique, direction ou adjoint de direction    Chef de service communication institutionnelle privée ou publique  Animateur scientifique Animateur pédagogique Régisseur des expositions    Chargé de coordination auprès des ministères  Chargé de mission éducation artistique et culturelle  Adjoint à la direction de l'accueil et des relations avec les publics    Chargé de développement culturel,    Chargé de communication scientifique  Chef de projet artistique, scientifique et de médiation  Chargé de projets arts-sciences et de médiation scientifique  Administrateur de festival ou d’équipement culturel  « Regissor » culturel  Consultant en ingénierie culturelle  Chargé de valorisation des patrimoines    </TYPE_EMPLOI_ACCESSIBLES>
+  <CODES_ROME>
+    <ROME>
+      <CODE>E1106</CODE>
+      <LIBELLE>Journalisme et information média</LIBELLE>
+    </ROME>
+    <ROME>
+      <CODE>K1602</CODE>
+      <LIBELLE>Gestion de patrimoine culturel</LIBELLE>
+    </ROME>
+    <ROME>
+      <CODE>K1601</CODE>
+      <LIBELLE>Gestion de l'information et de la documentation</LIBELLE>
+    </ROME>
+    <ROME>
+      <CODE>L1302</CODE>
+      <LIBELLE>Production et administration spectacle, cinéma et audiovisuel</LIBELLE>
+    </ROME>
+    <ROME>
+      <CODE>G1202</CODE>
+      <LIBELLE>Animation d'activités culturelles ou ludiques</LIBELLE>
+    </ROME>
+  </CODES_ROME>
+  <SI_JURY_FI>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :  - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation    - des professionnels qualifiés ayant contribué aux enseignements  - des professionnels qualifiés n'ayant pas contribué aux enseignements  </COMPOSITION>
+  </SI_JURY_FI>
+  <SI_JURY_CA>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :    - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation    - des professionnels qualifiés ayant contribué aux enseignements  - des professionnels qualifiés n'ayant pas contribué aux enseignements  </COMPOSITION>
+  </SI_JURY_CA>
+  <SI_JURY_FC>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :  - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation    - des professionnels qualifiés ayant contribué aux enseignements    - des professionnels qualifiés n'ayant pas contribué aux enseignements  </COMPOSITION>
+  </SI_JURY_FC>
+  <SI_JURY_CQ>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION>Leur composition comprend :    - une moitié d'enseignants-chercheurs, d'enseignants ou de chercheurs participant à la formation     - des professionnels qualifiés ayant contribué aux enseignements    - des professionnels qualifiés n'ayant pas contribué aux enseignements  </COMPOSITION>
+  </SI_JURY_CQ>
+  <SI_JURY_CL>
+    <ACTIF>Non</ACTIF>
+  </SI_JURY_CL>
+  <SI_JURY_VAE>
+    <ACTIF>Oui</ACTIF>
+    <COMPOSITION> Composition définie par le Code de l'éducation : article L613-4 modifié par la loi n°2016-1088 du 8 août 2016 - art. 78 </COMPOSITION>
+  </SI_JURY_VAE>
+  <ACCESSIBLE_NOUVELLE_CALEDONIE>Non</ACCESSIBLE_NOUVELLE_CALEDONIE>
+  <ACCESSIBLE_POLYNESIE_FRANCAISE>Non</ACCESSIBLE_POLYNESIE_FRANCAISE>
+  <PUBLICATION_DECRET_GENERAL>
+    <PUBLICATION_JO>
+      <TITRE>- Arrêté du 22 janvier 2014 fixant les modalités d'accréditation d'établissements d’enseignement supérieur    - Arrêté du 22 janvier 2014 fixant le cadre national des formations conduisant à la délivrance des diplômes nationaux de licence, de licence professionnelle et de master    - Arrêté du 25 avril 2002 relatif au diplôme national de master, publié au J.O du 27 avril 2002    - Arrêté du 4 février 2014 fixant la nomenclature des mentions du diplôme national de master  - Arrêté du 30 juillet 2018 modifiant l'arrêté du 22 janvier 2014 fixant le cadre national des formations conduisant à la délivrance des diplômes nationaux de licence, de licence professionnelle et de master   </TITRE>
+    </PUBLICATION_JO>
+  </PUBLICATION_DECRET_GENERAL>
+  <PUBLICATION_DECRET_CREATION>
+    <PUBLICATION_JO>
+      <TITRE>UNIVERSITÉ DE REIMS CHAMPAGNE-ARDENNE, arrêté du : 28/03/2024</TITRE>
+    </PUBLICATION_JO>
+    <PUBLICATION_JO>
+      <TITRE>NANTES UNIVERSITÉ, arrêté du : 10/04/2025</TITRE>
+    </PUBLICATION_JO>
+    <PUBLICATION_JO>
+      <TITRE>UNIVERSITÉ PARIS-SACLAY, arrêté du : 12/07/2021</TITRE>
+    </PUBLICATION_JO>
+  </PUBLICATION_DECRET_CREATION>
+  <PUBLICATION_DECRET_AUTRE>
+    <PUBLICATION_JO>
+      <TITRE>UNIVERSITÉ DE REIMS CHAMPAGNE-ARDENNE, arrêté du : 28/03/2024</TITRE>
+    </PUBLICATION_JO>
+    <PUBLICATION_JO>
+      <TITRE>NANTES UNIVERSITÉ, arrêté du : 10/04/2025</TITRE>
+    </PUBLICATION_JO>
+    <PUBLICATION_JO>
+      <TITRE>UNIVERSITÉ PARIS-SACLAY, arrêté du : 12/07/2021</TITRE>
+    </PUBLICATION_JO>
+  </PUBLICATION_DECRET_AUTRE>
+  <LIEN_URL_DESCRIPTION>    https://www.univ-nantes.fr/     </LIEN_URL_DESCRIPTION>
+  <DATE_FIN_ENREGISTREMENT>15/07/2026</DATE_FIN_ENREGISTREMENT>
+  <DATE_EFFET>16/07/2021</DATE_EFFET>
+  <TYPE_ENREGISTREMENT>Enregistrement de droit</TYPE_ENREGISTREMENT>
+  <BLOCS_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP35804BC01</CODE>
+      <LIBELLE>Usages avancés et spécialisés des outils numériques</LIBELLE>
+      <LISTE_COMPETENCES>-  Identifier les usages numériques et les impacts de leur évolution sur le ou   les domaines concernés par la mention  -  Se servir de façon autonome des outils numériques avancés pour un ou  plusieurs métiers ou secteurs de recherche du domaine      </LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc. Ces modalités d’évaluation peuvent être adaptées en fonction du chemin d’accès à la certification : formation initiale, VAE, formation continue. </MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP35804BC02</CODE>
+      <LIBELLE>Développement et intégration de savoirs hautement spécialisés</LIBELLE>
+      <LISTE_COMPETENCES>- Mobiliser des savoirs hautement spécialisés, dont certains sont à l’avant-garde du  savoir dans un domaine de travail ou d’études, comme base d’une pensée  originale  - Développer une conscience critique des savoirs dans un  domaine et/ou à l’interface de plusieurs domaines    - Résoudre des problèmes pour développer de  nouveaux savoirs et de nouvelles procédures et intégrer les savoirs de  différents domaines    - Apporter des contributions novatrices dans le cadre d’échanges de haut niveau, et dans des contextes internationaux  - Conduire une analyse réflexive et distanciée prenant en compte les enjeux, les problématiques et la complexité d’une demande ou d’une situation afin de proposer des solutions adaptées et/ou innovantes en respect des évolutions de la réglementation          </LISTE_COMPETENCES>
+      <MODALITES_EVALUATION> Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc. Ces modalités d’évaluation peuvent être adaptées en fonction du chemin d’accès à la certification : formation initiale, VAE, formation continue. </MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP35804BC03</CODE>
+      <LIBELLE>Communication spécialisée pour le transfert de connaissance</LIBELLE>
+      <LISTE_COMPETENCES>- Identifier, sélectionner et analyser avec esprit critique diverses ressources spécialisées pour documenter un sujet et synthétiser ces données en vue de leur exploitation     - Communiquer à des fins de formation ou de transfert de connaissances, par oral et par écrit, en français et dans au moins une langue étrangère      </LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc. Ces modalités d’évaluation peuvent être adaptées en fonction du chemin d’accès à la certification : formation initiale, VAE, formation continue. </MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP35804BC04</CODE>
+      <LIBELLE>Appui à la transformation en contexte professionnel</LIBELLE>
+      <LISTE_COMPETENCES>- Gérer des contextes professionnels ou d’études complexes, imprévisibles et qui nécessitent des approches stratégiques nouvelles  - Prendre des responsabilités pour contribuer aux savoirs et aux pratiques professionnelles et/ou pour réviser la performance stratégique d'une équipe     - Conduire un projet (conception, pilotage, coordination d’équipe, mise en œuvre et gestion, évaluation, diffusion) pouvant mobiliser des compétences pluridisciplinaires dans un cadre collaboratif      - Analyser ses actions en situation professionnelle, s’autoévaluer pour améliorer sa pratique dans le cadre d'une démarche qualité  - Respecter les principes d’éthique, de déontologie et de responsabilité environnementale  </LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc. Ces modalités d’évaluation peuvent être adaptées en fonction du chemin d’accès à la certification : formation initiale, VAE, formation continue. </MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP35804BC05</CODE>
+      <LIBELLE>Administration et gestion de structures</LIBELLE>
+      <LISTE_COMPETENCES>- Analyser la faisabilité et concevoir un projet culturel, l'argumenter, construire une médiation, construire des interventions face public, en définir les phases, le calendrier et les moyens de mise en œuvre     - Valoriser, sensibiliser et communiquer sur les patrimoines matériels et immatériels versus la diversité des publics (jeunes publics, publics adultes, publics empêchés...)     - Analyser les publics de la culture et les pratiques culturelles (conditions de production et de réception des biens culturels, publics éloignés et publics empêchés en se concentrant sur les dispositifs de médiation)      </LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc. Ces modalités d’évaluation peuvent être adaptées en fonction du chemin d’accès à la certification : formation initiale, VAE, formation continue. </MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP35804BC06</CODE>
+      <LIBELLE>Conception, élaboration et planification de projets de médiation culturelle</LIBELLE>
+      <LISTE_COMPETENCES>- Identifier les différents types de médias, spécialisés dans la culture, les arts, les sciences     - Analyser les relations arts-sciences sous l'angle des processus de recherche, de découverte et de création     - Étudier la médiation culturelle dans ses aspects les plus généraux (historique de la médiation ; médiation et territoires sensibilisateurs et sociétaux ; médiation, médiateurs et espaces intermédiaires)  </LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc. Ces modalités d’évaluation peuvent être adaptées en fonction du chemin d’accès à la certification : formation initiale, VAE, formation continue. </MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+    <BLOC_COMPETENCES>
+      <CODE>RNCP35804BC07</CODE>
+      <LIBELLE>Valorisation des patrimoines culturels et médiation</LIBELLE>
+      <LISTE_COMPETENCES>- Médier les savoirs (approches formelles et  informelles) et sensibiliser aux connaissances spécifiques     - Développer une  médiation scientifique adaptée et souvent spécifiques de la médiation  scientifique en vue d’une « mise en culture des Sciences » (JM Levy-Leblond) (approche historique et problèmes théoriques, dispositifs contemporains de   médiation de la science et leurs enjeux)     - Concevoir et organiser un cycle de conférences et de débats, une animation, un atelier, un dispositif de  médiation, et mettre en œuvre un dispositif d'évaluation      </LISTE_COMPETENCES>
+      <MODALITES_EVALUATION>Chaque certificateur accrédité met en œuvre les modalités qu’il juge adaptées : rendu de travaux, mise en situation, évaluation de projet, etc. Ces modalités d’évaluation peuvent être adaptées en fonction du chemin d’accès à la certification : formation initiale, VAE, formation continue. </MODALITES_EVALUATION>
+    </BLOC_COMPETENCES>
+  </BLOCS_COMPETENCES>
+  <OBJECTIFS_CONTEXTE>Le master est un diplôme national de l'enseignement supérieur conférant à son titulaire le grade universitaire de master. Il confère les mêmes droits à tous ses titulaires, quel que soit l'établissement qui l'a délivré. Le master atteste l'acquisition d'un socle de connaissances et de compétences majoritairement adossées à la recherche dans un champ disciplinaire ou pluridisciplinaire. Le master prépare à la poursuite d'études en doctorat comme à l'insertion professionnelle immédiate après son obtention et est organisé pour favoriser la formation tout au long de la vie.    Les parcours de formation en master tiennent compte de la diversité et des spécificités des publics accueillis en formation initiale et en formation continue.   </OBJECTIFS_CONTEXTE>
+  <ACTIF>Non</ACTIF>
+  <DATE_DE_PUBLICATION>22/07/2021</DATE_DE_PUBLICATION>
+  <DATE_LIMITE_DELIVRANCE>15/07/2029</DATE_LIMITE_DELIVRANCE>
+</FICHE>
+    
+</FICHES>

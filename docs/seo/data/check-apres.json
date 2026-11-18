@@ -1,0 +1,13 @@
+{
+  "url": "http://nm-prodlocal:3000",
+  "production": false,
+  "seconds": 229,
+  "sitemaps": 6,
+  "sitemapUrls": 2110,
+  "pagesFetched": 5402,
+  "indexablePages": 2280,
+  "errors": {},
+  "warnings": {},
+  "errorList": [],
+  "warningList": []
+}

@@ -1,0 +1,1439 @@
+{
+ "generatedFrom": "docs/sources/programmes.md (reconnaissance du 14/11/2026)",
+ "profiles": [
+  {
+   "uai": "0952259P",
+   "name": "CY Cergy Paris Université",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formation.cyu.fr",
+    "www.cyu.fr"
+   ],
+   "sitemaps": [
+    "https://formation.cyu.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formation.cyu.fr/fr/index.html"
+   ]
+  },
+  {
+   "uai": "0310152X",
+   "name": "Institut national des sciences appliquées de Toulouse",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formation.insa-toulouse.fr",
+    "www.insa-toulouse.fr"
+   ],
+   "sitemaps": [
+    "https://www.insa-toulouse.fr/sitemap_index.xml",
+    "https://www.insa-toulouse.fr/formation-sitemap.xml",
+    "https://formation.insa-toulouse.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formation.insa-toulouse.fr/"
+   ]
+  },
+  {
+   "uai": "0720916E",
+   "name": "Le Mans Université",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "www.univ-lemans.fr"
+   ],
+   "sitemaps": [
+    "http://www.univ-lemans.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-lemans.fr/fr/formation/trouver-sa-formation.html"
+   ]
+  },
+  {
+   "uai": "0301911P",
+   "name": "Nîmes université",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.unimes.fr",
+    "www.unimes.fr"
+   ],
+   "sitemaps": [
+    "https://www.unimes.fr/sitemap.xml",
+    "https://formations.unimes.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.unimes.fr/"
+   ]
+  },
+  {
+   "uai": "0331766R",
+   "name": "Université Bordeaux Montaigne",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.u-bordeaux-montaigne.fr",
+    "www.u-bordeaux-montaigne.fr"
+   ],
+   "sitemaps": [
+    "https://www.u-bordeaux-montaigne.fr/sitemap.xml",
+    "https://formations.u-bordeaux-montaigne.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.u-bordeaux-montaigne.fr/"
+   ]
+  },
+  {
+   "uai": "0212296G",
+   "name": "Université Bourgogne Europe",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.ube.fr",
+    "www.ube.fr"
+   ],
+   "sitemaps": [
+    "https://www.ube.fr/sitemap.xml",
+    "https://www.ube.fr/post-sitemap1.xml",
+    "https://www.ube.fr/post-sitemap2.xml",
+    "https://www.ube.fr/post-sitemap3.xml"
+   ],
+   "entryUrls": [
+    "https://formations.ube.fr/"
+   ]
+  },
+  {
+   "uai": "0561718N",
+   "name": "Université Bretagne Sud",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "www.univ-ubs.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-ubs.fr/sitemap.xml",
+    "https://www-actus.univ-ubs.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-ubs.fr/fr/formation-initiale-continue/formation-continue/catalogue-de-l-offre.html"
+   ]
+  },
+  {
+   "uai": "0383546Y",
+   "name": "Université Grenoble Alpes",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.univ-grenoble-alpes.fr",
+    "www.univ-grenoble-alpes.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-grenoble-alpes.fr/sitemap.xml",
+    "https://formations.univ-grenoble-alpes.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-grenoble-alpes.fr/"
+   ]
+  },
+  {
+   "uai": "0422388T",
+   "name": "Université Jean Monnet - Saint-Etienne",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "www.univ-st-etienne.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-st-etienne.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-st-etienne.fr/fr/formation/catalogue-des-formations.html"
+   ]
+  },
+  {
+   "uai": "0751717J",
+   "name": "Université Paris 1 - Panthéon Sorbonne",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.pantheonsorbonne.fr",
+    "www.pantheonsorbonne.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://formations.pantheonsorbonne.fr/"
+   ]
+  },
+  {
+   "uai": "0921204J",
+   "name": "Université Paris Nanterre",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.parisnanterre.fr",
+    "www.parisnanterre.fr"
+   ],
+   "sitemaps": [
+    "https://formations.parisnanterre.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.parisnanterre.fr/fr/index.html"
+   ]
+  },
+  {
+   "uai": "0597132G",
+   "name": "Université Polytechnique Hauts-de-France",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.uphf.fr",
+    "www.uphf.fr"
+   ],
+   "sitemaps": [
+    "https://www.uphf.fr/sitemap.xml",
+    "http://formations.uphf.fr/sitemap.xml",
+    "https://www.uphf.fr/sitemap.xml?page=1",
+    "https://www.uphf.fr/sitemap.xml?page=2"
+   ],
+   "entryUrls": [
+    "https://formations.uphf.fr/"
+   ]
+  },
+  {
+   "uai": "0350937D",
+   "name": "Université Rennes 2",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.univ-rennes2.fr",
+    "www.univ-rennes2.fr"
+   ],
+   "sitemaps": [
+    "https://formations.univ-rennes2.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-rennes2.fr/"
+   ]
+  },
+  {
+   "uai": "0730858L",
+   "name": "Université Savoie Mont Blanc",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.univ-smb.fr",
+    "www.univ-smb.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-smb.fr/sitemap.xml",
+    "https://formations.univ-smb.fr/sitemap.xml",
+    "https://www.univ-smb.fr/page-sitemap1.xml",
+    "https://www.univ-smb.fr/post-sitemap1.xml",
+    "https://www.univ-smb.fr/post-sitemap2.xml"
+   ],
+   "entryUrls": [
+    "http://formations.univ-smb.fr/fr/catalogue.html"
+   ]
+  },
+  {
+   "uai": "0931238R",
+   "name": "Université Sorbonne Paris Nord",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "odf.univ-spn.fr",
+    "www.univ-spn.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-spn.fr/sitemap_index.xml",
+    "https://odf.univ-spn.fr/sitemap.xml",
+    "https://www.univ-spn.fr/post-sitemap.xml",
+    "https://www.univ-spn.fr/page-sitemap.xml",
+    "https://www.univ-spn.fr/astra-portfolio-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://odf.univ-spn.fr/fr/index.html"
+   ]
+  },
+  {
+   "uai": "0490970N",
+   "name": "Université d'Angers",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.univ-angers.fr",
+    "www.univ-angers.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-angers.fr/sitemap.xml",
+    "https://formations.univ-angers.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-angers.fr/"
+   ]
+  },
+  {
+   "uai": "0623957P",
+   "name": "Université d'Artois",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "www.univ-artois.fr",
+    "formations.univ-artois.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-artois.fr/sitemap.xml",
+    "https://formations.univ-artois.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-artois.fr/formations"
+   ]
+  },
+  {
+   "uai": "0450855K",
+   "name": "Université d'Orléans",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formation.univ-orleans.fr",
+    "www.univ-orleans.fr"
+   ],
+   "sitemaps": [
+    "https://formation.univ-orleans.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formation.univ-orleans.fr/fr/index.html"
+   ]
+  },
+  {
+   "uai": "0292473F",
+   "name": "Université de Bretagne Occidentale",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "www.univ-brest.fr",
+    "formations.univ-brest.fr"
+   ],
+   "sitemaps": [
+    "https://formations.univ-brest.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-brest.fr/fr/sous-menu/Formations?menu-root=menu_link_content%3Aca79337a-55b1-4343-bd78-6ff8c6b34ac5"
+   ]
+  },
+  {
+   "uai": "0681166Y",
+   "name": "Université de Haute-Alsace",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.uha.fr",
+    "www.uha.fr"
+   ],
+   "sitemaps": [
+    "https://formations.uha.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.uha.fr/"
+   ]
+  },
+  {
+   "uai": "0597239Y",
+   "name": "Université de Lille",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "www.univ-lille.fr",
+    "formation.univ-lille.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://www.univ-lille.fr/formations"
+   ]
+  },
+  {
+   "uai": "0342490X",
+   "name": "Université de Montpellier",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.umontpellier.fr",
+    "www.umontpellier.fr"
+   ],
+   "sitemaps": [
+    "https://www.umontpellier.fr/wp-sitemap.xml",
+    "https://formations.umontpellier.fr/sitemap.xml",
+    "https://www.umontpellier.fr/wp-sitemap-posts-post-1.xml",
+    "https://www.umontpellier.fr/wp-sitemap-posts-page-1.xml",
+    "https://www.umontpellier.fr/wp-sitemap-posts-evenement-1.xml"
+   ],
+   "entryUrls": [
+    "https://formations.umontpellier.fr/"
+   ]
+  },
+  {
+   "uai": "0640251A",
+   "name": "Université de Pau et des Pays de l'Adour",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formation.univ-pau.fr",
+    "www.univ-pau.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-pau.fr/sitemap.xml",
+    "https://formation.univ-pau.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formation.univ-pau.fr/fr/catalogue.html"
+   ]
+  },
+  {
+   "uai": "0860856N",
+   "name": "Université de Poitiers",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formations.univ-poitiers.fr",
+    "www.univ-poitiers.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-poitiers.fr/sitemap.xml",
+    "https://formations.univ-poitiers.fr/sitemap.xml",
+    "https://www.univ-poitiers.fr/sitemap-misc.xml",
+    "https://www.univ-poitiers.fr/sitemap-pt-post-2026-11.xml",
+    "https://www.univ-poitiers.fr/sitemap-pt-post-2026-10.xml"
+   ],
+   "entryUrls": [
+    "http://formations.univ-poitiers.fr/"
+   ]
+  },
+  {
+   "uai": "0761904G",
+   "name": "Université de Rouen Normandie",
+   "template": "AMETYS_ODF_HTML",
+   "hosts": [
+    "formation.univ-rouen.fr",
+    "www.univ-rouen.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-rouen.fr/sitemap_index.xml",
+    "https://formation.univ-rouen.fr/sitemap.xml",
+    "https://www.univ-rouen.fr/page-sitemap.xml",
+    "https://www.univ-rouen.fr/postinstagram-sitemap.xml",
+    "https://www.univ-rouen.fr/3d-flip-book-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formation.univ-rouen.fr/fr/index.html"
+   ]
+  },
+  {
+   "uai": "0134009M",
+   "name": "Aix-Marseille Université",
+   "template": "DRUPAL",
+   "hosts": [
+    "formations.univ-amu.fr",
+    "www.univ-amu.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-amu.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-amu.fr/"
+   ],
+   "blocked": "robots.txt de formations.univ-amu.fr : Disallow: /"
+  },
+  {
+   "uai": "0753237L",
+   "name": "Arts et Métiers Sciences et Technologies",
+   "template": "DRUPAL",
+   "hosts": [
+    "artsetmetiers.fr"
+   ],
+   "sitemaps": [
+    "https://artsetmetiers.fr/sitemap.xml",
+    "https://www.artsetmetiers.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://artsetmetiers.fr/fr/formation/catalogue-mastere-specialise"
+   ]
+  },
+  {
+   "uai": "0756246G",
+   "name": "Institut national d'enseignement supérieur pour l'agriculture, l'alimentation et l'environnement",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.institut-agro.fr"
+   ],
+   "sitemaps": [
+    "https://www.institut-agro.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.institut-agro.fr/fr/nos-formations"
+   ]
+  },
+  {
+   "uai": "0753488J",
+   "name": "Institut national des langues et civilisations orientales",
+   "template": "DRUPAL",
+   "hosts": [
+    "catalogue.inalco.fr",
+    "www.inalco.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://catalogue.inalco.fr/fr/catalogue"
+   ]
+  },
+  {
+   "uai": "0411068N;0180974L",
+   "name": "Institut national des sciences appliquées Centre Val de Loire",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.insa-centrevaldeloire.fr"
+   ],
+   "sitemaps": [
+    "https://www.insa-centrevaldeloire.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.insa-centrevaldeloire.fr/fr/formation/masters"
+   ]
+  },
+  {
+   "uai": "0690192J",
+   "name": "Institut national des sciences appliquées de Lyon",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.insa-lyon.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://www.insa-lyon.fr/fr/catalogues-ects"
+   ]
+  },
+  {
+   "uai": "0760165S",
+   "name": "Institut national des sciences appliquées de Rouen Normandie",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.insa-rouen.fr"
+   ],
+   "sitemaps": [
+    "https://www.insa-rouen.fr/sitemap.xml",
+    "http://www.insa-rouen.fr/sitemap.xml?page=1",
+    "http://www.insa-rouen.fr/sitemap.xml?page=2"
+   ],
+   "entryUrls": [
+    "https://www.insa-rouen.fr/formation/offre-de-formation/master"
+   ]
+  },
+  {
+   "uai": "0922605G",
+   "name": "Institut national supérieur de formation et de recherche pour l'éducation inclusive",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.insei.fr"
+   ],
+   "sitemaps": [
+    "https://www.insei.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.insei.fr/formation/toutes-les-formations"
+   ]
+  },
+  {
+   "uai": "0811293R",
+   "name": "Institut national universitaire Jean-François Champollion",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.univ-jfc.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://www.univ-jfc.fr/formations"
+   ]
+  },
+  {
+   "uai": "0912403T",
+   "name": "Institut polytechnique de Paris",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.ip-paris.fr"
+   ],
+   "sitemaps": [
+    "https://www.ip-paris.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.ip-paris.fr/education/niveau-master-et-ingenieur"
+   ]
+  },
+  {
+   "uai": "0753494R",
+   "name": "Muséum national d'histoire naturelle",
+   "template": "DRUPAL",
+   "hosts": [
+    "formation.mnhn.fr",
+    "www.mnhn.fr"
+   ],
+   "sitemaps": [
+    "https://www.mnhn.fr/index/sitemap.xml",
+    "https://formation.mnhn.fr/sitemap.xml",
+    "https://www.mnhn.fr/sitemap.xml",
+    "https://www.mnhn.fr/sitemaps/dossiers/sitemap.xml",
+    "https://www.mnhn.fr/sitemaps/agenda/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formation.mnhn.fr/"
+   ]
+  },
+  {
+   "uai": "0441916U",
+   "name": "Oniris VetAgroBio",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.oniris-nantes.fr",
+    "formations.univ-rennes.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://www.oniris-nantes.fr/formations/contact-service-formations"
+   ]
+  },
+  {
+   "uai": "0755890V",
+   "name": "Sorbonne Université",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.sorbonne-universite.fr"
+   ],
+   "sitemaps": [
+    "https://www.sorbonne-universite.fr/sitemap.xml",
+    "https://www.sorbonne-universite.fr/sitemap.xml?page=1",
+    "https://www.sorbonne-universite.fr/sitemap.xml?page=2",
+    "https://www.sorbonne-universite.fr/sitemap.xml?page=3"
+   ],
+   "entryUrls": [
+    "https://www.sorbonne-universite.fr/formation-et-vie-etudiante/les-grands-projets-de-formation/limpact-et-lattractivite-des-formations"
+   ]
+  },
+  {
+   "uai": "0252044L",
+   "name": "Université Marie et Louis Pasteur",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.umlp.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://www.umlp.fr/les-formations"
+   ]
+  },
+  {
+   "uai": "0756036D",
+   "name": "Université Paris sciences et lettres",
+   "template": "DRUPAL",
+   "hosts": [
+    "catalogue.explore.psl.eu",
+    "psl.eu",
+    "www.psl.eu"
+   ],
+   "sitemaps": [
+    "https://www.psl.eu/sitemap.xml",
+    "https://psl.eu/default/sitemap.xml?page=1",
+    "https://psl.eu/default/sitemap.xml?page=2"
+   ],
+   "entryUrls": [
+    "https://catalogue.explore.psl.eu/primo-explore/search?vid=33PSL_V1&lang=en_US"
+   ],
+   "blocked": "robots.txt de catalogue.explore.psl.eu : Disallow: /"
+  },
+  {
+   "uai": "0756305W",
+   "name": "Université Paris-Panthéon-Assas",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.assas-universite.fr"
+   ],
+   "sitemaps": [
+    "https://www.assas-universite.fr/sitemap.xml",
+    "https://www.assas-universite.fr/sitemaps/pantheon_itdev_fr/sitemap.xml?page=1",
+    "https://www.assas-universite.fr/sitemaps/pantheon_itdev_fr/sitemap.xml?page=2",
+    "https://www.assas-universite.fr/sitemaps/pantheon_itdev_fr/sitemap.xml?page=3"
+   ],
+   "entryUrls": [
+    "https://www.assas-universite.fr/fr/formations"
+   ]
+  },
+  {
+   "uai": "0912408Y",
+   "name": "Université Paris-Saclay",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.universite-paris-saclay.fr"
+   ],
+   "sitemaps": [
+    "https://www.universite-paris-saclay.fr/sitemap.xml",
+    "https://www.universite-paris-saclay.fr/sitemap.xml?page=1",
+    "https://www.universite-paris-saclay.fr/sitemap.xml?page=2",
+    "https://www.universite-paris-saclay.fr/sitemap.xml?page=3"
+   ],
+   "entryUrls": [
+    "https://www.universite-paris-saclay.fr/formation"
+   ]
+  },
+  {
+   "uai": "0342569H",
+   "name": "Université de Montpellier Paul-Valéry",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.univ-montp3.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://www.univ-montp3.fr/fr/formation/masters"
+   ]
+  },
+  {
+   "uai": "0801344B",
+   "name": "Université de Picardie Jules Verne",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.u-picardie.fr"
+   ],
+   "sitemaps": [
+    "https://www.u-picardie.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.u-picardie.fr/formation/tunnel-catalogue-formation"
+   ]
+  },
+  {
+   "uai": "0353074B",
+   "name": "Université de Rennes",
+   "template": "DRUPAL",
+   "hosts": [
+    "formations.univ-rennes.fr",
+    "www.univ-rennes.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-rennes.fr/sitemap.xml",
+    "https://formations.univ-rennes.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-rennes.fr/tes"
+   ]
+  },
+  {
+   "uai": "0673021V",
+   "name": "Université de Strasbourg",
+   "template": "DRUPAL",
+   "hosts": [
+    "formations.unistra.fr",
+    "www.unistra.fr"
+   ],
+   "sitemaps": [
+    "https://www.unistra.fr/sitemap.xml",
+    "https://www.unistra.fr/sitemap.xml?page=1",
+    "https://www.unistra.fr/sitemap.xml?page=2",
+    "https://www.unistra.fr/sitemap.xml?page=3"
+   ],
+   "entryUrls": [
+    "https://formations.unistra.fr/fr/index.html"
+   ]
+  },
+  {
+   "uai": "9840349G",
+   "name": "Université de la Polynésie Française",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.upf.pf"
+   ],
+   "sitemaps": [
+    "https://inspe.upf.pf/wp-sitemap.xml",
+    "https://inspe.upf.pf/wp-sitemap-posts-post-1.xml",
+    "https://inspe.upf.pf/wp-sitemap-posts-page-1.xml",
+    "https://inspe.upf.pf/wp-sitemap-posts-team_manager-1.xml"
+   ],
+   "entryUrls": [
+    "https://www.upf.pf/fr/une-offre-de-formation-variee-et-pluridisciplinaire"
+   ]
+  },
+  {
+   "uai": "9710585J",
+   "name": "Université des Antilles",
+   "template": "DRUPAL",
+   "hosts": [
+    "formations.univ-antilles.fr",
+    "www.univ-antilles.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-antilles.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-antilles.fr/"
+   ]
+  },
+  {
+   "uai": "0772517T;0753501Y",
+   "name": "École nationale des ponts et chaussées",
+   "template": "DRUPAL",
+   "hosts": [
+    "ecoledesponts.fr"
+   ],
+   "sitemaps": [
+    "https://ecoledesponts.fr/sitemap.xml",
+    "https://ecoledesponts.fr/sitemap.xml?page=1",
+    "https://ecoledesponts.fr/sitemap.xml?page=2"
+   ],
+   "entryUrls": [
+    "https://ecoledesponts.fr/en/academics/masters"
+   ]
+  },
+  {
+   "uai": "0694123G",
+   "name": "École normale supérieure de Lyon",
+   "template": "DRUPAL",
+   "hosts": [
+    "www.ens-lyon.fr"
+   ],
+   "sitemaps": [
+    "https://catalogue-editions.ens-lyon.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.ens-lyon.fr/formation/offre-de-formation/master-2022-2026"
+   ]
+  },
+  {
+   "uai": "0840685N",
+   "name": "Avignon Université",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "univ-avignon.fr",
+    "formations.univ-avignon.fr"
+   ],
+   "sitemaps": [
+    "https://univ-avignon.fr/sitemap.xml",
+    "https://formations.univ-avignon.fr/wp-sitemap.xml",
+    "https://formations.univ-avignon.fr/wp-sitemap-posts-page-1.xml",
+    "https://formations.univ-avignon.fr/wp-sitemap-posts-formation-1.xml",
+    "http://univ-avignon.fr/post-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://univ-avignon.fr/formations/"
+   ]
+  },
+  {
+   "uai": "0597139P;0590349J",
+   "name": "Centrale Lille Institut",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "centralelille.fr"
+   ],
+   "sitemaps": [
+    "https://centralelille.fr/sitemap.xml",
+    "https://centralelille.fr/wp-sitemap-posts-post-1.xml",
+    "https://centralelille.fr/wp-sitemap-posts-page-1.xml",
+    "https://centralelille.fr/wp-sitemap-posts-frm_display-1.xml"
+   ],
+   "entryUrls": [
+    "https://centralelille.fr/formation/masters/"
+   ]
+  },
+  {
+   "uai": "0171463Y",
+   "name": "La Rochelle Université",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "formations.univ-larochelle.fr",
+    "www.univ-larochelle.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-larochelle.fr/sitemap.xml",
+    "https://formations.univ-larochelle.fr/sitemap.xml",
+    "https://www.univ-larochelle.fr/post-sitemap.xml",
+    "https://www.univ-larochelle.fr/page-sitemap.xml",
+    "https://www.univ-larochelle.fr/event-sitemap1.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-larochelle.fr/Master"
+   ]
+  },
+  {
+   "uai": "0772894C",
+   "name": "Université Gustave Eiffel",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "formations.univ-gustave-eiffel.fr",
+    "www.univ-gustave-eiffel.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": [
+    "https://formations.univ-gustave-eiffel.fr/"
+   ]
+  },
+  {
+   "uai": "0762762P",
+   "name": "Université Le Havre Normandie",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.univ-lehavre.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-lehavre.fr/fr/sitemap_index.xml",
+    "https://www.univ-lehavre.fr/formations-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-lehavre.fr/fr/formation/offre-de-formation/"
+   ]
+  },
+  {
+   "uai": "0751724S;0931827F",
+   "name": "Université Paris 8",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.univ-paris8.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-paris8.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-paris8.fr/-Etudes-diplomes-"
+   ]
+  },
+  {
+   "uai": "0755976N",
+   "name": "Université Paris Cité",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "u-pariscite.fr"
+   ],
+   "sitemaps": [
+    "https://u-pariscite.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://u-pariscite.fr/sante/offre-de-formation/"
+   ]
+  },
+  {
+   "uai": "0333298F",
+   "name": "Université de Bordeaux",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "formations.u-bordeaux.fr",
+    "www.u-bordeaux.fr"
+   ],
+   "sitemaps": [
+    "https://www.u-bordeaux.fr/sitemap.xml",
+    "https://formations.u-bordeaux.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.u-bordeaux.fr/"
+   ]
+  },
+  {
+   "uai": "9730429D",
+   "name": "Université de Guyane",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.univ-guyane.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-guyane.fr/sitemap.xml",
+    "https://www.univ-guyane.fr/post-sitemap.xml",
+    "https://www.univ-guyane.fr/page-sitemap.xml",
+    "https://www.univ-guyane.fr/category-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-guyane.fr/campus/bibliotheque/formations/"
+   ]
+  },
+  {
+   "uai": "0870669E",
+   "name": "Université de Limoges",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "formations.unilim.fr",
+    "www.unilim.fr"
+   ],
+   "sitemaps": [
+    "https://www.unilim.fr/sitemap_index.xml",
+    "https://www.unilim.fr/post-sitemap.xml",
+    "https://www.unilim.fr/page-sitemap.xml",
+    "https://www.unilim.fr/attachment-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.unilim.fr/"
+   ],
+   "blocked": "robots.txt de formations.unilim.fr : Disallow: /"
+  },
+  {
+   "uai": "0511296G",
+   "name": "Université de Reims Champagne-Ardenne",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.univ-reims.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": []
+  },
+  {
+   "uai": "0830766G",
+   "name": "Université de Toulon",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "formations.univ-tln.fr",
+    "www.univ-tln.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-tln.fr/sitemap_index.xml",
+    "https://www.univ-tln.fr/post-sitemap.xml",
+    "https://www.univ-tln.fr/page-sitemap.xml",
+    "https://www.univ-tln.fr/category-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-tln.fr/"
+   ]
+  },
+  {
+   "uai": "0313218E",
+   "name": "Université de Toulouse",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.univ-tlse3.fr"
+   ],
+   "sitemaps": [],
+   "entryUrls": []
+  },
+  {
+   "uai": "9830445S",
+   "name": "Université de la Nouvelle-Calédonie",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.unc.nc"
+   ],
+   "sitemaps": [
+    "https://www.unc.nc/sitemap_index.xml",
+    "https://www.unc.nc/formations-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.unc.nc/campus-de-baco/formations/"
+   ]
+  },
+  {
+   "uai": "0595964M",
+   "name": "Université du Littoral Côte d'Opale",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "odf.univ-littoral.fr",
+    "www.univ-littoral.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-littoral.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://odf.univ-littoral.fr/"
+   ]
+  },
+  {
+   "uai": "0911975C",
+   "name": "Université Évry Paris-Saclay",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "formations.univ-evry.fr",
+    "www.univ-evry.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-evry.fr/sitemap.xml",
+    "https://www.univ-evry.fr/accueil/sitemap.xml?sitemap=pages&cHash=dcc02f920e5ef2fb09f57eaf53b59204",
+    "https://www.univ-evry.fr/accueil/page/1/sitemap.xml?sitemap=pages&cHash=edab5d4fc17d45e3f3c958bf391d925b",
+    "https://www.univ-evry.fr/accueil/page/2/sitemap.xml?sitemap=pages&cHash=03b69d5dea87823652767eafc40d2ee7"
+   ],
+   "entryUrls": [
+    "https://formations.univ-evry.fr/"
+   ]
+  },
+  {
+   "uai": "0141720U",
+   "name": "École nationale supérieure d'ingénieurs de Caen",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.ensicaen.fr"
+   ],
+   "sitemaps": [
+    "https://www.ensicaen.fr/sitemap_index.xml",
+    "https://www.ensicaen.fr/post-sitemap.xml",
+    "https://www.ensicaen.fr/page-sitemap.xml",
+    "https://www.ensicaen.fr/mailpoet_page-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.ensicaen.fr/formation/master-cybersecurite/"
+   ]
+  },
+  {
+   "uai": "0860073M",
+   "name": "École nationale supérieure de mécanique et d'aérotechnique de Poitiers",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.ensma.fr"
+   ],
+   "sitemaps": [
+    "https://www.ensma.fr/sitemap.xml",
+    "https://www.ensma.fr/wp-sitemap-posts-post-1.xml",
+    "https://www.ensma.fr/wp-sitemap-posts-page-1.xml",
+    "https://www.ensma.fr/wp-sitemap-taxonomies-category-1.xml"
+   ],
+   "entryUrls": [
+    "https://www.ensma.fr/master-aeronautique-et-espace/"
+   ]
+  },
+  {
+   "uai": "0290124C",
+   "name": "École navale",
+   "template": "GENERIC_HTML",
+   "hosts": [
+    "www.ecole-navale.fr"
+   ],
+   "sitemaps": [
+    "https://www.ecole-navale.fr/sitemap_index.xml",
+    "https://www.ecole-navale.fr/post-sitemap.xml",
+    "https://www.ecole-navale.fr/page-sitemap.xml",
+    "https://www.ecole-navale.fr/event-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.ecole-navale.fr/formation/formations-officiers/entrer-a-lecole-navale/"
+   ]
+  },
+  {
+   "uai": "0753471R",
+   "name": "Conservatoire national des arts et métiers",
+   "template": "KSUP",
+   "hosts": [
+    "formations.cnam.fr",
+    "www.cnam.fr"
+   ],
+   "sitemaps": [
+    "https://www.cnam.fr/seo/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.cnam.fr/"
+   ]
+  },
+  {
+   "uai": "0442953W",
+   "name": "Nantes Université",
+   "template": "KSUP",
+   "hosts": [
+    "formations.univ-nantes.fr",
+    "www.univ-nantes.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-nantes.fr/seo/sitemap.xml",
+    "https://formations.univ-nantes.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-nantes.fr/"
+   ]
+  },
+  {
+   "uai": "0691774D",
+   "name": "Université Claude Bernard Lyon 1",
+   "template": "KSUP",
+   "hosts": [
+    "offre-de-formations.univ-lyon1.fr",
+    "www.univ-lyon1.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-lyon1.fr/seo/sitemap.xml",
+    "https://offre-de-formations.univ-lyon1.fr/sitemap.php"
+   ],
+   "entryUrls": [
+    "http://offre-de-formations.univ-lyon1.fr/"
+   ]
+  },
+  {
+   "uai": "0632084Y",
+   "name": "Université Clermont Auvergne",
+   "template": "KSUP",
+   "hosts": [
+    "www.uca.fr"
+   ],
+   "sitemaps": [
+    "https://www.uca.fr/seo/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.uca.fr/formation/nos-formations"
+   ]
+  },
+  {
+   "uai": "0062205P",
+   "name": "Université Côte d'Azur",
+   "template": "KSUP",
+   "hosts": [
+    "formations.univ-cotedazur.fr",
+    "univ-cotedazur.fr"
+   ],
+   "sitemaps": [
+    "https://univ-cotedazur.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-cotedazur.fr/"
+   ]
+  },
+  {
+   "uai": "0692437Z",
+   "name": "Université Jean Moulin - Lyon 3",
+   "template": "KSUP",
+   "hosts": [
+    "www.univ-lyon3.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-lyon3.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-lyon3.fr/nos-formations"
+   ]
+  },
+  {
+   "uai": "0691775E",
+   "name": "Université Lumière - Lyon 2",
+   "template": "KSUP",
+   "hosts": [
+    "www.univ-lyon2.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-lyon2.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-lyon2.fr/formation/nos-formations"
+   ]
+  },
+  {
+   "uai": "0941111X",
+   "name": "Université Paris-Est Créteil",
+   "template": "KSUP",
+   "hosts": [
+    "www.u-pec.fr"
+   ],
+   "sitemaps": [
+    "https://www.u-pec.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.u-pec.fr/fr/enseignant-e-chercheur-e/formations"
+   ]
+  },
+  {
+   "uai": "0751719L",
+   "name": "Université Sorbonne Nouvelle",
+   "template": "KSUP",
+   "hosts": [
+    "www.sorbonne-nouvelle.fr"
+   ],
+   "sitemaps": [
+    "https://www.sorbonne-nouvelle.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.sorbonne-nouvelle.fr/l-offre-de-formation-de-la-sorbonne-nouvelle-3.kjsp?RH=ACCUEIL"
+   ]
+  },
+  {
+   "uai": "0311383K",
+   "name": "Université Toulouse - Jean Jaurès",
+   "template": "KSUP",
+   "hosts": [
+    "www.univ-tlse2.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-tlse2.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-tlse2.fr/accueil/formation-insertion/decouvrir-formations"
+   ]
+  },
+  {
+   "uai": "0313124C",
+   "name": "Université Toulouse Capitole",
+   "template": "KSUP",
+   "hosts": [
+    "www.ut-capitole.fr"
+   ],
+   "sitemaps": [
+    "https://www.ut-capitole.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.ut-capitole.fr/accueil/formations"
+   ]
+  },
+  {
+   "uai": "0141408E",
+   "name": "Université de Caen Normandie",
+   "template": "KSUP",
+   "hosts": [
+    "formation-pro.unicaen.fr",
+    "www.unicaen.fr"
+   ],
+   "sitemaps": [
+    "https://www.unicaen.fr/sitemap.xml",
+    "https://www.unicaen.fr/post-sitemap.xml",
+    "https://www.unicaen.fr/post-sitemap2.xml",
+    "https://www.unicaen.fr/page-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formation-pro.unicaen.fr/vous-former/offre-de-formation-en-alternance/catalogue-de-la-formation-en-alternance/"
+   ]
+  },
+  {
+   "uai": "7200664J",
+   "name": "Université de Corse Pasquale Paoli",
+   "template": "KSUP",
+   "hosts": [
+    "www.universita.corsica"
+   ],
+   "sitemaps": [
+    "https://www.universita.corsica/sitemap_index.xml",
+    "https://www.universita.corsica/post-sitemap.xml",
+    "https://www.universita.corsica/page-sitemap.xml",
+    "https://www.universita.corsica/portfolio_page-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.universita.corsica/fr/etudier/offre-de-formation/"
+   ]
+  },
+  {
+   "uai": "9740478B",
+   "name": "Université de La Réunion",
+   "template": "KSUP",
+   "hosts": [
+    "informations-univ-reunion-fr.elgebar.univ-reunion.fr",
+    "www.univ-reunion.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-reunion.fr/sitemap_index.xml",
+    "https://www.univ-reunion.fr/formation-v2-sitemap.xml",
+    "https://www.univ-reunion.fr/formations-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://informations-univ-reunion-fr.elgebar.univ-reunion.fr/"
+   ]
+  },
+  {
+   "uai": "0542493S",
+   "name": "Université de Lorraine",
+   "template": "KSUP",
+   "hosts": [
+    "formations.univ-lorraine.fr",
+    "www.univ-lorraine.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-lorraine.fr/sitemap_index.xml",
+    "https://www.univ-lorraine.fr/page-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-lorraine.fr/"
+   ]
+  },
+  {
+   "uai": "0660437S",
+   "name": "Université de Perpignan Via Domitia",
+   "template": "KSUP",
+   "hosts": [
+    "formations.univ-perp.fr",
+    "www.univ-perp.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-perp.fr/seo/sitemap.xml",
+    "https://formations.univ-perp.fr/seo/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://formations.univ-perp.fr/"
+   ]
+  },
+  {
+   "uai": "0370800U",
+   "name": "Université de Tours",
+   "template": "KSUP",
+   "hosts": [
+    "www.univ-tours.fr"
+   ],
+   "sitemaps": [
+    "https://www.univ-tours.fr/sitemap.xml",
+    "https://formation-continue.univ-tours.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.univ-tours.fr/formations"
+   ]
+  },
+  {
+   "uai": "0781944P",
+   "name": "Université de Versailles Saint-Quentin-en-Yvelines",
+   "template": "KSUP",
+   "hosts": [
+    "www.uvsq.fr"
+   ],
+   "sitemaps": [
+    "https://www.uvsq.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.uvsq.fr/offre-de-formations"
+   ]
+  },
+  {
+   "uai": "0601223D",
+   "name": "Université de technologie de Compiègne",
+   "template": "KSUP",
+   "hosts": [
+    "www.utc.fr"
+   ],
+   "sitemaps": [
+    "https://www.utc.fr/sitemap.xml",
+    "https://www.utc.fr/post-sitemap1.xml",
+    "https://www.utc.fr/page-sitemap1.xml",
+    "https://www.utc.fr/category-sitemap1.xml"
+   ],
+   "entryUrls": [
+    "https://www.utc.fr/formations/"
+   ]
+  },
+  {
+   "uai": "0101060Y",
+   "name": "Université de technologie de Troyes",
+   "template": "KSUP",
+   "hosts": [
+    "www.utt.fr"
+   ],
+   "sitemaps": [
+    "https://www.utt.fr/seo/sitemap.xml",
+    "https://formations.utt.fr/sitemap_index.xml",
+    "https://formations.utt.fr/post-sitemap.xml",
+    "https://formations.utt.fr/page-sitemap.xml",
+    "https://formations.utt.fr/category-sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.utt.fr/formations"
+   ]
+  },
+  {
+   "uai": "0753742K",
+   "name": "École des hautes études en sciences sociales",
+   "template": "KSUP",
+   "hosts": [
+    "www.ehess.fr"
+   ],
+   "sitemaps": [
+    "https://www.ehess.fr/sitemap.xml"
+   ],
+   "entryUrls": [
+    "https://www.ehess.fr/jcms/ehess_25205/fr/formation"
+   ]
+  },
+  {
+   "uai": "0310143M",
+   "name": "École nationale supérieure de formation de l’enseignement agricole",
+   "template": "KSUP",
+   "hosts": [
+    "www.ensfea.fr"
+   ],
+   "sitemaps": [
+    "https://www.ensfea.fr/wp-sitemap.xml",
+    "https://www.ensfea.fr/wp-sitemap-posts-post-1.xml",
+    "https://www.ensfea.fr/wp-sitemap-posts-page-1.xml",
+    "https://www.ensfea.fr/wp-sitemap-taxonomies-category-1.xml"
+   ],
+   "entryUrls": [
+    "https://www.ensfea.fr/catalogue_pfc/"
+   ]
+  },
+  {
+   "uai": "0692459Y",
+   "name": "École nationale supérieure des sciences de l'information et des bibliothèques",
+   "template": "KSUP",
+   "hosts": [
+    "www.enssib.fr"
+   ],
+   "sitemaps": [
+    "https://www.enssib.fr/sitemap.xml",
+    "https://www.enssib.fr/sitemap.xml?page=1",
+    "https://www.enssib.fr/sitemap.xml?page=2"
+   ],
+   "entryUrls": [
+    "https://www.enssib.fr/l-offre-de-formation/admission-en-master"
+   ]
+  }
+ ]
+}

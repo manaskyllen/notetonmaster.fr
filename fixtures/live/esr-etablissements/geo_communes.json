@@ -1,0 +1,397 @@
+[
+ {
+  "nom": "Troyes",
+  "code": "10387",
+  "codesPostaux": [
+   "10000"
+  ],
+  "codeDepartement": "10",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    4.0761,
+    48.2924
+   ]
+  },
+  "departement": {
+   "code": "10",
+   "nom": "Aube"
+  },
+  "region": {
+   "code": "44",
+   "nom": "Grand Est"
+  }
+ },
+ {
+  "nom": "Saint-Denis",
+  "code": "11339",
+  "codesPostaux": [
+   "11310"
+  ],
+  "codeDepartement": "11",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.2181,
+    43.357
+   ]
+  },
+  "departement": {
+   "code": "11",
+   "nom": "Aude"
+  },
+  "region": {
+   "code": "76",
+   "nom": "Occitanie"
+  }
+ },
+ {
+  "nom": "Marseille",
+  "code": "13055",
+  "codesPostaux": [
+   "13001",
+   "13002",
+   "13003",
+   "13004",
+   "13005",
+   "13006",
+   "13007",
+   "13008",
+   "13009",
+   "13010",
+   "13011",
+   "13012",
+   "13013",
+   "13014",
+   "13015",
+   "13016"
+  ],
+  "codeDepartement": "13",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    5.3806,
+    43.2803
+   ]
+  },
+  "departement": {
+   "code": "13",
+   "nom": "Bouches-du-Rhône"
+  },
+  "region": {
+   "code": "93",
+   "nom": "Provence-Alpes-Côte d'Azur"
+  }
+ },
+ {
+  "nom": "Saint-Denis",
+  "code": "30247",
+  "codesPostaux": [
+   "30500"
+  ],
+  "codeDepartement": "30",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    4.2475,
+    44.2359
+   ]
+  },
+  "departement": {
+   "code": "30",
+   "nom": "Gard"
+  },
+  "region": {
+   "code": "76",
+   "nom": "Occitanie"
+  }
+ },
+ {
+  "nom": "Nantes",
+  "code": "44109",
+  "codesPostaux": [
+   "44000",
+   "44100",
+   "44200",
+   "44300"
+  ],
+  "codeDepartement": "44",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    -1.5603,
+    47.2382
+   ]
+  },
+  "departement": {
+   "code": "44",
+   "nom": "Loire-Atlantique"
+  },
+  "region": {
+   "code": "52",
+   "nom": "Pays de la Loire"
+  }
+ },
+ {
+  "nom": "Reims",
+  "code": "51454",
+  "codesPostaux": [
+   "51100"
+  ],
+  "codeDepartement": "51",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    4.0551,
+    49.2535
+   ]
+  },
+  "departement": {
+   "code": "51",
+   "nom": "Marne"
+  },
+  "region": {
+   "code": "44",
+   "nom": "Grand Est"
+  }
+ },
+ {
+  "nom": "Lyon",
+  "code": "69123",
+  "codesPostaux": [
+   "69001",
+   "69002",
+   "69003",
+   "69004",
+   "69005",
+   "69006",
+   "69007",
+   "69008",
+   "69009"
+  ],
+  "codeDepartement": "69",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    4.8351,
+    45.758
+   ]
+  },
+  "departement": {
+   "code": "69",
+   "nom": "Rhône"
+  },
+  "region": {
+   "code": "84",
+   "nom": "Auvergne-Rhône-Alpes"
+  }
+ },
+ {
+  "nom": "Paris",
+  "code": "75056",
+  "codesPostaux": [
+   "75001",
+   "75002",
+   "75003",
+   "75004",
+   "75005",
+   "75006",
+   "75007",
+   "75008",
+   "75009",
+   "75010",
+   "75011",
+   "75012",
+   "75013",
+   "75014",
+   "75015",
+   "75016",
+   "75017",
+   "75018",
+   "75019",
+   "75020",
+   "75116"
+  ],
+  "codeDepartement": "75",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.347,
+    48.8589
+   ]
+  },
+  "departement": {
+   "code": "75",
+   "nom": "Paris"
+  },
+  "region": {
+   "code": "11",
+   "nom": "Île-de-France"
+  }
+ },
+ {
+  "nom": "Guyancourt",
+  "code": "78297",
+  "codesPostaux": [
+   "78280"
+  ],
+  "codeDepartement": "78",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.0745,
+    48.7735
+   ]
+  },
+  "departement": {
+   "code": "78",
+   "nom": "Yvelines"
+  },
+  "region": {
+   "code": "11",
+   "nom": "Île-de-France"
+  }
+ },
+ {
+  "nom": "Versailles",
+  "code": "78646",
+  "codesPostaux": [
+   "78000"
+  ],
+  "codeDepartement": "78",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.1191,
+    48.8039
+   ]
+  },
+  "departement": {
+   "code": "78",
+   "nom": "Yvelines"
+  },
+  "region": {
+   "code": "11",
+   "nom": "Île-de-France"
+  }
+ },
+ {
+  "nom": "Gif-sur-Yvette",
+  "code": "91272",
+  "codesPostaux": [
+   "91190"
+  ],
+  "codeDepartement": "91",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.1342,
+    48.6964
+   ]
+  },
+  "departement": {
+   "code": "91",
+   "nom": "Essonne"
+  },
+  "region": {
+   "code": "11",
+   "nom": "Île-de-France"
+  }
+ },
+ {
+  "nom": "Orsay",
+  "code": "91471",
+  "codesPostaux": [
+   "91400"
+  ],
+  "codeDepartement": "91",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.1896,
+    48.6972
+   ]
+  },
+  "departement": {
+   "code": "91",
+   "nom": "Essonne"
+  },
+  "region": {
+   "code": "11",
+   "nom": "Île-de-France"
+  }
+ },
+ {
+  "nom": "Nanterre",
+  "code": "92050",
+  "codesPostaux": [
+   "92000"
+  ],
+  "codeDepartement": "92",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.2018,
+    48.8974
+   ]
+  },
+  "departement": {
+   "code": "92",
+   "nom": "Hauts-de-Seine"
+  },
+  "region": {
+   "code": "11",
+   "nom": "Île-de-France"
+  }
+ },
+ {
+  "nom": "Saint-Denis",
+  "code": "93066",
+  "codesPostaux": [
+   "93200",
+   "93210",
+   "93380"
+  ],
+  "codeDepartement": "93",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    2.3657,
+    48.9378
+   ]
+  },
+  "departement": {
+   "code": "93",
+   "nom": "Seine-Saint-Denis"
+  },
+  "region": {
+   "code": "11",
+   "nom": "Île-de-France"
+  }
+ },
+ {
+  "nom": "Saint-Denis",
+  "code": "97411",
+  "codesPostaux": [
+   "97400",
+   "97417",
+   "97490"
+  ],
+  "codeDepartement": "974",
+  "centre": {
+   "type": "Point",
+   "coordinates": [
+    55.4444,
+    -20.9434
+   ]
+  },
+  "departement": {
+   "code": "974",
+   "nom": "La Réunion"
+  },
+  "region": {
+   "code": "04",
+   "nom": "La Réunion"
+  }
+ }
+]

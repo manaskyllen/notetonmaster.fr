@@ -1,0 +1,878 @@
+{
+ "source": "esr-etablissements",
+ "datasets": {
+  "principaux": {
+   "dataset": "fr-esr-principaux-etablissements-enseignement-superieur",
+   "observedAt": "2026-11-13",
+   "rowCount": 245,
+   "columns": [
+    {
+     "name": "etablissement_id_paysage",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uo_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "nom_court",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4408
+    },
+    {
+     "name": "sigle",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4653
+    },
+    {
+     "name": "type_d_etablissement",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "typologie_d_universites_et_assimiles",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.7143
+    },
+    {
+     "name": "secteur_d_etablissement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "vague_contractuelle",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.298
+    },
+    {
+     "name": "localisation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "url",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0082
+    },
+    {
+     "name": "coordonnees",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "anciens_codes_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.8041
+    },
+    {
+     "name": "siret",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0122
+    },
+    {
+     "name": "siren",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0122
+    },
+    {
+     "name": "rna",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.7429
+    },
+    {
+     "name": "identifiant_wikidata",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0286
+    },
+    {
+     "name": "element_wikidata",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0286
+    },
+    {
+     "name": "identifiant_idref",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1388
+    },
+    {
+     "name": "identifiant_eter",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.3918
+    },
+    {
+     "name": "identifiant_ror",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0531
+    },
+    {
+     "name": "element_ror",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0531
+    },
+    {
+     "name": "identifiant_pic",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6122
+    },
+    {
+     "name": "identifiant_orgref",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.5878
+    },
+    {
+     "name": "identifiant_isni",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.3633
+    },
+    {
+     "name": "element_isni",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.3633
+    },
+    {
+     "name": "element_fundref",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.9306
+    },
+    {
+     "name": "date_creation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0776
+    },
+    {
+     "name": "texte_de_ref_creation_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6449
+    },
+    {
+     "name": "texte_de_ref_creation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6449
+    },
+    {
+     "name": "com_code",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "com_nom",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uucr_id",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uucr_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "dep_id",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "dep_nom",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "aca_id",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "aca_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "reg_id",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "reg_nom",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "reg_id_old",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "reg_nom_old",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "mention_distribution",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.8857
+    },
+    {
+     "name": "adresse_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0163
+    },
+    {
+     "name": "lieu_dit_uai",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9551
+    },
+    {
+     "name": "boite_postale_uai",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6816
+    },
+    {
+     "name": "code_postal_uai",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "localite_acheminement_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "pays_etranger_acheminement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "numero_telephone_uai",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.3306
+    },
+    {
+     "name": "statut_juridique_court",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "statut_juridique_long",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "compte_facebook",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1306
+    },
+    {
+     "name": "compte_twitter",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.2449
+    },
+    {
+     "name": "compte_instagram",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.449
+    },
+    {
+     "name": "compte_flickr",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9265
+    },
+    {
+     "name": "compte_pinterest",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9755
+    },
+    {
+     "name": "flux_rss",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.8286
+    },
+    {
+     "name": "compte_linkedin",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.3673
+    },
+    {
+     "name": "compte_france_culture",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9837
+    },
+    {
+     "name": "compte_scribd",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9959
+    },
+    {
+     "name": "compte_scoopit",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9714
+    },
+    {
+     "name": "compte_tumblr",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9878
+    },
+    {
+     "name": "compte_youtube",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.302
+    },
+    {
+     "name": "compte_vimeo",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9551
+    },
+    {
+     "name": "compte_dailymotion",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9755
+    },
+    {
+     "name": "compte_github",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9878
+    },
+    {
+     "name": "wikipedia",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "wikipedia_en",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "scanr",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.351
+    },
+    {
+     "name": "hal",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.7184
+    },
+    {
+     "name": "mooc",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9102
+    },
+    {
+     "name": "article",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0531
+    },
+    {
+     "name": "uo_lib_officiel",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.5347
+    },
+    {
+     "name": "uo_lib_en",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.5633
+    },
+    {
+     "name": "url_en",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.4041
+    },
+    {
+     "name": "url_cn",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9796
+    },
+    {
+     "name": "url_es",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9592
+    },
+    {
+     "name": "url_de",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9796
+    },
+    {
+     "name": "url_it",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9959
+    },
+    {
+     "name": "universites_fusionnees",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9796
+    },
+    {
+     "name": "etablissement_experimental",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9061
+    },
+    {
+     "name": "champ_recherche",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "inscrits",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.5551
+    },
+    {
+     "name": "inscrits_2010",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.7184
+    },
+    {
+     "name": "inscrits_2011",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.7102
+    },
+    {
+     "name": "inscrits_2012",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.7061
+    },
+    {
+     "name": "inscrits_2013",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.698
+    },
+    {
+     "name": "inscrits_2014",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.6898
+    },
+    {
+     "name": "inscrits_2015",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.6898
+    },
+    {
+     "name": "inscrits_2016",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.6898
+    },
+    {
+     "name": "inscrits_2017",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.6694
+    },
+    {
+     "name": "inscrits_2018",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.6694
+    },
+    {
+     "name": "inscrits_2019",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.6245
+    },
+    {
+     "name": "inscrits_2020",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.6204
+    },
+    {
+     "name": "inscrits_2021",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.6041
+    },
+    {
+     "name": "inscrits_2022",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.5959
+    },
+    {
+     "name": "inscrits_2023",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.5878
+    },
+    {
+     "name": "inscrits_2024",
+     "type": "number",
+     "required": false,
+     "emptyRate": 0.5551
+    }
+   ],
+   "keys": {
+    "uai": "uai",
+    "paysage": "etablissement_id_paysage",
+    "oldUai": "anciens_codes_uai (séparés par ;)"
+   }
+  },
+  "implantations": {
+   "dataset": "fr-esr-implantations_etablissements_d_enseignement_superieur_publics",
+   "observedAt": "2026-11-13",
+   "rowCount": 2561,
+   "columns": [
+    {
+     "name": "localisation",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "siege_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "type_d_etablissement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "implantation_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0215
+    },
+    {
+     "name": "coordonnees",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "bcnag_n_nature_uai_libelle_editi",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "services",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.7806
+    },
+    {
+     "name": "date_ouverture",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "effectif",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.4615
+    },
+    {
+     "name": "bcnag_n_type_uai_libelle_edition",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "ur",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "ur_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "etablissement_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "sigle",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6603
+    },
+    {
+     "name": "identifiant_eter",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1402
+    },
+    {
+     "name": "identifiant_wikidata",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "element_wikidata",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "identifiant_grid",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1168
+    },
+    {
+     "name": "element_grid",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1168
+    },
+    {
+     "name": "com_code",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.023
+    },
+    {
+     "name": "com_nom",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "uucr_id",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0238
+    },
+    {
+     "name": "uucr_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "dep_id",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "dep_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "aca_id",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "aca_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "reg_id",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "reg_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "code_pays",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "mention_distribution",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9203
+    },
+    {
+     "name": "adresse_uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0703
+    },
+    {
+     "name": "lieu_dit_uai",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.884
+    },
+    {
+     "name": "boite_postale_uai",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.6989
+    },
+    {
+     "name": "code_postal_uai",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0238
+    },
+    {
+     "name": "localite_acheminement_uai",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0234
+    },
+    {
+     "name": "pays_etranger_acheminement",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9973
+    },
+    {
+     "name": "type_uai",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0211
+    },
+    {
+     "name": "nature_uai",
+     "type": "int",
+     "required": false,
+     "emptyRate": 0.0211
+    }
+   ],
+   "keys": {
+    "implantation": "uai",
+    "etablissement": "etablissement_uai",
+    "commune": "com_code"
+   }
+  },
+  "geo.api.gouv.fr/communes": {
+   "fields": [
+    "code",
+    "nom",
+    "codeDepartement",
+    "codeRegion",
+    "centre",
+    "codesPostaux",
+    "departement",
+    "region"
+   ],
+   "keys": {
+    "commune": "code (INSEE)"
+   }
+  }
+ }
+}

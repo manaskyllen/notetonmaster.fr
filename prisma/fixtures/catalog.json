@@ -1,0 +1,690 @@
+{
+  "$comment": "Real public data for the pilot scope. Sources: Mon Master open data, France Compétences, InserSup, university booklets and brochures.",
+  "domains": [
+    {
+      "slug": "arts-lettres-langues",
+      "name": "Arts, lettres, langues",
+      "tone": "violet",
+      "icon": "book",
+      "position": 1
+    },
+    {
+      "slug": "sciences-humaines-et-sociales",
+      "name": "Sciences humaines et sociales",
+      "tone": "lime",
+      "icon": "users",
+      "position": 2
+    },
+    {
+      "slug": "droit-economie-gestion",
+      "name": "Droit, économie, gestion",
+      "tone": "coral",
+      "icon": "scale",
+      "position": 3
+    },
+    {
+      "slug": "sciences-technologies-sante",
+      "name": "Sciences, technologies, santé",
+      "tone": "night",
+      "icon": "database",
+      "position": 4
+    }
+  ],
+  "universities": [
+    {
+      "slug": "nantes-universite",
+      "name": "Nantes Université",
+      "uai": "0442953W",
+      "city": "Nantes",
+      "cities": [
+        "Nantes"
+      ],
+      "region": "Pays de la Loire",
+      "website": "https://www.univ-nantes.fr",
+      "emailDomains": [
+        "univ-nantes.fr",
+        "etu.univ-nantes.fr"
+      ],
+      "keywords": [
+        "nantes",
+        "pays de la loire"
+      ],
+      "components": [
+        "UFR Histoire, histoire de l’art et archéologie",
+        "UFR Sociologie",
+        "Langues et cultures étrangères"
+      ],
+      "siteDomains": [
+        "univ-nantes.fr"
+      ],
+      "paysageId": "qUCQp"
+    },
+    {
+      "slug": "universite-paris-saclay",
+      "name": "Université Paris-Saclay",
+      "uai": "0912408Y",
+      "city": "Gif-sur-Yvette",
+      "cities": [
+        "Gif-sur-Yvette",
+        "Guyancourt",
+        "Versailles"
+      ],
+      "region": "Île-de-France",
+      "website": "https://www.universite-paris-saclay.fr",
+      "emailDomains": [
+        "universite-paris-saclay.fr",
+        "uvsq.fr"
+      ],
+      "keywords": [
+        "paris saclay",
+        "uvsq",
+        "versailles",
+        "guyancourt",
+        "ile de france"
+      ],
+      "components": [],
+      "siteDomains": [
+        "universite-paris-saclay.fr"
+      ],
+      "paysageId": "G2qA7"
+    },
+    {
+      "slug": "universite-de-reims-champagne-ardenne",
+      "name": "Université de Reims Champagne-Ardenne",
+      "shortName": "URCA",
+      "uai": "0511296G",
+      "city": "Reims",
+      "cities": [
+        "Reims",
+        "Troyes"
+      ],
+      "region": "Grand Est",
+      "website": "https://www.univ-reims.fr",
+      "emailDomains": [
+        "univ-reims.fr",
+        "etudiant.univ-reims.fr"
+      ],
+      "keywords": [
+        "urca",
+        "reims",
+        "troyes",
+        "champagne"
+      ],
+      "components": [
+        "UFR Lettres et sciences humaines"
+      ],
+      "siteDomains": [
+        "univ-reims.fr"
+      ],
+      "paysageId": "57OsX"
+    }
+  ],
+  "cities": [
+    {
+      "name": "Nantes",
+      "slug": "nantes",
+      "department": "Loire-Atlantique",
+      "region": "Pays de la Loire",
+      "inseeCode": "44109",
+      "departmentCode": "44"
+    },
+    {
+      "name": "Gif-sur-Yvette",
+      "slug": "gif-sur-yvette",
+      "department": "Essonne",
+      "region": "Île-de-France",
+      "inseeCode": "91272",
+      "departmentCode": "91"
+    },
+    {
+      "name": "Guyancourt",
+      "slug": "guyancourt",
+      "department": "Yvelines",
+      "region": "Île-de-France",
+      "inseeCode": "78297",
+      "departmentCode": "78"
+    },
+    {
+      "name": "Versailles",
+      "slug": "versailles",
+      "department": "Yvelines",
+      "region": "Île-de-France",
+      "inseeCode": "78646",
+      "departmentCode": "78"
+    },
+    {
+      "name": "Reims",
+      "slug": "reims",
+      "department": "Marne",
+      "region": "Grand Est",
+      "inseeCode": "51454",
+      "departmentCode": "51"
+    },
+    {
+      "name": "Troyes",
+      "slug": "troyes",
+      "department": "Aube",
+      "region": "Grand Est",
+      "inseeCode": "10387",
+      "departmentCode": "10"
+    }
+  ],
+  "certifications": [
+    {
+      "code": "RNCP42684",
+      "title": "Master Culture, patrimoine et médiation",
+      "level": 7,
+      "status": "ACTIVE",
+      "validFrom": "2026-06-06",
+      "validTo": "2031-06-05",
+      "lastDeliveryDate": "2034-06-05",
+      "replacesCode": "RNCP35804",
+      "certifiers": [
+        "Ministère de l’Enseignement supérieur et de la Recherche",
+        "Nantes Université",
+        "Université de Reims Champagne-Ardenne",
+        "Université Paris-Saclay"
+      ],
+      "sourceUrl": "https://www.francecompetences.fr/recherche/rncp/42684/"
+    },
+    {
+      "code": "RNCP35804",
+      "title": "Master Culture, patrimoine et médiation (ancienne fiche)",
+      "level": 7,
+      "status": "INACTIVE",
+      "validFrom": null,
+      "validTo": "2026-07-15",
+      "lastDeliveryDate": "2029-07-15",
+      "replacesCode": null,
+      "certifiers": [],
+      "sourceUrl": "https://www.francecompetences.fr/recherche/rncp/35804/"
+    }
+  ],
+  "mentions": [
+    {
+      "slug": "culture-patrimoine-et-mediation",
+      "name": "Culture, patrimoine et médiation",
+      "shortLabel": "Patrimoine",
+      "domain": "arts-lettres-langues",
+      "certification": "RNCP42684",
+      "rncpStatus": "Active",
+      "levels": [
+        "M1",
+        "M2"
+      ],
+      "description": "Une mention nationale qui forme aux métiers de la médiation culturelle et scientifique, de l’administration de la culture et de la valorisation des patrimoines. Chaque université la décline en parcours.",
+      "keywords": [
+        "culture",
+        "patrimoine",
+        "mediation",
+        "rncp",
+        "musee"
+      ]
+    }
+  ],
+  "programs": [
+    {
+      "slug": "valorisation-des-nouveaux-patrimoines",
+      "title": "Valorisation des nouveaux patrimoines",
+      "shortName": "VNP",
+      "university": "nantes-universite",
+      "component": "UFR Histoire, histoire de l’art et archéologie",
+      "city": "Nantes",
+      "campus": "Campus du Tertre",
+      "modality": "ONSITE",
+      "entryLevel": "M1",
+      "durationYears": 2,
+      "ects": 120,
+      "keywords": [
+        "vnp",
+        "patrimoine",
+        "musee",
+        "tourisme",
+        "histoire"
+      ],
+      "applicationPlatform": "Mon Master",
+      "m2Entry": "Moyenne ≥ 10 et pré-mémoire ≥ 10",
+      "tuitionFees": "255 €/an (UE) · indicatif",
+      "internships": "Stage de 3 mois minimum en M1, stage de 3 à 6 mois en M2.",
+      "highlights": [
+        "Certification guide-conférencier",
+        "Voyage d’étude"
+      ],
+      "contactRole": "Responsable du parcours, secrétariat pédagogique",
+      "monMaster": [
+        {
+          "code": "2500101KDKQN"
+        }
+      ],
+      "stats": [
+        {
+          "code": "2500101KDKQN",
+          "session": 2025,
+          "capacity": 19,
+          "seatsTaken": 18,
+          "applications": 320,
+          "offers": 47,
+          "lastRankCalled": 48
+        }
+      ],
+      "semesters": [
+        {
+          "label": "M1 · Semestre 1",
+          "title": "Les bases du patrimoine",
+          "content": "Histoire de la notion de patrimoine, conservation et restauration, histoire de l’architecture, patrimoine industriel et du XXᵉ siècle, droit de l’urbanisme, montage de projet culturel, humanités numériques, anglais + LV2."
+        },
+        {
+          "label": "M1 · Semestre 2",
+          "title": "Stage et mémoire",
+          "content": "Stage de 3 mois minimum, mémoire d’environ 50 pages soutenu en juin."
+        },
+        {
+          "label": "M2 · Semestre 3",
+          "title": "Les nouveaux patrimoines",
+          "content": "Patrimoines maritime et naturel ; patrimoines archéologique et mémoriel ; patrimoine immatériel, « de la main et du geste » ; muséologie ; gestion de la culture ; développement web ; projet tutoré ; voyage d’étude ; certification guide-conférencier."
+        },
+        {
+          "label": "M2 · Semestre 4",
+          "title": "Stage long et mémoire",
+          "content": "Stage de 3 à 6 mois, mémoire d’environ 80 pages évalué en septembre."
+        }
+      ],
+      "semesterSource": {
+        "document": "Livret pédagogique de l’UFR Histoire",
+        "year": "2022-2023"
+      }
+    },
+    {
+      "slug": "expertise-des-mediations-professions-et-institutions-de-la-culture",
+      "title": "Expertise des médiations, professions et institutions de la culture",
+      "shortName": "EPIC",
+      "university": "nantes-universite",
+      "component": "UFR Sociologie",
+      "city": "Nantes",
+      "modality": "ONSITE",
+      "entryLevel": "M1",
+      "durationYears": 2,
+      "ects": 120,
+      "keywords": [
+        "epic",
+        "mediation",
+        "culture",
+        "sociologie"
+      ],
+      "applicationPlatform": "Mon Master",
+      "monMaster": [
+        {
+          "code": "2500101KWEVZ"
+        }
+      ],
+      "stats": [
+        {
+          "code": "2500101KWEVZ",
+          "session": 2025,
+          "capacity": 18,
+          "seatsTaken": 19,
+          "applications": 428,
+          "offers": 38,
+          "lastRankCalled": 61
+        }
+      ]
+    },
+    {
+      "slug": "mediation-culturelle-et-communication-internationale",
+      "title": "Médiation culturelle et communication internationale",
+      "university": "nantes-universite",
+      "component": "Langues et cultures étrangères",
+      "city": "Nantes",
+      "modality": "ONSITE",
+      "entryLevel": "M1",
+      "durationYears": 2,
+      "ects": 120,
+      "keywords": [
+        "mediation",
+        "communication",
+        "international",
+        "langues"
+      ],
+      "applicationPlatform": "Mon Master",
+      "monMaster": [
+        {
+          "code": "2500101KNGLJ"
+        }
+      ],
+      "stats": [
+        {
+          "code": "2500101KNGLJ",
+          "session": 2025,
+          "capacity": 28,
+          "seatsTaken": 33,
+          "applications": 256,
+          "offers": 61,
+          "lastRankCalled": 61
+        }
+      ]
+    },
+    {
+      "slug": "histoire-de-l-art-et-culture-materielle",
+      "title": "Histoire de l’art et culture matérielle",
+      "university": "nantes-universite",
+      "component": "UFR Histoire, histoire de l’art et archéologie",
+      "city": "Nantes",
+      "modality": "ONSITE",
+      "entryLevel": "M1",
+      "durationYears": 2,
+      "ects": 120,
+      "keywords": [
+        "histoire",
+        "art",
+        "patrimoine"
+      ],
+      "applicationPlatform": "Mon Master",
+      "monMaster": [
+        {
+          "code": "2500101K7QD2"
+        }
+      ],
+      "stats": [
+        {
+          "code": "2500101K7QD2",
+          "session": 2025,
+          "capacity": 20,
+          "seatsTaken": 18,
+          "applications": 95,
+          "offers": 34,
+          "lastRankCalled": 43
+        }
+      ]
+    },
+    {
+      "slug": "administration-culturelle-projets-culturels-internationaux",
+      "title": "Administration culturelle / Projets culturels internationaux",
+      "shortName": "ACPCI",
+      "university": "universite-paris-saclay",
+      "component": null,
+      "city": "Guyancourt",
+      "modality": "ONSITE",
+      "entryLevel": "M1",
+      "durationYears": 2,
+      "ects": 120,
+      "keywords": [
+        "acpci",
+        "administration",
+        "culture",
+        "international",
+        "uvsq"
+      ],
+      "applicationPlatform": "Mon Master",
+      "highlights": [
+        "100 % présentiel"
+      ],
+      "monMaster": [
+        {
+          "code": "2000144GJ2FE",
+          "label": "Entrée 1"
+        },
+        {
+          "code": "2000144GHGRB",
+          "label": "Entrée 2"
+        }
+      ],
+      "stats": [
+        {
+          "code": "2000144GJ2FE",
+          "session": 2025,
+          "capacity": 9,
+          "seatsTaken": null,
+          "applications": 168,
+          "offers": 31,
+          "lastRankCalled": 68
+        },
+        {
+          "code": "2000144GHGRB",
+          "session": 2025,
+          "capacity": 9,
+          "seatsTaken": null,
+          "applications": 252,
+          "offers": 39,
+          "lastRankCalled": 74
+        },
+        {
+          "code": "2000144GJ2FE",
+          "session": 2024,
+          "capacity": null,
+          "seatsTaken": 11,
+          "applications": 183,
+          "offers": 22,
+          "lastRankCalled": 39
+        },
+        {
+          "code": "2000144GJ2FE",
+          "session": 2023,
+          "capacity": null,
+          "seatsTaken": 9,
+          "applications": 248,
+          "offers": 24,
+          "lastRankCalled": 47
+        },
+        {
+          "code": "2000144GHGRB",
+          "session": 2024,
+          "capacity": null,
+          "seatsTaken": 11,
+          "applications": 272,
+          "offers": 34,
+          "lastRankCalled": 61
+        },
+        {
+          "code": "2000144GHGRB",
+          "session": 2023,
+          "capacity": null,
+          "seatsTaken": 9,
+          "applications": 289,
+          "offers": 39,
+          "lastRankCalled": 79
+        }
+      ]
+    },
+    {
+      "slug": "evenementiel-mediation-des-arts-et-des-sciences",
+      "title": "Événementiel, médiation des arts et des sciences",
+      "shortName": "EMAS",
+      "university": "universite-paris-saclay",
+      "component": null,
+      "city": "Versailles",
+      "modality": "WORK_STUDY",
+      "entryLevel": "M1",
+      "durationYears": 2,
+      "ects": 120,
+      "keywords": [
+        "emas",
+        "evenementiel",
+        "mediation",
+        "sciences",
+        "alternance",
+        "apprentissage",
+        "uvsq"
+      ],
+      "applicationPlatform": "Mon Master",
+      "selectionProcess": "Sélection sur dossier puis entretien.",
+      "monMaster": [
+        {
+          "code": "2000144GANLI"
+        }
+      ],
+      "stats": [
+        {
+          "code": "2000144GANLI",
+          "session": 2025,
+          "capacity": 22,
+          "seatsTaken": 10,
+          "applications": 850,
+          "offers": 12,
+          "lastRankCalled": null,
+          "place": "Versailles - VERSAILLES (78)"
+        },
+        {
+          "code": "2000144GANLI",
+          "session": 2024,
+          "capacity": 20,
+          "seatsTaken": 16,
+          "applications": 573,
+          "offers": 17,
+          "lastRankCalled": null,
+          "place": "Guyancourt - GUYANCOURT (78)"
+        },
+        {
+          "code": "2000144GANLI",
+          "session": 2023,
+          "capacity": 20,
+          "seatsTaken": 17,
+          "applications": 474,
+          "offers": 55,
+          "lastRankCalled": null,
+          "place": "Guyancourt - GUYANCOURT (78)"
+        }
+      ],
+      "semesters": [
+        {
+          "label": "M1 · Semestre 1",
+          "title": null,
+          "content": "Politiques culturelles, anglais professionnel, journalisme culturel, arts et sciences, projet personnel, graphisme et InDesign, WordPress et Photoshop, médiation culturelle et des savoirs, médiation collective."
+        },
+        {
+          "label": "M1 · Semestre 2",
+          "title": null,
+          "content": "Anglais, marketing culturel, publics de la culture, médiation des savoirs, méthodologie du mémoire, projet personnel, médiation scientifique, management et financement de projets culturels, patrimoines et valorisation."
+        }
+      ],
+      "semesterSource": {
+        "document": "Site de l’Université Paris-Saclay",
+        "year": "2025-2026"
+      }
+    },
+    {
+      "slug": "musees-bibliotheques-archives",
+      "title": "Musées, bibliothèques, archives",
+      "university": "universite-de-reims-champagne-ardenne",
+      "component": "UFR Lettres et sciences humaines",
+      "city": "Troyes",
+      "campus": "Campus des Comtes de Champagne",
+      "modality": "ONSITE",
+      "entryLevel": "M1",
+      "durationYears": 2,
+      "ects": 120,
+      "keywords": [
+        "musee",
+        "bibliotheque",
+        "archives",
+        "patrimoine",
+        "guide conferencier"
+      ],
+      "applicationPlatform": "Mon Master",
+      "internships": "Stage de 2 mois en M1 et de 2 mois en M2.",
+      "recommendedDegrees": "Licences d’histoire, d’histoire de l’art et archéologie, de LLCER, de lettres.",
+      "highlights": [
+        "Carte de guide-conférencier",
+        "Prépare aux concours de catégorie A et B"
+      ],
+      "monMaster": [
+        {
+          "code": "2400126NBJPY"
+        }
+      ],
+      "stats": [
+        {
+          "code": "2400126NBJPY",
+          "session": 2025,
+          "capacity": 15,
+          "seatsTaken": 15,
+          "applications": 496,
+          "offers": 51,
+          "lastRankCalled": 141
+        },
+        {
+          "code": "2400126NBJPY",
+          "session": 2024,
+          "capacity": 15,
+          "seatsTaken": 15,
+          "applications": 443,
+          "offers": 64,
+          "lastRankCalled": 208
+        },
+        {
+          "code": null,
+          "session": 2024,
+          "capacity": null,
+          "accessRate": 43,
+          "source": "Brochure des masters URCA 2025"
+        }
+      ]
+    },
+    {
+      "slug": "administration-culturelle-m2",
+      "title": "Administration culturelle",
+      "university": "universite-paris-saclay",
+      "component": null,
+      "city": "Guyancourt",
+      "modality": "ONSITE",
+      "entryLevel": "M2",
+      "durationYears": 1,
+      "ects": 60,
+      "keywords": [
+        "administration",
+        "culture",
+        "m2",
+        "uvsq"
+      ],
+      "applicationPlatform": "Inception",
+      "applicationWindow": "Du 01/03 au 04/07/2026",
+      "monMaster": [],
+      "stats": [
+        {
+          "code": null,
+          "session": 2026,
+          "capacity": 25,
+          "source": "Site de l’Université Paris-Saclay"
+        }
+      ]
+    },
+    {
+      "slug": "projets-culturels-internationaux-m2",
+      "title": "Projets culturels internationaux",
+      "university": "universite-paris-saclay",
+      "component": null,
+      "city": "Guyancourt",
+      "modality": "ONSITE",
+      "entryLevel": "M2",
+      "durationYears": 1,
+      "ects": 60,
+      "keywords": [
+        "projets",
+        "international",
+        "culture",
+        "m2",
+        "uvsq"
+      ],
+      "applicationPlatform": "Inception",
+      "requirements": "Deuxième langue vivante exigée.",
+      "monMaster": [],
+      "stats": []
+    }
+  ],
+  "insertion": [
+    {
+      "mention": "culture-patrimoine-et-mediation",
+      "university": "universite-paris-saclay",
+      "cohortYear": 2023,
+      "graduatesCount": 39,
+      "employmentRate12m": 64.1,
+      "employmentRate18m": 69.2,
+      "stableJobRate": 20,
+      "furtherStudyRate": 15.2,
+      "salaryQ1": 1590,
+      "salaryMedian": 1730,
+      "salaryQ3": 1980,
+      "salaryCohortYear": 2022,
+      "source": "InserSup"
+    }
+  ]
+}

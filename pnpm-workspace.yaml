@@ -1,0 +1,18 @@
+packages:
+  - '.'
+allowBuilds:
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+
+# Supply chain: a version published less than a day ago is not installed (time for a malicious
+# release to be caught), sub-dependencies only from the registry (no git or tarball URL), and a
+# package whose publishing trust drops (provenance lost) is refused.
+minimumReleaseAge: 1440
+blockExoticSubdeps: true
+trustPolicy: no-downgrade
+# Versions already in use whose publication lost provenance compared to earlier releases: allowed
+# one by one (a new version is checked again). To review at each update.
+trustPolicyExclude:
+  - prisma@7.10.1
+  - eslint-import-resolver-typescript@3.10.1

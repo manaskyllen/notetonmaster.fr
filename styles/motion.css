@@ -1,0 +1,2353 @@
+/*
+ * Motion: tokens, transitions and keyframes of the site.
+ * Only transform and opacity are animated (box-shadow / background-color for hovers), except two
+ * cases asked for explicitly: the width of the step dots and the height of collapsible
+ * blocks (grid-template-rows 0fr → 1fr). Everything is cut or reduced to a fade under
+ * prefers-reduced-motion: reduce (end of file). Components only add the classes below.
+ */
+
+:root {
+  --dur-fast: 120ms;
+  --dur: 180ms;
+  --dur-slow: 260ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ───────── Keyframes ───────── */
+
+@keyframes nm-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes nm-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+/* Rise: fade + slide up by --rise (4px for errors, 6px for search results, 8px for toasts). */
+@keyframes nm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 6px));
+  }
+}
+@keyframes nm-pop {
+  0% {
+    scale: 1;
+  }
+  45% {
+    scale: 1.08;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes nm-pop-big {
+  0% {
+    scale: 1;
+  }
+  40% {
+    scale: 1.2;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes nm-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px) rotate(-8deg);
+  }
+  70% {
+    transform: translateY(1px);
+  }
+}
+@keyframes nm-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+@keyframes nm-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes nm-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+@keyframes nm-modal-out {
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+@keyframes nm-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes nm-sheet-out {
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes nm-roll-in {
+  from {
+    opacity: 0;
+    transform: translateY(70%);
+  }
+}
+@keyframes nm-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}
+@keyframes nm-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+@keyframes nm-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+@keyframes nm-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes nm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ───────── Theme change ───────── */
+
+body {
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+/* ───────── Clickable cards ───────── */
+
+.nm-lift {
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.nm-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+}
+.nm-lift:active {
+  transform: translateY(0);
+}
+
+/* ───────── Buttons ───────── */
+
+.nm-btn-press {
+  transition:
+    filter var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease),
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.nm-btn-press:hover:not(:disabled, [aria-disabled='true']) {
+  filter: brightness(1.06);
+}
+.nm-btn-press:active:not(:disabled, [aria-disabled='true']) {
+  transform: scale(0.97);
+}
+.nm-spinner {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: nm-spin 700ms linear infinite;
+}
+
+/* ───────── Fields ───────── */
+
+.nm-control,
+.nm-choice,
+.nm-check-card,
+.nm-radio-card {
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease),
+    outline-color var(--dur-fast) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+.nm-error,
+.nm-hint--error {
+  --rise: -4px;
+  animation: nm-rise var(--dur) var(--ease-out) both;
+}
+
+/* ───────── Search: results in cascade, counter fade ───────── */
+
+.nm-stagger > * {
+  --rise: 6px;
+  animation: nm-rise var(--dur) var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 7) * 30ms);
+}
+.nm-fade-in {
+  animation: nm-fade-in var(--dur) var(--ease) both;
+}
+
+/* ───────── Chips, tabs, switches ───────── */
+
+.nm-chip,
+.nm-tab {
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+/* Switches (components/ui/Switch.tsx). The knob
+   slides on `left` with a slight bounce; at each change (`data-moved`: not on page load) it
+   stretches then tightens, from the side it arrives at; the track fades. Pressed, the knob
+   already stretches; hovered, a violet halo. A disabled switch: neither halo nor stretch. */
+.sw {
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.2s ease;
+}
+.sw:hover:not(:disabled),
+.sw-link:hover .sw {
+  box-shadow: 0 0 0 4px rgba(90, 59, 240, 0.14);
+}
+.sw .knob {
+  transition:
+    left 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.18s ease;
+  box-shadow: 0 2px 5px rgba(22, 19, 31, 0.28);
+  transform-origin: left center;
+}
+.sw[aria-checked='true'] .knob,
+.sw-link[aria-checked='true'] .knob {
+  transform-origin: right center;
+}
+.sw[data-moved][aria-checked='true'] .knob,
+.sw-link[data-moved][aria-checked='true'] .knob {
+  animation: knob-on 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sw[data-moved][aria-checked='false'] .knob,
+.sw-link[data-moved][aria-checked='false'] .knob {
+  animation: knob-off 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sw:active:not(:disabled) .knob,
+.sw-link:active .knob {
+  transform: scaleX(1.28);
+}
+/* Two names for one movement: switching from one to the other restarts it at each change. */
+@keyframes knob-on {
+  0% {
+    transform: scaleX(1.3);
+  }
+  60% {
+    transform: scaleX(0.92);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes knob-off {
+  0% {
+    transform: scaleX(1.3);
+  }
+  60% {
+    transform: scaleX(0.92);
+  }
+  100% {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sw,
+  .sw .knob {
+    transition: none;
+    animation: none !important;
+  }
+  .sw:active .knob,
+  .sw-link:active .knob {
+    transform: none;
+  }
+}
+
+/* Active tab indicator: one element moved with transform (no layout animation). */
+.nm-tab-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100px;
+  border-radius: var(--radius-pill);
+  background: var(--night);
+  transform-origin: 0 0;
+  transition: transform var(--dur) var(--ease);
+  pointer-events: none;
+}
+
+/* ───────── GradePicker ───────── */
+
+.nm-gpick-btn {
+  transition:
+    transform var(--dur-fast) var(--ease),
+    background-color 0.25s ease,
+    border-color var(--dur) var(--ease),
+    rotate var(--dur-slow) var(--ease-out);
+}
+.nm-gpick-btn[aria-checked='true'] {
+  animation: nm-pop var(--dur-slow) var(--ease-out);
+}
+.nm-gpick-word {
+  animation: nm-fade-in var(--dur) var(--ease) both;
+}
+
+/* ───────── Thank-you screen ───────── */
+
+.nm-thanks {
+  animation: nm-zoom-in var(--dur-slow) var(--ease-out) both;
+}
+.nm-check-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: nm-draw 400ms var(--ease-out) 120ms forwards;
+}
+
+/* ───────── Collapsible blocks ───────── */
+
+.nm-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease-out),
+    opacity var(--dur) var(--ease),
+    visibility 0s linear var(--dur-slow);
+}
+.nm-collapse[data-open='true'] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease-out),
+    opacity var(--dur) var(--ease),
+    visibility 0s;
+}
+.nm-collapse > * {
+  min-height: 0;
+  overflow: hidden;
+}
+.nm-chevron {
+  transition: transform var(--dur) var(--ease);
+}
+[aria-expanded='true'] > .nm-chevron,
+[aria-expanded='true'] .nm-chevron {
+  transform: rotate(180deg);
+}
+
+/* ───────── Modals (and bottom sheet on small screens) ───────── */
+
+.nm-modal[open]::backdrop {
+  animation: nm-fade-in var(--dur) var(--ease) both;
+}
+.nm-modal[open] .nm-modal__box {
+  animation: nm-modal-in var(--dur-slow) var(--ease-out) both;
+}
+.nm-modal[data-closing]::backdrop {
+  animation: nm-fade-out var(--dur) var(--ease) both;
+}
+.nm-modal[data-closing] .nm-modal__box {
+  animation: nm-modal-out var(--dur) var(--ease) both;
+}
+@media (max-width: 640px) {
+  .nm-modal[open] .nm-modal__box {
+    animation: nm-sheet-in var(--dur-slow) var(--ease-out) both;
+  }
+  .nm-modal[data-closing] .nm-modal__box {
+    animation: nm-sheet-out var(--dur) var(--ease) both;
+  }
+}
+.nm-modal-done {
+  animation: nm-fade-in var(--dur) var(--ease) both;
+}
+
+/* ───────── Toasts and confirmations ───────── */
+
+.nm-toast-in {
+  --rise: 8px;
+  animation: nm-rise var(--dur) var(--ease-out) both;
+}
+.nm-toast-out {
+  animation: nm-fade-out var(--dur) var(--ease) both;
+}
+
+/* ───────── "Utile" vote, save (heart) ───────── */
+
+.nm-bounce {
+  animation: nm-bounce var(--dur-slow) var(--ease-out);
+}
+.nm-roll {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.nm-roll > span {
+  animation: nm-roll-in var(--dur) var(--ease-out) both;
+}
+.nm-pop {
+  animation: nm-pop-big var(--dur-slow) var(--ease-out);
+}
+
+/* ───────── Compare bar ───────── */
+
+.nm-compare-bar {
+  transition:
+    transform var(--dur-slow) var(--ease-out),
+    opacity var(--dur) var(--ease),
+    visibility 0s linear var(--dur-slow);
+}
+.nm-compare-bar[data-shown='false'] {
+  transform: translateY(calc(100% + 24px));
+  opacity: 0;
+  visibility: hidden;
+}
+.nm-compare-bar[data-shown='true'] {
+  visibility: visible;
+  transition:
+    transform var(--dur-slow) var(--ease-out),
+    opacity var(--dur) var(--ease),
+    visibility 0s;
+}
+
+/* ───────── Bars and key figures (filled on first view) ───────── */
+
+.nm-fill {
+  transform: translateX(calc(var(--fill, 1) * 100% - 100%));
+}
+/* With JavaScript (class set before first paint), bars start empty and fill once seen. */
+.nm-js .nm-fill:not([data-revealed='true']) {
+  transform: translateX(-100%);
+}
+.nm-fill[data-revealed='true'] {
+  transition: transform 600ms var(--ease-out);
+}
+
+/* ───────── Loading skeletons ───────── */
+
+.nm-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--surface-100);
+}
+.nm-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--surface-0) 70%, transparent),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: nm-shimmer 1.4s ease-in-out infinite;
+}
+
+/* ───────── Messaging ───────── */
+
+.nm-msg-in-left {
+  animation: nm-slide-in-left var(--dur-slow) var(--ease-out) both;
+}
+.nm-msg-in-right {
+  animation: nm-slide-in-right var(--dur-slow) var(--ease-out) both;
+}
+
+/* ───────── Admin ───────── */
+
+.nm-pulse-dot {
+  animation: nm-pulse 1.2s ease-in-out infinite;
+}
+.nm-row-hover {
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.nm-row-hover:hover {
+  background-color: var(--surface-50);
+}
+.nm-progress-smooth {
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+/* ───────── Mobile menu ───────── */
+
+/* Phones only: on wider screens the links sit in the header. */
+@media (max-width: 639px) {
+  .nm-drawer {
+    transition:
+      transform var(--dur-slow) var(--ease-out),
+      visibility 0s linear var(--dur-slow);
+  }
+  .nm-drawer[data-open='false'] {
+    transform: translateX(100%);
+    visibility: hidden;
+  }
+  .nm-drawer[data-open='true'] {
+    visibility: visible;
+    transition:
+      transform var(--dur-slow) var(--ease-out),
+      visibility 0s;
+  }
+  .nm-scrim {
+    transition:
+      opacity var(--dur) var(--ease),
+      visibility 0s linear var(--dur);
+  }
+  .nm-scrim[data-open='false'] {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .nm-scrim[data-open='true'] {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--dur) var(--ease),
+      visibility 0s;
+  }
+}
+@media (min-width: 640px) {
+  .nm-scrim {
+    display: none;
+  }
+}
+
+/* ───────── Page navigation (View Transitions API, when supported) ───────── */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 120ms;
+  animation-timing-function: var(--ease);
+}
+
+/* ───────── Reduced motion: no movement, at most a short fade ───────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  /* Entrances keep a plain fade; anything that moves, scales, spins or loops stops. */
+  .nm-error,
+  .nm-hint--error,
+  .nm-stagger > *,
+  .nm-thanks,
+  .nm-toast-in,
+  .nm-msg-in-left,
+  .nm-msg-in-right,
+  .nm-modal[open] .nm-modal__box,
+  .nm-roll > span {
+    animation: nm-fade-in var(--dur) linear both !important;
+    animation-delay: 0s !important;
+  }
+  .nm-modal[data-closing] .nm-modal__box {
+    animation: nm-fade-out var(--dur-fast) linear both !important;
+  }
+  .nm-gpick-btn[aria-checked='true'],
+  .nm-bounce,
+  .nm-pop,
+  .nm-spinner,
+  .nm-skeleton::after,
+  .nm-pulse-dot {
+    animation: none !important;
+  }
+  .nm-check-draw {
+    animation: none !important;
+    stroke-dashoffset: 0;
+  }
+  .nm-lift:hover,
+  .nm-btn-press:active:not(:disabled) {
+    transform: none;
+  }
+  .nm-js .nm-fill:not([data-revealed='true']) {
+    transform: translateX(calc(var(--fill, 1) * 100% - 100%));
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* ───────── "Note globale" card (transition: background-color .5s ease) ───────── */
+.nm-overall {
+  transition: background-color 0.5s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-overall {
+    transition: none;
+  }
+}
+
+/* ───────── "Donner mon avis" (.cta / .arr / nudge) ───────── */
+.nm-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.18s ease,
+    filter var(--dur-fast) var(--ease);
+}
+.nm-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(22, 19, 31, 0.18);
+}
+.nm-cta:active {
+  transform: scale(0.97);
+}
+.nm-cta .nm-cta-arr {
+  flex: none;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: nm-nudge 2.6s 1.2s ease-in-out 2;
+}
+.nm-cta:hover .nm-cta-arr {
+  transform: translateX(5px);
+  animation: none;
+}
+@keyframes nm-nudge {
+  0%,
+  64%,
+  100% {
+    transform: none;
+  }
+  72% {
+    transform: translateX(6px);
+  }
+  80% {
+    transform: none;
+  }
+  88% {
+    transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-cta,
+  .nm-cta .nm-cta-arr {
+    transition: none;
+    animation: none;
+  }
+  .nm-cta:hover,
+  .nm-cta:hover .nm-cta-arr {
+    transform: none;
+  }
+}
+
+/* ───────── Search results fall into place (.drop / drop) ───────── */
+/* `backwards`, not `both`: once fallen, the card's transform is free again (hover lift). */
+.nm-drop {
+  animation: nm-drop 0.55s cubic-bezier(0.22, 1.2, 0.36, 1) backwards;
+}
+@keyframes nm-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-22px) rotate(-1.5deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(4px) rotate(0.4deg);
+  }
+  80% {
+    transform: translateY(-1px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-drop {
+    animation: nm-fade-in 0.2s both;
+  }
+}
+
+/* ───────── ⌘K palette and header pill (palbg, palin, prow, .hpill) ───────── */
+.nm-palette[open]::backdrop {
+  animation: nm-palbg 0.2s ease both;
+}
+.nm-palette[open] .nm-palbox {
+  animation: nm-palin 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: top center;
+}
+.nm-palette[data-closing]::backdrop,
+.nm-palette[data-closing] .nm-palbox {
+  animation: nm-fade-out 0.15s ease both;
+}
+@keyframes nm-palbg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes nm-palin {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.nm-prow {
+  transition: background-color 0.12s ease;
+  animation: nm-prow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes nm-prow {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.nm-hpill {
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.nm-hpill:hover {
+  border-color: var(--ink);
+  box-shadow: 0 6px 16px rgba(40, 20, 120, 0.1);
+}
+/* ⌘K to a field: its halo appears in 150ms. */
+.nm-search-field {
+  transition: box-shadow 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-palette[open]::backdrop,
+  .nm-palette[open] .nm-palbox,
+  .nm-prow {
+    animation: none;
+  }
+  .nm-prow,
+  .nm-hpill,
+  .nm-search-field {
+    transition: none;
+  }
+}
+
+/* ───────── Review form stepper (.dot, .drop, .done, .cwin, .cnum, .stepin) ───────── */
+.nm-dot {
+  position: relative;
+  display: block;
+  height: 8px;
+  border-radius: 99px;
+  overflow: hidden;
+  transition:
+    width 0.65s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.35s ease;
+}
+.nm-dot--drop {
+  transform-origin: left center;
+  animation: nm-dropland 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  box-shadow: 0 3px 10px rgba(90, 59, 240, 0.35);
+}
+.nm-dot--drop::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: -40%;
+  width: 22%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: skewX(-25deg);
+  animation: nm-dropshine 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
+}
+@keyframes nm-dropland {
+  0% {
+    transform: scale(0.55, 1.6);
+    border-radius: 99px;
+  }
+  35% {
+    transform: scale(1.14, 0.7);
+  }
+  60% {
+    transform: scale(0.96, 1.12);
+  }
+  80% {
+    transform: scale(1.02, 0.96);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes nm-dropshine {
+  from {
+    left: -40%;
+  }
+  to {
+    left: 120%;
+  }
+}
+.nm-dot--done {
+  animation: nm-donesquish 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes nm-donesquish {
+  0% {
+    transform: scaleY(1.5);
+  }
+  100% {
+    transform: none;
+  }
+}
+.nm-cwin {
+  display: inline-block;
+  height: 1.25em;
+  line-height: 1.25em;
+  overflow: hidden;
+  vertical-align: bottom;
+  color: var(--ink);
+  font-weight: 800;
+}
+.nm-cnum {
+  display: block;
+}
+.nm-fwd.nm-cnum {
+  animation: nm-numUp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.nm-bwd.nm-cnum {
+  animation: nm-numDown 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.nm-fwd.nm-stepin {
+  animation: nm-inR 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.nm-bwd.nm-stepin {
+  animation: nm-inL 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.nm-stepin {
+  animation-delay: 0.06s !important;
+}
+@keyframes nm-inR {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nm-inL {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nm-numUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes nm-numDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-dot {
+    transition: none;
+  }
+  .nm-dot--drop,
+  .nm-dot--done,
+  .nm-dot--drop::after,
+  .nm-fwd,
+  .nm-bwd {
+    animation: none !important;
+  }
+  .nm-dot--drop::after {
+    display: none;
+  }
+}
+
+/* ───────── Master autocomplete (.psearch, .acpanel, .opt, .picked) ───────── */
+.nm-psearch {
+  transition: box-shadow 0.15s ease;
+}
+.nm-psearch:focus-within {
+  box-shadow: 0 0 0 4px var(--focus-halo);
+}
+.nm-opt {
+  transition: background-color 0.12s ease;
+}
+.nm-opt:hover {
+  background: var(--surface-50) !important;
+}
+.nm-acpanel {
+  animation: nm-acin 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: top center;
+}
+@keyframes nm-acin {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.nm-picked {
+  animation: nm-pickin 0.35s cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
+}
+@keyframes nm-pickin {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* « Et aujourd'hui ? » and « Ton poste » unfold in height (grid rows 0fr → 1fr) with a fade. */
+.nm-unfold {
+  display: grid;
+  grid-template-rows: 1fr;
+  animation: nm-unfold var(--dur-slow) var(--ease-out) both;
+}
+.nm-unfold > * {
+  min-height: 0;
+  overflow: hidden;
+}
+@keyframes nm-unfold {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-picked,
+  .nm-acpanel {
+    animation: none;
+  }
+  .nm-opt,
+  .nm-psearch {
+    transition: none;
+  }
+  .nm-unfold {
+    animation: nm-fade-in var(--dur) both;
+  }
+}
+
+/* ───────── Mon espace (.tab, .lift) ───────── */
+.nm-tab {
+  transition: background-color 0.15s ease;
+}
+.nm-tabfade {
+  animation: nm-fade-in var(--dur-fast) linear both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-tab {
+    transition: none;
+  }
+}
+
+/*
+ * ───────── « Suivre » / « Suivi » (.save …) ─────────
+ * The celebration (heart pop, ring, confetti, glow, tag drop) plays only after a click
+ * (data-celebrate), never on load nor when unfollowing.
+ */
+.nm-save {
+  position: relative;
+  isolation: isolate;
+  transition:
+    color 0.3s ease 0.24s,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.35s ease;
+}
+.nm-save:hover {
+  transform: translateY(-1px);
+}
+.nm-save:active {
+  transform: scale(0.94);
+  transition-duration: 0.12s;
+}
+.nm-save .nm-save-fill {
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.nm-save[aria-pressed='true'] .nm-save-fill {
+  clip-path: circle(80% at 50% 50%);
+}
+.nm-save[aria-pressed='true'][data-celebrate] {
+  animation: nm-glow 0.9s ease-out 0.4s;
+}
+@keyframes nm-glow {
+  0% {
+    box-shadow: 0 0 0 0 var(--glow, rgba(255, 255, 255, 0.55));
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(255, 255, 255, 0);
+  }
+}
+.nm-save .nm-save-hw {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+}
+.nm-save .nm-heart path {
+  fill: transparent;
+  transition: fill 0.2s ease 0.2s;
+}
+.nm-save[aria-pressed='true'] .nm-heart path {
+  fill: currentColor;
+}
+.nm-save[aria-pressed='true'][data-celebrate] .nm-heart {
+  animation: nm-hpop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes nm-hpop {
+  0% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(0.5);
+  }
+  55% {
+    transform: scale(1.3) rotate(-7deg);
+  }
+  78% {
+    transform: scale(0.93) rotate(2deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.nm-save .nm-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  border: 2px solid var(--burst, #5a3bf0);
+  box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
+  animation: nm-ring 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) 0.12s both;
+}
+@keyframes nm-ring {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.15);
+    border-width: 9px;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+    border-width: 1px;
+  }
+}
+.nm-save .nm-p {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 2px;
+  background: var(--c);
+  opacity: 0;
+  pointer-events: none;
+  animation: nm-burst 0.75s cubic-bezier(0.15, 0.85, 0.35, 1) 0.16s both;
+}
+.nm-save .nm-p:nth-child(even) {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation-duration: 0.6s;
+}
+@keyframes nm-burst {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateX(6px) scale(1);
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(var(--d, 26px)) scale(0.2);
+  }
+}
+.nm-p1 {
+  --a: -90deg;
+  --c: #d4f75a;
+}
+.nm-p2 {
+  --a: -45deg;
+  --c: #ff8a73;
+  --d: 20px;
+}
+.nm-p3 {
+  --a: 0deg;
+  --c: #b9a7ff;
+}
+.nm-p4 {
+  --a: 45deg;
+  --c: #d4f75a;
+  --d: 20px;
+}
+.nm-p5 {
+  --a: 90deg;
+  --c: #ff8a73;
+}
+.nm-p6 {
+  --a: 135deg;
+  --c: #b9a7ff;
+  --d: 20px;
+}
+.nm-p7 {
+  --a: 180deg;
+  --c: #d4f75a;
+}
+.nm-p8 {
+  --a: 225deg;
+  --c: #ff8a73;
+  --d: 20px;
+}
+.nm-save .nm-lbl {
+  position: relative;
+  display: inline-grid;
+  height: 1.3em;
+  line-height: 1.3em;
+  overflow: hidden;
+}
+.nm-save .nm-lbl > span {
+  grid-area: 1 / 1;
+  text-align: left;
+  transition:
+    transform 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.35s ease,
+    filter 0.35s ease;
+}
+.nm-save .nm-lb {
+  transform: translateY(110%);
+  opacity: 0;
+  filter: blur(3px);
+}
+.nm-save[aria-pressed='true'] .nm-la {
+  transform: translateY(-110%);
+  opacity: 0;
+  filter: blur(3px);
+}
+.nm-save[aria-pressed='true'] .nm-lb {
+  transform: none;
+  opacity: 1;
+  filter: none;
+}
+.nm-save--card {
+  --glow: rgba(90, 59, 240, 0.35);
+}
+/* Followed card: only the lime « Suivi » tag tilted -3° across the top edge (no violet border:
+   too much next to the tag). */
+.nm-followcard {
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.nm-savedtag {
+  position: absolute;
+  top: -11px;
+  left: 18px;
+  z-index: 1;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: var(--lime-400);
+  color: var(--on-lime);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+  transform: rotate(-3deg);
+  pointer-events: none;
+  animation: nm-tagdrop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s both;
+}
+@keyframes nm-tagdrop {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px) rotate(-16deg) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-3deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-save,
+  .nm-save .nm-save-fill,
+  .nm-save .nm-heart path,
+  .nm-save .nm-lbl > span {
+    transition: none;
+  }
+  .nm-save[aria-pressed='true'],
+  .nm-save[aria-pressed='true'] .nm-heart,
+  .nm-savedtag {
+    animation: none;
+  }
+  .nm-save .nm-ring,
+  .nm-save .nm-p {
+    display: none;
+  }
+  .nm-save .nm-lb,
+  .nm-save[aria-pressed='true'] .nm-la {
+    filter: none;
+  }
+}
+
+/* ───────── « Utile » vote (.vote, .thumb, .roll, .plus1, .spark) ───────── */
+.nm-vote {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
+}
+.nm-vote:active {
+  transform: scale(0.95);
+}
+.nm-vote[aria-pressed='true'][data-celebrate] .nm-thumb {
+  animation: nm-thumbup 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.4);
+  transform-origin: 30% 80%;
+}
+@keyframes nm-thumbup {
+  0% {
+    transform: none;
+  }
+  30% {
+    transform: rotate(-24deg) scale(1.35) translateY(-2px);
+  }
+  60% {
+    transform: rotate(8deg) scale(0.95);
+  }
+  100% {
+    transform: none;
+  }
+}
+.nm-roll {
+  animation: nm-roll-num 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes nm-roll-num {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.nm-plus1 {
+  position: absolute;
+  left: 18px;
+  top: -4px;
+  font: 800 13px var(--font-sans);
+  color: var(--violet-700);
+  pointer-events: none;
+  animation: nm-plus1 0.9s ease-out forwards;
+}
+@keyframes nm-plus1 {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.8);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-26px);
+  }
+}
+.nm-spark {
+  position: absolute;
+  left: 24px;
+  top: 22px;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: #5a3bf0;
+  pointer-events: none;
+  opacity: 0;
+  animation: nm-spark 0.6s ease-out forwards;
+}
+.nm-spark.nm-s1 {
+  --dx: -16px;
+  --dy: -14px;
+}
+.nm-spark.nm-s2 {
+  --dx: 14px;
+  --dy: -16px;
+  background: #d4f75a;
+}
+.nm-spark.nm-s3 {
+  --dx: -12px;
+  --dy: 12px;
+  background: #ff8a73;
+}
+.nm-spark.nm-s4 {
+  --dx: 16px;
+  --dy: 10px;
+}
+@keyframes nm-spark {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.4) rotate(45deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-vote[aria-pressed='true'] .nm-thumb,
+  .nm-roll,
+  .nm-spark {
+    animation: none;
+  }
+  .nm-plus1 {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Chip counters: a new value fades in. */
+.nm-count {
+  animation: nm-fade-in var(--dur) var(--ease) both;
+}
+
+/* FAQ (<details>): unfolds in height where the browser can animate ::details-content. */
+@supports (interpolate-size: allow-keywords) {
+  .nm-faq {
+    interpolate-size: allow-keywords;
+  }
+  .nm-faq::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--dur-slow) var(--ease-out),
+      content-visibility var(--dur-slow) allow-discrete;
+  }
+  .nm-faq[open]::details-content {
+    block-size: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-faq::details-content {
+    transition: none;
+  }
+}
+
+/* Comparator: a column that gets a program fades in. */
+.nm-colfade {
+  animation: nm-fade-in var(--dur-slow) var(--ease) both;
+}
+
+/* Page change: the content fades in (120ms). */
+.nm-page-fade {
+  animation: nm-fade-in var(--dur-fast) linear both;
+}
+
+/* First load of a document (html.nm-first, set before the first paint, removed by NavMarker at
+ * the first client navigation): no entrance animation starting at opacity 0. The content is
+ * painted at once, so the Largest Contentful Paint does not wait for the JavaScript. */
+.nm-first .nm-page-fade,
+.nm-first .nm-drop,
+.nm-first .mm-card,
+.nm-first .zone,
+.nm-first .vc,
+.nm-first .vc .seg {
+  animation: none;
+}
+
+/* ───────── Footer ─────────
+ * Classes and keyframes prefixed ft-. The server renders the final
+ * state; SiteFooterMotion adds .armed (hidden, numbers at 0) once mounted, then .shown when the
+ * footer enters the screen (IntersectionObserver, once). The block stays dark in both themes. */
+.ft {
+  background: #16131f;
+  color: #ffffff;
+  border-radius: 40px 40px 0 0;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font-sans);
+}
+.ft a {
+  color: #e7e3f0;
+  text-decoration: none;
+}
+.ft a:hover {
+  color: #ffffff;
+}
+.ft-link {
+  background-image: linear-gradient(#d4f75a, #d4f75a);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 2px;
+  padding-bottom: 2px;
+  transition:
+    background-size 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    color 0.15s ease;
+}
+.ft-link:hover,
+.ft-link:focus-visible {
+  background-size: 100% 2px;
+}
+.ft a:focus-visible,
+.ft button:focus-visible {
+  outline: 3px solid #d4f75a;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.ft .ft-cta {
+  color: #16131f;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.ft .ft-cta:hover {
+  color: #16131f;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(212, 247, 90, 0.25);
+}
+.ft-cta .ft-arr {
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ft-cta:hover .ft-arr {
+  transform: translateX(5px);
+}
+.ft-live {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d4f75a;
+  flex: none;
+  animation: ft-livepulse 2.2s ease-out infinite;
+}
+@keyframes ft-livepulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 247, 90, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(212, 247, 90, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 247, 90, 0);
+  }
+}
+.ft-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(44px, 5vw, 68px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.ft-bar {
+  display: block;
+  width: 48px;
+  height: 3px;
+  border-radius: 3px;
+  background: #d4f75a;
+  transform-origin: left center;
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ft-wm {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(52px, 12.4vw, 200px);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  margin: 40px 0 -0.17em;
+  padding: 0 24px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* Below 380px the 52px minimum of the clamp would be wider than the screen (≈ 7.25em of text):
+   the logo then follows the viewport so it still fits whole at 320px. */
+@media (max-width: 379px) {
+  .ft-wm {
+    font-size: 12.4vw;
+    padding: 0 8px;
+  }
+}
+.ft-wm .w {
+  display: inline-block;
+}
+.ft-wm .g {
+  margin-left: 0.14em;
+}
+.ft-wm .hl {
+  display: inline-block;
+  position: relative;
+  isolation: isolate;
+  margin-left: 0.05em;
+  padding: 0 0.13em 0.07em;
+  color: #16131f;
+  transform: rotate(-3deg);
+}
+.ft-wm .hl::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 0.12em;
+  background: #d4f75a;
+  transform-origin: left center;
+}
+.ft.armed .w {
+  opacity: 0;
+  transform: translateY(55%);
+}
+.ft.armed .hl {
+  transform: translateY(55%) rotate(0deg);
+}
+.ft.armed .hl::before {
+  transform: scaleX(0);
+}
+.ft.armed .ft-bar {
+  transform: scaleX(0);
+}
+.ft.shown .w {
+  animation: ft-wrise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.ft.shown .w2 {
+  animation-delay: 0.08s;
+}
+.ft.shown .w3 {
+  animation-delay: 0.16s;
+}
+.ft.shown .hl {
+  animation:
+    ft-wrise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.16s forwards,
+    ft-hltilt 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) 1.05s forwards;
+}
+.ft.shown .hl::before {
+  animation: ft-hlsweep 0.55s cubic-bezier(0.6, 0, 0.2, 1) 0.5s forwards;
+}
+.ft.shown .ft-bar {
+  transform: scaleX(1);
+}
+@keyframes ft-wrise {
+  from {
+    opacity: 0;
+    transform: translateY(55%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ft-hlsweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes ft-hltilt {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-3deg);
+  }
+}
+.ft-thm {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: none;
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+  background: transparent;
+  color: #cfcadb;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.ft-thm[aria-checked='true'] {
+  background: #d4f75a;
+  color: #16131f;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ft-live {
+    animation: none;
+  }
+  .ft .w,
+  .ft .hl,
+  .ft .hl::before {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .ft .hl {
+    transform: rotate(-3deg) !important;
+  }
+  .ft .hl::before,
+  .ft .ft-bar {
+    transform: none !important;
+    transition: none;
+  }
+  .ft-link,
+  .ft-cta,
+  .ft-cta .ft-arr {
+    transition: none;
+  }
+}
+
+/* ───────── « D'où viennent les admis » (Parcours › Admission .ao-*) ───────── */
+.ao-seg {
+  transform-origin: left center;
+  animation: ao-grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition: opacity 0.15s ease;
+}
+.ao-rate {
+  transform-origin: left center;
+  animation: ao-grow 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes ao-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ao-seg,
+  .ao-rate {
+    animation: none;
+  }
+  .ao-seg {
+    transition: none;
+  }
+}
+
+/* ───────── « Comment ce master évolue » (Parcours › Admission .ev-*) ───────── */
+.ev-bar {
+  transform-origin: bottom center;
+  animation: ev-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition: opacity 0.15s ease;
+}
+@keyframes ev-up {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ev-bar {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ───────── Droit de réponse (.dr-reply, .dr-step) ───────── */
+.dr-reply {
+  animation: qp-drop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
+}
+@keyframes qp-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.dr-step {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dr-reply {
+    animation: none;
+  }
+  .dr-step {
+    transition: none;
+  }
+}
+
+/* ───────── Questions publiques (.qp-*) ───────── */
+.qp-card {
+  animation: qp-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes qp-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.qp-vote {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.qp-vote[aria-pressed='true'] {
+  transform: translateY(-2px);
+}
+.qp-ans {
+  animation: qp-drop 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .qp-card,
+  .qp-ans {
+    animation: none;
+  }
+  .qp-vote {
+    transition: none;
+  }
+  .qp-vote[aria-pressed='true'] {
+    transform: none;
+  }
+}
+
+/* ───────── « Comparer » → « Ajouté » (.cmp) ───────── */
+
+.nm-cmp {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 132px;
+  min-height: 40px;
+  padding: 0 12px;
+  overflow: hidden;
+  border: 1.5px solid var(--border-control);
+  border-radius: 999px;
+  background: var(--surface-0);
+  color: var(--ink);
+  font: 700 13px/1 var(--font-sans, Inter, sans-serif);
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nm-cmp:active {
+  transform: scale(0.94);
+}
+.nm-cmp[aria-pressed='true'] {
+  border-color: var(--night);
+  background: var(--lime-400);
+  color: var(--on-lime);
+  animation: nm-cmppop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nm-cmp[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.nm-cmp[aria-disabled='true']:active {
+  transform: none;
+}
+.nm-cmp[data-shake='1'] {
+  animation: nm-cmpshake-a 0.4s ease;
+}
+.nm-cmp[data-shake='0'] {
+  animation: nm-cmpshake-b 0.4s ease;
+}
+.nm-cmp-l {
+  display: inline-grid;
+  height: 1.4em;
+  line-height: 1.4em;
+  overflow: hidden;
+}
+.nm-cmp-l > span {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition:
+    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.3s ease;
+}
+.nm-cmp-b {
+  transform: translateY(110%);
+  opacity: 0;
+}
+.nm-cmp[aria-pressed='true'] .nm-cmp-a {
+  transform: translateY(-110%);
+  opacity: 0;
+}
+.nm-cmp[aria-pressed='true'] .nm-cmp-b {
+  transform: none;
+  opacity: 1;
+}
+.nm-cmp-tick {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset 0.35s ease 0.28s;
+}
+.nm-cmp[aria-pressed='true'] .nm-cmp-tick {
+  stroke-dashoffset: 0;
+}
+@keyframes nm-cmppop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* Two identical keyframes: alternating them restarts the shake on every press. */
+@keyframes nm-cmpshake-a {
+  0%,
+  100% {
+    transform: none;
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes nm-cmpshake-b {
+  0%,
+  100% {
+    transform: none;
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-cmp,
+  .nm-cmp-l > span,
+  .nm-cmp-tick {
+    transition: none;
+  }
+  .nm-cmp[aria-pressed='true'],
+  .nm-cmp[data-shake] {
+    animation: none;
+  }
+}
+
+/* ───────── Masters suivis (.svc, .unf) ───────── */
+
+/* The master card (ProgramCard) of Mon espace: violet border once ticked for the comparison. */
+.nm-svc:has(.nm-cmp[aria-pressed='true']) {
+  border-color: var(--violet-500);
+  background-color: color-mix(in srgb, var(--violet-500) 2.5%, var(--surface-0));
+}
+.nm-unf {
+  transition:
+    background-color 0.15s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nm-unf:hover {
+  background: color-mix(in srgb, var(--violet-500) 22%, var(--violet-100));
+}
+.nm-unf:active {
+  transform: scale(0.9);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nm-unf {
+    transition: none;
+  }
+}
+
+/* ───────── Fiche parcours › Programme : filtres par thématique (.seg-btn) ───────── */
+.seg-btn {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .seg-btn {
+    transition: none;
+  }
+}
+
+/* ───────── Fiche parcours › « Même mention, ailleurs » (.mm-card) ───────── */
+/* The cards rise in cascade (delay set by ProgramCard), like the questions (qp-in). */
+.mm-card {
+  animation: qp-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-card {
+    animation: none;
+  }
+}
+
+/* ───────── Bandeau d'information (Annonce .ann, .ann-ico, .ann-x) ───────── */
+.ann {
+  position: relative;
+  overflow: hidden;
+  animation: ann-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ann::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 30%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-18deg);
+  animation: ann-sheen 1.4s ease 0.7s 1 both;
+  pointer-events: none;
+}
+.ann.leaving {
+  animation: ann-out 0.35s cubic-bezier(0.6, 0, 0.4, 1) forwards;
+}
+@keyframes ann-in {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes ann-out {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+    margin-bottom: -48px;
+  }
+}
+@keyframes ann-sheen {
+  from {
+    left: -40%;
+  }
+  to {
+    left: 120%;
+  }
+}
+.ann-ico {
+  animation: ann-twinkle 3.2s ease-in-out 1.2s infinite;
+}
+@keyframes ann-twinkle {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0) scale(1);
+  }
+  78% {
+    transform: rotate(18deg) scale(1.15);
+  }
+  86% {
+    transform: rotate(-8deg) scale(0.95);
+  }
+}
+.ann a.ann-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+.ann a.ann-link:hover {
+  text-decoration-thickness: 3px;
+}
+.ann-x {
+  transition:
+    background-color 0.15s ease,
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ann-x:hover {
+  background: rgba(22, 19, 31, 0.12);
+  transform: rotate(90deg);
+}
+.ann button:focus-visible,
+.ann a:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+/* Dismissed (inline script of the root layout): hidden before the first paint */
+html[data-banner-closed] .ann {
+  display: none;
+}
+/* Already seen in this visit: no slide-in nor sheen again */
+html[data-banner-seen] .ann:not(.leaving),
+html[data-banner-seen] .ann::after {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ann,
+  .ann.leaving,
+  .ann-ico,
+  .ann::after {
+    animation: none;
+  }
+  .ann-x {
+    transition: none;
+  }
+  .ann-x:hover {
+    transform: none;
+  }
+}
+/* Admin preview */
+.ann-prev {
+  animation: annp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes annp {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.tone {
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ann-prev {
+    animation: none;
+  }
+}
+
+/* ───────── Accueil › la ligne des villes ouvertes (.zone / zone-in) ───────── */
+.zone {
+  animation: zone-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+@keyframes zone-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zone {
+    animation: none;
+  }
+}
+
+/* Indexes /mentions and /universites. `ix-card`: the
+   cards come in cascade (delay set inline), then lift 3px on hover, their border turns night
+   and their arrow slides. `ix-chip`: colour transitions of the filters. `cp-pop`: the panel of
+   the city picker. Nothing of it with reduced motion. */
+.ix-card {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+  animation: ix-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+.ix-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(40, 20, 120, 0.1);
+  border-color: var(--ink);
+}
+.ix-card .go {
+  opacity: 0.35;
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.2s ease;
+}
+.ix-card:hover .go,
+.ix-card:focus-within .go {
+  transform: translateX(4px);
+  opacity: 1;
+}
+/* The card is focused through its name (a stretched link): the ring goes around the card. */
+.ix-card:has(a:focus-visible) {
+  outline: 2px solid var(--violet-500);
+  outline-offset: 3px;
+}
+.ix-card a:focus-visible {
+  outline: none;
+}
+@keyframes ix-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ix-chip {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.cp-chevron {
+  transition: transform 0.2s ease;
+}
+.cp-pop {
+  animation: cp-in 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: top left;
+}
+@keyframes cp-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.cp-opt:hover {
+  background: var(--surface-50);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ix-card,
+  .ix-card .go,
+  .ix-chip,
+  .cp-chevron,
+  .cp-pop {
+    transition: none;
+    animation: none;
+  }
+  .ix-card:hover,
+  .ix-card:hover .go,
+  .ix-card:focus-within .go {
+    transform: none;
+  }
+}
+
+/* Index /masters (VillesIndex mockup). `vc`: the city cards come in cascade (delay set inline),
+   then lift 3px on hover, their border turns night and their arrow square turns lime and slides
+   (the whole card is the link: the name, stretched).
+   `vc-grow`: the bar of the domains fills from left to right. Nothing of it with reduced motion,
+   and no entrance on the first load of the document (.nm-first above). */
+.vc {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+  animation: ix-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+.vc:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(40, 20, 120, 0.1);
+  border-color: var(--ink);
+}
+.vc .go {
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.vc:hover .go,
+.vc:focus-within .go {
+  transform: translateX(3px);
+  background: var(--lime-400);
+  color: var(--on-lime);
+}
+/* The card is focused through its name (a stretched link): the ring goes around the card. */
+.vc:has(a:focus-visible) {
+  outline: 2px solid var(--violet-500);
+  outline-offset: 3px;
+}
+.vc a:focus-visible {
+  outline: none;
+}
+.vc .seg {
+  transform-origin: left center;
+  animation: vc-grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+@keyframes vc-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vc,
+  .vc .go,
+  .vc .seg {
+    transition: none;
+    animation: none;
+  }
+  .vc:hover,
+  .vc:hover .go,
+  .vc:focus-within .go {
+    transform: none;
+  }
+}
+
+/* ───────── Admin (AdminOverview, AdminFiches, AdminSync, AdminAudit mockups) ─────────
+   todo-row: the arrow of a subject slides on hover · drawer / drawer-bg: the fiche panel slides
+   in from the right · bulk: the bulk action bar rises · expand: a detail unfolds. */
+.todo-row {
+  transition:
+    background-color 0.15s ease,
+    transform 0.18s ease;
+}
+.todo-row .go {
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.todo-row:hover .go {
+  transform: translateX(4px);
+}
+.trow {
+  transition: background-color 0.12s ease;
+}
+.drawer-bg {
+  animation: nm-dbg 0.2s ease both;
+}
+.drawer {
+  animation: nm-din 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes nm-dbg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes nm-din {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.bulk {
+  animation: nm-bulkup 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes nm-bulkup {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.expand {
+  animation: nm-exp 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes nm-exp {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .drawer-bg,
+  .bulk,
+  .expand {
+    animation: none;
+  }
+  .todo-row,
+  .todo-row .go,
+  .trow {
+    transition: none;
+  }
+  .todo-row:hover .go {
+    transform: none;
+  }
+}

@@ -1,0 +1,1881 @@
+// notetonmaster — database schema.
+// Sensitive values (emails, TOTP secrets) are encrypted at rest (AES-256-GCM, lib/crypto).
+// Columns suffixed `Enc` hold ciphertext; `Hash` columns hold an HMAC used for lookups.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/db/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────────── Catalogue ─────────────────────────────
+
+model University {
+  id                String            @id @default(cuid())
+  name              String
+  shortName         String?
+  slug              String            @unique
+  uai               String?           @unique
+  paysageId         String?           @unique
+  /// Établissement-composante (UVSQ → Université Paris-Saclay), saisi à la main dans l'admin.
+  parentId          String?
+  parent            University?       @relation("UniversityParent", fields: [parentId], references: [id], onDelete: SetNull)
+  children          University[]      @relation("UniversityParent")
+  address           String?
+  lat               Float?
+  lng               Float?
+  /// Official domains the crawler may visit for this university (allow-list).
+  siteDomains       String[]
+  origin            RecordOrigin      @default(MANUAL)
+  city              String
+  cities            String[]
+  region            String
+  website           String?
+  emailDomains      String[] // recognised student/staff mail domains (university email verification)
+  /// Official domains of the staff (droit de réponse): from the website of the annuaire, completed in the admin.
+  mailDomains       String[]
+  keywords          String[]
+  isPublished       Boolean           @default(true)
+  /// Secteur de l'annuaire des établissements (`secteur_d_etablissement`). Null : absent de
+  /// l'annuaire, traité comme privé jusqu'à vérification dans l'admin (alerte « sector-unknown »).
+  sector            UniversitySector?
+  /// "annuaire" (recalculé à chaque synchro) ou "admin" (saisi à la main, jamais écrasé).
+  sectorSource      String?
+  /// `type_d_etablissement` de l'annuaire : Université, École, Grand établissement…
+  establishmentType String?
+  /// Published reviews of its published parcours and their average (index /universites): copied
+  /// from ProgramSearchIndex after every review change and index rebuild, never computed on read.
+  reviewCount       Int               @default(0)
+  avgRating         Float?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  components        Component[]
+  programs          Program[]
+  insertionStats    InsertionStat[]
+  campuses          Campus[]
+  accreditations    MentionAccreditation[]
+  extractionProfile ExtractionProfile?
+  staffResponders   StaffResponder[]
+  crawlPages        CrawlPage[]
+
+  @@index([sector])
+}
+
+enum UniversitySector {
+  PUBLIC
+  PRIVATE
+}
+
+model Component {
+  id           String     @id @default(cuid())
+  name         String
+  universityId String
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  programs     Program[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([universityId, name])
+}
+
+model Domain {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  tone        String    @default("violet") // violet | lime | coral | night
+  icon        String    @default("mention")
+  position    Int       @default(0)
+  mentions    Mention[]
+}
+
+model Mention {
+  id              String         @id @default(cuid())
+  name            String
+  slug            String         @unique
+  domainId        String?
+  domain          Domain?        @relation(fields: [domainId], references: [id], onDelete: SetNull)
+  rncpCode        String?
+  rncpStatus      String?
+  certificationId String?
+  certification   Certification? @relation(fields: [certificationId], references: [id], onDelete: SetNull)
+  levels          String[] // e.g. ["M1", "M2"]
+  description     String?
+  /// Common skills of the mention, read on a mention page of a university site (univ-sites).
+  skills          String?
+  /// Short name of the mention, shown for the default course theme of the programme
+  /// (« Patrimoine » for Culture, patrimoine et médiation). Entered in the admin.
+  shortLabel      String?
+  keywords        String[]
+  isPublished     Boolean        @default(true)
+  origin          RecordOrigin   @default(MANUAL)
+  /// Published reviews of its published parcours and their average (index /mentions): copied
+  /// from ProgramSearchIndex after every review change and index rebuild, never computed on read.
+  reviewCount     Int            @default(0)
+  avgRating       Float?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  programs       Program[]
+  insertionStats InsertionStat[]
+  accreditations MentionAccreditation[]
+}
+
+/// A national mention accredited in one university (Mon Master `inm`). A co-accredited mention has
+/// the same `inm` in several universities: one accreditation per university. When a university is
+/// re-accredited the new `inm` points to the old one (`predecessorId`, "succède à"), so the
+/// insertion history of the old accreditation stays attached. An old accreditation may have
+/// several successors (its parcours moved to several new mentions).
+model MentionAccreditation {
+  id               String                 @id @default(cuid())
+  mentionId        String
+  mention          Mention                @relation(fields: [mentionId], references: [id], onDelete: Cascade)
+  universityId     String
+  university       University             @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  inm              String
+  predecessorId    String?
+  predecessor      MentionAccreditation?  @relation("AccreditationSuccession", fields: [predecessorId], references: [id], onDelete: SetNull)
+  successors       MentionAccreditation[] @relation("AccreditationSuccession")
+  firstSeenSession Int?
+  lastSeenSession  Int?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  programs         Program[]
+
+  @@unique([inm, universityId])
+  @@index([mentionId])
+}
+
+enum CertificationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Certification {
+  id               String              @id @default(cuid())
+  code             String              @unique // RNCP42684
+  title            String
+  level            Int?
+  status           CertificationStatus
+  validFrom        DateTime?
+  validTo          DateTime?
+  lastDeliveryDate DateTime?
+  replacesCode     String?
+  certifiers       String[]
+  sourceUrl        String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  mentions Mention[]
+}
+
+enum Modality {
+  ONSITE
+  WORK_STUDY
+  HYBRID
+  REMOTE
+}
+
+enum EntryLevel {
+  M1
+  M2
+}
+
+enum ProgramStatus {
+  ACTIVE
+  NOT_RENEWED
+  DRAFT
+}
+
+enum RecordOrigin {
+  SYNC
+  MANUAL
+}
+
+model Program {
+  id                  String                @id @default(cuid())
+  title               String
+  shortName           String? // EMAS, ACPCI…
+  slug                String                @unique
+  mentionId           String
+  mention             Mention               @relation(fields: [mentionId], references: [id], onDelete: Restrict)
+  universityId        String
+  university          University            @relation(fields: [universityId], references: [id], onDelete: Restrict)
+  componentId         String?
+  component           Component?            @relation(fields: [componentId], references: [id], onDelete: SetNull)
+  city                String
+  campus              String?
+  campusId            String?
+  campusRef           Campus?               @relation(fields: [campusId], references: [id], onDelete: SetNull)
+  accreditationId     String?
+  accreditation       MentionAccreditation? @relation(fields: [accreditationId], references: [id], onDelete: SetNull)
+  /// "Même parcours, autre modalité" (work-study and on-site versions are two programs by default).
+  variantOfId         String?
+  variantOf           Program?              @relation("ProgramVariant", fields: [variantOfId], references: [id], onDelete: SetNull)
+  variants            Program[]             @relation("ProgramVariant")
+  status              ProgramStatus         @default(ACTIVE)
+  origin              RecordOrigin          @default(MANUAL)
+  firstSeenSession    Int?
+  lastSeenSession     Int?
+  modality            Modality              @default(ONSITE)
+  durationYears       Int                   @default(2)
+  ects                Int?
+  entryLevel          EntryLevel            @default(M1)
+  isPublished         Boolean               @default(true)
+  contactRole         String?
+  summary             String?
+  keywords            String[]
+  // Admission
+  applicationPlatform String? // "Mon Master", "Inception"…
+  applicationWindow   String?
+  admissionCriteria   String? // "attendus et critères" (cannot be collected from Mon Master)
+  selectionProcess    String?
+  m2Entry             String?
+  recommendedDegrees  String?
+  requirements        String? // e.g. second foreign language required
+  // Admission, entered by hand (or extracted from a university page): lists, locked by default.
+  expectations        String[] // attendus
+  selectionCriteria   String[] // critères d'examen des candidatures
+  examModes           String[] // Dossier, Entretien, Épreuve écrite
+  languages           String[] // langues demandées
+  advisedDegrees      String[] // diplômes conseillés
+  admissionSourceUrl  String? // page consulted for the manual entry
+  tuitionFees         String?
+  // Rubrics read on the university page (univ-sites), or entered in the admin
+  objectives          String?
+  skills              String?
+  furtherStudies      String?
+  // Programme extras
+  internships         String?
+  highlights          String[] // short facts: "Carte de guide-conférencier"…
+  /// Published reviews, denormalised (lib/catalog/program-ratings.ts): recomputed after every
+  /// review published, edited or removed. Copied into ProgramSearchIndex for the lists.
+  reviewCount         Int                   @default(0)
+  verifiedReviewCount Int                   @default(0)
+  avgRating           Float?
+  /// Share of the published reviews with an overall rating of 4 or 5 (« n % le recommandent »).
+  recommendShare      Int?
+  /// INSEE codes of the communes the program is taught in (campus, Mon Master `lieux`),
+  /// recomputed at each sync (lib/launch/zones.ts).
+  siteCommunes        String[]              @default([])
+  /// At least one site in an open launch zone (LaunchZone). Published = isPublished && inOpenZone.
+  inOpenZone          Boolean               @default(false)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  monMasterEntries MonMasterEntry[]
+  admissionStats   AdmissionStat[]
+  semesters        ProgramSemester[]
+  reviews          Review[]
+  favorites        Favorite[]
+  verifications    ProgramVerification[]
+  searchIndex      ProgramSearchIndex?
+  questions        Question[]
+
+  @@index([mentionId])
+  @@index([universityId])
+  @@index([status])
+  @@index([avgRating(sort: Desc), reviewCount(sort: Desc)])
+  @@index([reviewCount(sort: Desc)])
+  @@index([inOpenZone])
+}
+
+/// Denormalised row of a listed program (published, ACTIVE or NOT_RENEWED, published university
+/// and mention), with everything Explorer, the search, the facets and the sorts read: one table, no
+/// join on the public lists. Rebuilt after each publication (lib/catalog/program-index.ts), one row
+/// refreshed after each review published or removed. Private establishments are kept (flag
+/// `isPublicSector`): the public site hides them by default (lib/domain/sector.ts).
+model ProgramSearchIndex {
+  programId           String                   @id
+  program             Program                  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  slug                String
+  /// Displayed title: the speciality when the source reads « Parcours : M2 Spécialité ».
+  title               String
+  parentTitle         String?
+  sourceTitle         String
+  shortName           String?
+  status              ProgramStatus
+  universityId        String
+  universitySlug      String
+  /// First UAI of the establishment (Explorer URLs: etab=0442953W), or its slug.
+  universityKey       String
+  universityName      String
+  universityShort     String
+  universityParentId  String?
+  /// UNIVERSITY | PUBLIC_SCHOOL | PRIVATE (lib/domain/sector.ts)
+  kind                String
+  isPublicSector      Boolean
+  mentionId           String
+  mentionSlug         String
+  mentionName         String
+  domainSlug          String?
+  discipline          String?
+  disciplineSlug      String?
+  componentName       String?
+  campusName          String?
+  /// insee:44109, or nom:<slug> when the commune is unknown, or etranger:<slug>.
+  cityKey             String
+  cityName            String
+  cityInsee           String?
+  departmentCode      String?
+  departmentName      String?
+  region              String?
+  regionSlug          String?
+  lat                 Float?
+  lng                 Float?
+  isAbroad            Boolean                  @default(false)
+  /// Open launch zones the program is taught in (Explorer « Lieu » = zone:strasbourg, city pills).
+  zoneSlugs           String[]                 @default([])
+  /// presentiel | alternance | continue | distance
+  modalities          String[]
+  durationYears       Int                      @default(2)
+  entryLevel          EntryLevel
+  places              Int?
+  applications        Int?
+  offers              Int?
+  /// Offers / applications × 100 (latest session), or the brochure access rate.
+  accessRate          Float?
+  /// tres-selectif | selectif | accessible | nc
+  accessBand          String
+  lastSession         Int?
+  reviewCount         Int                      @default(0)
+  verifiedReviewCount Int                      @default(0)
+  avgRating           Float?
+  recommendShare      Int?
+  tsv                 Unsupported("tsvector")?
+  titleNorm           String
+  textNorm            String
+  updatedAt           DateTime                 @default(now())
+
+  @@index([isPublicSector, kind])
+  @@index([universityId])
+  @@index([mentionId])
+  @@index([domainSlug, disciplineSlug])
+  @@index([cityInsee])
+  @@index([departmentCode])
+  @@index([regionSlug])
+  @@index([lat, lng])
+  @@index([places])
+  @@index([applications])
+  @@index([accessRate])
+  @@index([avgRating])
+  @@index([reviewCount])
+  @@index([title])
+  @@index([modalities], type: Gin)
+  @@index([zoneSlugs], type: Gin)
+  @@index([titleNorm(ops: raw("gin_trgm_ops"))], map: "ProgramSearchIndex_titleNorm_trgm_idx", type: Gin)
+  @@index([textNorm(ops: raw("gin_trgm_ops"))], map: "ProgramSearchIndex_textNorm_trgm_idx", type: Gin)
+}
+
+/// Former slugs of a program (renamed to tell homonyms apart): /parcours/<old> answers 301.
+model ProgramSlugRedirect {
+  slug      String   @id
+  programId String
+  createdAt DateTime @default(now())
+
+  @@index([programId])
+}
+
+/// A campus = a teaching place of a university in a commune (INSEE code), built from Mon Master `lieux`.
+model Campus {
+  id           String     @id @default(cuid())
+  universityId String
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  name         String
+  key          String // normalised name, part of the unique key
+  cityId       String
+  city         City       @relation(fields: [cityId], references: [id], onDelete: Restrict)
+  lat          Float?
+  lng          Float?
+  createdAt    DateTime   @default(now())
+  programs     Program[]
+
+  @@unique([universityId, cityId, key])
+}
+
+model MonMasterEntry {
+  id           String          @id @default(cuid())
+  code         String          @unique // 2500101KDKQN (ifc)
+  label        String?
+  inm          String?
+  inmp         String?
+  workStudy    Boolean?
+  places       String? // raw `lieux` of the latest session
+  firstSession Int?
+  lastSession  Int?
+  programId    String
+  program      Program         @relation(fields: [programId], references: [id], onDelete: Cascade)
+  stats        AdmissionStat[]
+}
+
+model AdmissionStat {
+  id                       String            @id @default(cuid())
+  programId                String
+  program                  Program           @relation(fields: [programId], references: [id], onDelete: Cascade)
+  monMasterEntryId         String?
+  monMasterEntry           MonMasterEntry?   @relation(fields: [monMasterEntryId], references: [id], onDelete: SetNull)
+  session                  Int
+  capacity                 Int?
+  seatsTaken               Int?
+  applications             Int?
+  offers                   Int?
+  lastRankCalled           Int?
+  accessRate               Float? // percentage, for sources other than Mon Master (brochure)
+  participatedPp           Boolean?
+  participatedPc           Boolean?
+  applicationsPp           Int?
+  applicationsPc           Int?
+  ranked                   Int?
+  accepted                 Int?
+  lastRankPp               Int?
+  lastRankPc               Int?
+  offPlatformRecruits      Int?
+  /// Accepted applicants already enrolled in the establishment (`n_accept_etab`).
+  acceptedSameInstitution  Int?
+  /// Accepted applicants from the academy of the place of study (`n_accept_lieu_acad`, 2023: `n_accept_acad`).
+  acceptedSameAcademy      Int?
+  /// Accepted on the opening day of the main phase (`n_accept_debut_pp`).
+  acceptedAtMainPhaseStart Int?
+  raw                      Json?
+  source                   String
+  sourceUrl                String?
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @updatedAt
+  origins                  AdmissionOrigin[]
+
+  @@unique([programId, monMasterEntryId, session, source])
+  @@index([programId, session])
+}
+
+/// Diploma prepared the year of the application (Mon Master open data).
+enum AdmissionOriginKind {
+  LICENCE // licence générale (lg3)
+  LICENCE_PRO // lp3
+  BUT // but3 (absent from the 2023 schema: null)
+  MASTER
+  OTHER // autre
+  NOT_ENROLLED // noninscri
+}
+
+/// Applications, offers and acceptances of one Mon Master number and session, by origin.
+/// A null count = the column is absent from the source (never 0).
+model AdmissionOrigin {
+  id              String              @id @default(cuid())
+  admissionStatId String
+  admissionStat   AdmissionStat       @relation(fields: [admissionStatId], references: [id], onDelete: Cascade)
+  origin          AdmissionOriginKind
+  /// Main phase + complementary phase.
+  applications    Int?
+  offers          Int?
+  accepted        Int?
+
+  @@unique([admissionStatId, origin])
+}
+
+model InsertionStat {
+  id                String     @id @default(cuid())
+  mentionId         String
+  mention           Mention    @relation(fields: [mentionId], references: [id], onDelete: Cascade)
+  universityId      String
+  university        University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  cohortYear        Int
+  employmentRate12m Float?
+  employmentRate18m Float?
+  stableJobRate     Float?
+  furtherStudyRate  Float?
+  graduatesCount    Int?
+  salaryQ1          Int?
+  salaryMedian      Int?
+  salaryQ3          Int?
+  salaryCohortYear  Int?
+  delayMonths       Int?
+  graduatesOut      Int?
+  isCumulated       Boolean    @default(false)
+  raw               Json?
+  source            String
+  sourceUrl         String?
+
+  @@unique([mentionId, universityId, cohortYear])
+}
+
+/// A semester of the programme. `content` is the former free text, kept as provenance after its
+/// split into courses (« Migration » of the programme lot); new semesters leave it empty.
+model ProgramSemester {
+  id             String             @id @default(cuid())
+  programId      String
+  program        Program            @relation(fields: [programId], references: [id], onDelete: Cascade)
+  position       Int
+  label          String // "M1 · Semestre 1"
+  title          String?
+  content        String             @default("")
+  /// Year of the master (1 or 2) and semester number (1 to 4), read from the label.
+  year           Int?
+  number         Int?
+  /// 30 by default (national rule), or the value the source gives.
+  ects           Int                @default(30)
+  sourceDocument String?
+  sourceYear     String?
+  courses        ProgramCourse[]
+  milestones     ProgramMilestone[]
+
+  @@index([programId, position])
+}
+
+/// Theme of a course (lib/domain/course-categories.ts). CORE = « Cœur du master » (default).
+enum CourseCategory {
+  CORE
+  METHODS
+  LAW_ECONOMICS
+  DIGITAL
+  LANGUAGES
+  PROJECTS
+}
+
+model ProgramCourse {
+  id             String          @id @default(cuid())
+  semesterId     String
+  semester       ProgramSemester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+  label          String
+  ects           Float?
+  hours          Float?
+  category       CourseCategory  @default(CORE)
+  /// Category chosen by hand in the admin: never recomputed from the keywords.
+  categoryLocked Boolean         @default(false)
+  order          Int             @default(0)
+  /// Where the course comes from (« Site de l'université · a.fr », « Saisi à la main », « Migration : … »).
+  source         String?
+
+  @@index([semesterId, order])
+}
+
+enum MilestoneKind {
+  INTERNSHIP
+  THESIS
+  PROJECT
+  STUDY_TRIP
+  CERTIFICATION
+}
+
+/// Internship, thesis, project, study trip or certification of a semester.
+model ProgramMilestone {
+  id         String          @id @default(cuid())
+  semesterId String
+  semester   ProgramSemester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+  kind       MilestoneKind
+  title      String
+  detail     String?
+  minMonths  Float?
+  maxMonths  Float?
+  pages      Int?
+  /// « soutenu en juin », « évalué en septembre ».
+  period     String?
+  source     String?
+  order      Int             @default(0)
+
+  @@index([semesterId])
+}
+
+enum EntityType {
+  PROGRAM
+  MENTION
+  UNIVERSITY
+}
+
+enum IdentifierKind {
+  RNCP
+  RNCP_PREVIOUS
+  MONMASTER // ifc
+  MM_MENTION // inm
+  MM_PARCOURS // inmp
+  UAI
+  SISE
+  PAYSAGE
+  ONISEP
+  CFD
+  OTHER
+}
+
+/// Exact identifiers of a program, mention or university (RNCP, Mon Master, UAI…), searched
+/// before the text (brief 8.9). `value` is normalised: upper case, no space, no dash.
+model Identifier {
+  id         String         @id @default(cuid())
+  entityType EntityType
+  entityId   String
+  kind       IdentifierKind
+  value      String
+  label      String // shown in "Trouvé par …", e.g. "RNCP (ancienne)"
+  createdAt  DateTime       @default(now())
+
+  @@unique([kind, value, entityId])
+  @@index([value])
+  @@index([entityType, entityId])
+}
+
+/// Cities that host at least one program are searchable (palette "Villes"); department and
+/// region are search keywords. Joined to Program.city by name.
+model City {
+  id             String    @id @default(cuid())
+  inseeCode      String?   @unique
+  name           String
+  slug           String    @unique
+  department     String
+  departmentCode String?
+  region         String
+  lat            Float?
+  lng            Float?
+  campuses       Campus[]
+
+  @@index([name])
+}
+
+/// Turnstile verifications (no IP), for the failure counter of the admin overview.
+model TurnstileLog {
+  id         String           @id @default(cuid())
+  form       String
+  outcome    TurnstileOutcome
+  errorCodes String[]
+  at         DateTime         @default(now())
+
+  @@index([form, at])
+}
+
+enum TurnstileOutcome {
+  OK
+  FAIL
+  ERROR
+}
+
+enum FieldState {
+  OK
+  STALE
+  CONFLICT
+  MISSING
+  ERROR
+}
+
+/// Where each displayed field comes from, and whether a human locked it.
+model FieldProvenance {
+  id            String     @id @default(cuid())
+  entityType    EntityType
+  entityId      String
+  field         String
+  label         String
+  value         Json?
+  source        String
+  sourceKey     String? // DataSource.key when it comes from a connector
+  sourceUrl     String?
+  evidence      String?    @db.VarChar(300) // extract proving the value (university pages), never public
+  previousValue Json?
+  fetchedAt     DateTime?
+  state         FieldState @default(OK)
+  locked        Boolean    @default(false)
+  lockedById    String?
+  lockedBy      AdminUser? @relation(fields: [lockedById], references: [id], onDelete: SetNull)
+  lockedAt      DateTime?
+  position      Int        @default(0)
+  updatedAt     DateTime   @updatedAt
+
+  @@unique([entityType, entityId, field])
+  @@index([entityType, entityId])
+  @@index([entityId])
+}
+
+// ──────────────────────────── Data issues (admin) ────────────────────────────
+
+enum DataIssueKind {
+  CONFLICT
+  COLLECT_ERROR
+  NO_PROGRAM
+  OLD_PROGRAM
+  NO_UAI
+}
+
+/// BLOCK (coral) · HIGH (yellow) · LOW (grey): the same urgency on every admin screen.
+enum IssueSeverity {
+  BLOCK
+  HIGH
+  LOW
+}
+
+enum IssueTarget {
+  PROGRAM
+  MENTION
+  UNIVERSITY
+  SOURCE
+}
+
+/// A data problem to handle in the admin (lib/admin/issues.ts). Computed after each sync and each
+/// change, never on read. One row per (kind, target, field): a problem that comes back reopens it.
+model DataIssue {
+  id           String        @id @default(cuid())
+  kind         DataIssueKind
+  targetType   IssueTarget
+  targetId     String
+  /// Field concerned (conflicts), host (collect errors) or "".
+  field        String        @default("")
+  severity     IssueSeverity
+  /// Short detail: sources in conflict, error message, year of the booklet.
+  detail       String?
+  /// Establishment of the target (programs, universities): filters and groups without a join.
+  universityId String?
+  /// The target is published on the site (« fiches publiées » counters).
+  published    Boolean       @default(false)
+  firstSeenAt  DateTime      @default(now())
+  lastSeenAt   DateTime      @default(now())
+  ignoredUntil DateTime?
+  ignoredById  String?
+  resolvedAt   DateTime?
+  resolvedById String?
+
+  @@unique([kind, targetType, targetId, field])
+  @@index([kind, severity, resolvedAt, ignoredUntil])
+  @@index([targetType, targetId])
+  @@index([universityId])
+}
+
+/// « Toujours : le site de l'université » for one field of one establishment: the next syncs take
+/// the value of this source family instead of opening a conflict (lib/data/merge.ts).
+model SourceRule {
+  id           String   @id @default(cuid())
+  universityId String
+  field        String
+  /// Source family (connector key: univ-sites, monmaster-opendata…).
+  sourceKey    String
+  sourceLabel  String
+  createdById  String?
+  createdAt    DateTime @default(now())
+
+  @@unique([universityId, field])
+}
+
+// ──────────────────────────── Data collection ────────────────────────────
+
+model DataSource {
+  id            String    @id @default(cuid())
+  key           String    @unique // monmaster-opendata, rncp…
+  name          String
+  host          String
+  method        String
+  schedule      String? // cron expression
+  scheduleLabel String?
+  enabled       Boolean   @default(true)
+  /// « Pause 7 jours » (Récupération): no scheduled pass, no error shown, until then.
+  pausedUntil   DateTime?
+  blockedReason String?
+  note          String?
+  lastRunAt     DateTime?
+  /// Version of the source last applied (dataset modification date or SHA-256).
+  version       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  runs      SyncRun[]
+  snapshots RawSnapshot[]
+}
+
+enum SyncStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  SKIPPED
+  AWAITING_VALIDATION
+}
+
+enum SyncMode {
+  PREVIEW
+  APPLY
+}
+
+model SyncRun {
+  id             String          @id @default(cuid())
+  sourceId       String
+  source         DataSource      @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  status         SyncStatus      @default(QUEUED)
+  mode           SyncMode        @default(APPLY)
+  /// Next pipeline step to run (resume after a restart, or "publish" to apply a preview).
+  resumeFromStep String?
+  sourceVersion  String?
+  /// SHA-256 of the MatchDecisions taken into account by the match step (« Appliquer » refuses a
+  /// simulation computed before newer decisions).
+  decisionsStamp String?
+  diff           Json?
+  validatedById  String?
+  validatedAt    DateTime?
+  appliedAt      DateTime?
+  progress       Int             @default(0)
+  step           String?
+  trigger        String          @default("manual") // manual | schedule | all
+  queuedAt       DateTime        @default(now())
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  heartbeatAt    DateTime?
+  stats          Json?
+  error          String?
+  triggeredById  String?
+  triggeredBy    AdminUser?      @relation(fields: [triggeredById], references: [id], onDelete: SetNull)
+  logs           SyncLog[]
+  snapshots      RawSnapshot[]
+  staging        StagingRecord[]
+
+  @@index([status, queuedAt])
+  @@index([sourceId, queuedAt])
+  @@index([sourceId, startedAt(sort: Desc), status])
+}
+
+enum LogLevel {
+  START
+  INFO
+  OK
+  WARN
+  SKIP
+  ERROR
+}
+
+model SyncLog {
+  id      String   @id @default(cuid())
+  runId   String
+  run     SyncRun  @relation(fields: [runId], references: [id], onDelete: Cascade)
+  level   LogLevel
+  message String
+  at      DateTime @default(now())
+
+  @@index([runId, at])
+  @@index([at(sort: Desc), id(sort: Desc)])
+}
+
+enum ConflictKind {
+  VALUE
+  MERGE
+}
+
+model DataConflict {
+  id             String       @id @default(cuid())
+  key            String       @unique // stable key so connectors do not duplicate conflicts
+  kind           ConflictKind @default(VALUE)
+  score          Float?
+  recommended    Boolean      @default(false) // MERGE: normalised titles identical
+  entityType     EntityType
+  entityId       String
+  field          String
+  title          String
+  detail         String?
+  options        Json // [{ id, label, value, source }]
+  resolvedOption String?
+  resolvedById   String?
+  resolvedBy     AdminUser?   @relation(fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolvedAt     DateTime?
+  createdAt      DateTime     @default(now())
+}
+
+enum AlertSeverity {
+  ERROR
+  WARNING
+  INFO
+}
+
+model DataAlert {
+  id           String        @id @default(cuid())
+  key          String        @unique
+  severity     AlertSeverity
+  title        String
+  detail       String
+  link         String?
+  linkLabel    String?
+  code         String? // stable category, e.g. "schema-changed", "not-renewed"
+  sourceKey    String?
+  entityType   EntityType?
+  entityId     String?
+  count        Int?
+  resolvedAt   DateTime?
+  resolvedById String?
+  resolvedBy   AdminUser?    @relation(fields: [resolvedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+
+  @@index([resolvedAt, severity, createdAt])
+}
+
+/// Raw file downloaded by a connector, kept in the private `rawdata` volume (never served).
+model RawSnapshot {
+  id            String     @id @default(cuid())
+  sourceId      String
+  source        DataSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  runId         String?
+  run           SyncRun?   @relation(fields: [runId], references: [id], onDelete: SetNull)
+  url           String
+  fetchedAt     DateTime   @default(now())
+  sha256        String
+  contentType   String?
+  bytes         Int
+  storagePath   String
+  httpStatus    Int
+  etag          String?
+  lastModified  String?
+  sourceVersion String?
+  /// Kept beyond the retention (one per Mon Master session).
+  pinned        Boolean    @default(false)
+
+  @@index([sourceId, fetchedAt])
+  @@index([runId])
+}
+
+enum MatchStatus {
+  LINKED
+  NEW
+  PROPOSED
+  IGNORED
+  REJECTED
+}
+
+/// One source record of a run: raw payload, normalised form, match result and planned changes.
+/// Purged 30 days after the run is applied.
+model StagingRecord {
+  id          String       @id @default(cuid())
+  runId       String
+  run         SyncRun      @relation(fields: [runId], references: [id], onDelete: Cascade)
+  sourceKey   String
+  recordKey   String
+  payload     Json
+  normalized  Json?
+  matchStatus MatchStatus?
+  matchScore  Float?
+  matchReason String?
+  /// Extra match information (merge proposal: canonical number, recommended…).
+  matchInfo   Json?
+  targetType  String?
+  targetId    String?
+  plan        Json? // planned field changes (diff), replayed by "publish"
+  appliedAt   DateTime?
+
+  @@unique([runId, recordKey])
+  @@index([runId, matchStatus])
+  @@index([sourceKey, recordKey])
+}
+
+enum MatchDecisionKind {
+  LINK
+  NEW
+  IGNORE
+  MERGE
+}
+
+/// A human decision on a source record; always wins over the automatic match in later syncs.
+model MatchDecision {
+  id          String            @id @default(cuid())
+  sourceKey   String
+  recordKey   String
+  decision    MatchDecisionKind
+  targetType  String?
+  targetId    String?
+  authorId    String?
+  authorLabel String
+  note        String?
+  createdAt   DateTime          @default(now())
+
+  @@unique([sourceKey, recordKey])
+  @@index([targetType, targetId])
+}
+
+enum ExtractionKind {
+  ODF_XML
+  AMETYS_ODF
+  GENERIC_HTML
+  PDF_BOOKLET
+  /// Catalogue Ametys ODF read in HTML (one common template).
+  AMETYS_ODF_HTML
+  /// K-Sup sites (one common template, settings per site).
+  KSUP
+  /// Drupal sites (one profile per site).
+  DRUPAL
+}
+
+enum ProfileStatus {
+  UNCONFIGURED
+  TESTING
+  ACTIVE
+  PAUSED
+  /// robots.txt forbids the catalogue: never collected (no retry).
+  BLOCKED
+}
+
+/// Declarative extraction profile of a university site (JSON validated by Zod, no code).
+model ExtractionProfile {
+  id           String         @id @default(cuid())
+  universityId String         @unique
+  university   University     @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  kind         ExtractionKind
+  config       Json
+  status       ProfileStatus  @default(UNCONFIGURED)
+  pausedReason String?
+  lastTestedAt DateTime?
+  updatedById  String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model CrawlPage {
+  id            String     @id @default(cuid())
+  url           String     @unique
+  universityId  String
+  university    University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  programId     String?
+  lastFetchedAt DateTime?
+  etag          String?
+  lastModified  String?
+  sha256        String?
+  httpStatus    Int?
+  robotsAllowed Boolean?
+  tdmReserved   Boolean?
+  documentYear  String?
+  /// Template of the profile that read the page (AMETYS_ODF_HTML, KSUP, DRUPAL…).
+  template      String?
+  /// PARCOURS, MENTION (common fields only) or UNKNOWN.
+  level         String?
+  title         String?
+  /// Number of rubrics extracted from the page (« 3 rubriques ou plus »).
+  rubricCount   Int?
+  mentionId     String?
+
+  @@index([universityId])
+  @@index([programId])
+}
+
+/// Politeness state per host, shared by workers: robots.txt cache (24 h) and pauses after failures.
+model CrawlHost {
+  host            String    @id
+  robotsTxt       String?
+  robotsStatus    Int?
+  robotsSha256    String?
+  robotsFetchedAt DateTime?
+  tdmrep          Json?
+  failures        Int       @default(0)
+  pausedUntil     DateTime?
+  pausedReason    String?
+  updatedAt       DateTime  @updatedAt
+}
+
+// ──────────────────────────── Students & reviews ────────────────────────────
+
+enum VerificationMethod {
+  UNIVERSITY_EMAIL
+  DOCUMENT
+}
+
+model Student {
+  id                   String       @id @default(cuid())
+  emailHash            String       @unique
+  emailEnc             String
+  /// Shown on the identity card of Mon espace (level of the latest review).
+  level                ReviewLevel?
+  acceptsQuestions     Boolean      @default(false)
+  notifyNewMessage     Boolean      @default(true) // "Nouvelles questions sur mes avis"
+  notifyReviewStatus   Boolean      @default(true) // "Publication de mes avis"
+  notifySavedDigest    Boolean      @default(false) // "Nouveaux avis sur les masters que je suis" (weekly)
+  /// Verified alumni: weekly digest of the unanswered public questions on their master (Compte)
+  notifyQuestionDigest Boolean      @default(true)
+  lastSeenAt           DateTime     @default(now())
+  inactivityWarnedAt   DateTime?
+  deletedAt            DateTime?
+  isDemo               Boolean      @default(false)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  reviews            Review[]
+  verifications      ProgramVerification[]
+  favorites          Favorite[]
+  askedConversations Conversation[]        @relation("asker")
+  questions          Question[]
+  answers            Answer[]
+  questionDigest     QuestionDigestItem[]
+}
+
+enum TokenPurpose {
+  LOGIN
+  CONFIRM_REVIEW
+  REPLY
+  CHANGE_EMAIL
+}
+
+model MagicLinkToken {
+  id        String       @id @default(cuid())
+  tokenHash String       @unique
+  emailHash String
+  purpose   TokenPurpose
+  expiresAt DateTime
+  usedAt    DateTime?
+  payload   Json?
+  /// Keyed hash (HMAC) of the 6-digit code sent with the link: either one consumes the row.
+  codeHash  String?
+  /// Wrong codes typed for this row; the code stops working at MAX_CODE_ATTEMPTS.
+  attempts  Int          @default(0)
+  createdAt DateTime     @default(now())
+
+  @@index([emailHash, purpose])
+  @@index([expiresAt])
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  MORE_INFO
+}
+
+enum ReviewLevel {
+  M1
+  M2
+  GRADUATE
+}
+
+/// "Parcours vérifié" is earned master by master (brief 8.3): one verification links a student
+/// to one program, once, for all their reviews of it. At most one APPROVED per (student, program),
+/// enforced in lib/verification.ts. A document may validate several programs (same documentId).
+model ProgramVerification {
+  id                  String             @id @default(cuid())
+  studentId           String
+  student             Student            @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  programId           String
+  program             Program            @relation(fields: [programId], references: [id], onDelete: Cascade)
+  method              VerificationMethod
+  status              VerificationStatus @default(PENDING)
+  universityEmailHash String?
+  codeHash            String?
+  codeExpiresAt       DateTime?
+  codeAttempts        Int                @default(0)
+  documentId          String? // shared by the verifications one document validates
+  documentPath        String? // set to null as soon as a decision is made
+  documentName        String?
+  documentType        String? // "Certificat de scolarité", "Attestation de réussite"…
+  documentMime        String?
+  declaredLevel       ReviewLevel?
+  declaredCohort      Int?
+  decidedById         String?
+  decidedBy           AdminUser?         @relation(fields: [decidedById], references: [id], onDelete: SetNull)
+  decidedAt           DateTime?
+  reason              String?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([status, method])
+  @@index([studentId, programId])
+  @@index([documentId])
+}
+
+/// Situation of a graduate today (required when level = GRADUATE).
+enum EmploymentStatus {
+  EMPLOYED
+  JOB_SEEKING
+  FURTHER_STUDY
+  OTHER
+}
+
+enum ReviewStatus {
+  PENDING_CONFIRMATION
+  PENDING
+  PUBLISHED
+  NEEDS_EDIT
+  HIDDEN
+  REJECTED
+}
+
+enum Criterion {
+  CONTENT
+  SUPERVISION
+  INTERNSHIPS
+  ATMOSPHERE
+  OUTCOMES
+}
+
+model Review {
+  id               String            @id @default(cuid())
+  ref              String            @unique // short public reference, e.g. avis-7f3a21
+  programId        String
+  program          Program           @relation(fields: [programId], references: [id], onDelete: Cascade)
+  studentId        String?
+  student          Student?          @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  authorEmailHash  String // one review per email and per program
+  contactEmailEnc  String? // reviews without an account
+  level            ReviewLevel
+  viewCount        Int               @default(0) // reads, once per visitor and per day (ReviewView)
+  employmentStatus EmploymentStatus? // required for GRADUATE
+  jobTitle         String?           @db.VarChar(80) // required for EMPLOYED: "type of job, type of employer"
+  cohortYear       Int
+  overallRating    Int
+  title            String?
+  pros             String
+  cons             String
+  status           ReviewStatus      @default(PENDING)
+  isVerified       Boolean           @default(false)
+  acceptsQuestions Boolean           @default(false)
+  wantsBadge       Boolean           @default(false)
+  nameFlagged      Boolean           @default(false)
+  moderationReason String?
+  moderatedById    String?
+  moderatedBy      AdminUser?        @relation(fields: [moderatedById], references: [id], onDelete: SetNull)
+  moderatedAt      DateTime?
+  submittedAt      DateTime          @default(now())
+  publishedAt      DateTime?
+  hiddenAt         DateTime?
+  helpfulCount     Int               @default(0)
+  isDemo           Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  scores        ReviewCriterionScore[]
+  views         ReviewView[]
+  helpfulVotes  HelpfulVote[]
+  response      ReviewResponse?
+  conversations Conversation[]
+
+  @@unique([programId, authorEmailHash])
+  @@index([programId, status])
+  @@index([status, submittedAt])
+  @@index([programId, status, publishedAt(sort: Desc)])
+  @@index([studentId, submittedAt(sort: Desc)])
+}
+
+model ReviewCriterionScore {
+  id        String    @id @default(cuid())
+  reviewId  String
+  review    Review    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  criterion Criterion
+  score     Int
+
+  @@unique([reviewId, criterion])
+}
+
+model HelpfulVote {
+  id        String   @id @default(cuid())
+  reviewId  String
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  voterKey  String // hashed visitor cookie
+  createdAt DateTime @default(now())
+
+  @@unique([reviewId, voterKey])
+}
+
+/// One read of a review per visitor (hashed cookie key) and per day: lectures and « +N ces 7
+/// derniers jours » of Mon espace. No personal data.
+model ReviewView {
+  id        String   @id @default(cuid())
+  reviewId  String
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  day       DateTime @db.Date
+  viewerKey String
+
+  @@unique([reviewId, day, viewerKey])
+  @@index([reviewId, day])
+}
+
+model Favorite {
+  id           String   @id @default(cuid())
+  studentId    String
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  programId    String
+  program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  /// Last time the student opened the fiche: « n nouveaux avis depuis ta dernière visite ».
+  lastViewedAt DateTime @default(now())
+
+  @@unique([studentId, programId])
+  @@index([studentId, createdAt(sort: Desc)])
+}
+
+// ──────────────────────────── Droit de réponse ────────────────────────────
+
+/**
+ * A member of a teaching team who proved an address of an official domain of the establishment
+ * (code by mail). Only the hash of the address is kept, and the domain shown under the replies.
+ * The verification is valid 12 months.
+ */
+model StaffResponder {
+  id            String           @id @default(cuid())
+  emailHash     String           @unique
+  universityId  String
+  university    University       @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  /// « univ-nantes.fr », shown as « vérifié·e @univ-nantes.fr »
+  domain        String
+  codeHash      String?
+  codeExpiresAt DateTime?
+  codeAttempts  Int              @default(0)
+  verifiedAt    DateTime?
+  lastUsedAt    DateTime?
+  createdAt     DateTime         @default(now())
+  responses     ReviewResponse[]
+  answers       Answer[]
+}
+
+enum ResponseStatus {
+  PENDING
+  PUBLISHED
+  REJECTED
+}
+
+/**
+ * Public reply of the teaching team under a review: one per review, moderated before
+ * publication (again after each edit). It never changes nor removes the review.
+ */
+model ReviewResponse {
+  id               String         @id @default(cuid())
+  reviewId         String         @unique
+  review           Review         @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  responderId      String
+  responder        StaffResponder @relation(fields: [responderId], references: [id], onDelete: Cascade)
+  body             String         @db.VarChar(1500)
+  hadMaskedContent Boolean        @default(false)
+  status           ResponseStatus @default(PENDING)
+  publishedAt      DateTime?
+  editedAt         DateTime?
+  moderatedById    String?
+  moderatedBy      AdminUser?     @relation(fields: [moderatedById], references: [id], onDelete: SetNull)
+  moderatedAt      DateTime?
+  reason           String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([status, updatedAt])
+  @@index([responderId])
+}
+
+// ──────────────────────────── Public questions ────────────────────────────
+
+enum PublicStatus {
+  PENDING
+  PUBLISHED
+  REJECTED
+}
+
+enum AnswerKind {
+  ALUMNI
+  TEAM
+}
+
+/**
+ * A public question on a master (tab « Questions »), asked with an account, published under a
+ * pseudonym after moderation. In addition to the private messaging, which is unchanged.
+ */
+model Question {
+  id               String               @id @default(cuid())
+  programId        String
+  program          Program              @relation(fields: [programId], references: [id], onDelete: Cascade)
+  authorStudentId  String?
+  author           Student?             @relation(fields: [authorStudentId], references: [id], onDelete: SetNull)
+  alias            String
+  body             String               @db.VarChar(300)
+  hadMaskedContent Boolean              @default(false)
+  status           PublicStatus         @default(PENDING)
+  /// « moi aussi je me pose la question » (QuestionVote), and published answers: for the sorts
+  voteCount        Int                  @default(0)
+  answerCount      Int                  @default(0)
+  publishedAt      DateTime?
+  moderatedById    String?
+  moderatedBy      AdminUser?           @relation(fields: [moderatedById], references: [id], onDelete: SetNull)
+  moderatedAt      DateTime?
+  reason           String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  answers          Answer[]
+  votes            QuestionVote[]
+  digests          QuestionDigestItem[]
+
+  @@index([programId, status, voteCount(sort: Desc)])
+  @@index([programId, status, publishedAt(sort: Desc)])
+  @@index([status, createdAt])
+}
+
+/**
+ * An answer, only from people whose parcours is verified for this master (ALUMNI) or from the
+ * verified teaching team of its establishment (TEAM). Moderated like the questions.
+ */
+model Answer {
+  id               String          @id @default(cuid())
+  questionId       String
+  question         Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  authorStudentId  String?
+  author           Student?        @relation(fields: [authorStudentId], references: [id], onDelete: SetNull)
+  responderId      String?
+  responder        StaffResponder? @relation(fields: [responderId], references: [id], onDelete: SetNull)
+  kind             AnswerKind
+  /// « Diplômée · promo 2025 », kept at the time of writing
+  who              String
+  body             String          @db.VarChar(1500)
+  hadMaskedContent Boolean         @default(false)
+  status           PublicStatus    @default(PENDING)
+  voteCount        Int             @default(0)
+  publishedAt      DateTime?
+  moderatedById    String?
+  moderatedBy      AdminUser?      @relation(fields: [moderatedById], references: [id], onDelete: SetNull)
+  moderatedAt      DateTime?
+  reason           String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  votes            AnswerVote[]
+
+  @@index([questionId, status])
+  @@index([status, createdAt])
+}
+
+/**
+ * One vote per account, or per visitor (hashed cookie), on a question.
+ */
+model QuestionVote {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  voterKey   String
+  createdAt  DateTime @default(now())
+
+  @@unique([questionId, voterKey])
+}
+
+/**
+ * One vote per account or visitor on an answer (« la plus votée » is shown first).
+ */
+model AnswerVote {
+  id        String   @id @default(cuid())
+  answerId  String
+  answer    Answer   @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  voterKey  String
+  createdAt DateTime @default(now())
+
+  @@unique([answerId, voterKey])
+}
+
+/**
+ * A question listed in a weekly digest to an alum: never listed twice to the same person.
+ */
+model QuestionDigestItem {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  sentAt     DateTime @default(now())
+
+  @@unique([studentId, questionId])
+}
+
+// ──────────────────────────── Messaging ────────────────────────────
+
+enum ConversationStatus {
+  OPEN
+  BLOCKED
+  CLOSED
+}
+
+enum MessageRole {
+  ASKER
+  AUTHOR
+}
+
+model Conversation {
+  id             String             @id @default(cuid())
+  reviewId       String
+  review         Review             @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  askerEmailEnc  String
+  askerEmailHash String
+  askerStudentId String?
+  askerStudent   Student?           @relation("asker", fields: [askerStudentId], references: [id], onDelete: SetNull)
+  alias          String // "Étudiant·e anonyme #4F2"
+  status         ConversationStatus @default(OPEN)
+  lastMessageAt  DateTime           @default(now())
+  isDemo         Boolean            @default(false)
+  createdAt      DateTime           @default(now())
+  messages       Message[]
+
+  @@index([reviewId])
+  @@index([askerEmailHash, createdAt])
+  @@index([lastMessageAt])
+}
+
+model Message {
+  id               String       @id @default(cuid())
+  conversationId   String
+  conversation     Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  fromRole         MessageRole
+  body             String // already masked
+  hadMaskedContent Boolean      @default(false)
+  readAt           DateTime?
+  createdAt        DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([conversationId, fromRole, readAt])
+}
+
+// ──────────────────────────── Reports & legal ────────────────────────────
+
+enum ReportTarget {
+  REVIEW
+  MESSAGE
+}
+
+enum ReportStatus {
+  OPEN
+  UPHELD // content kept
+  ACTIONED // content hidden / removed / sender suspended
+  DISMISSED
+}
+
+model Report {
+  id               String       @id @default(cuid())
+  reference        String       @unique // SIG-2026-0142
+  targetType       ReportTarget
+  targetId         String
+  reason           String
+  details          String?
+  reporterEmailEnc String?
+  reporterKey      String? // hashed network/cookie fingerprint, for "same network" checks
+  status           ReportStatus @default(OPEN)
+  decidedById      String?
+  decidedBy        AdminUser?   @relation(fields: [decidedById], references: [id], onDelete: SetNull)
+  decidedAt        DateTime?
+  decision         String?
+  decisionReason   String?
+  isDemo           Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+
+  @@index([targetType, targetId])
+  @@index([status, createdAt])
+  @@index([targetType, status, targetId, createdAt])
+}
+
+enum LegalRequestType {
+  NOTICE
+  REQUISITION
+}
+
+enum LegalRequestStatus {
+  RECEIVED
+  IN_REVIEW
+  CLOSED
+}
+
+model LegalRequest {
+  id                String             @id @default(cuid())
+  type              LegalRequestType
+  reference         String             @unique // NOT-2026-0017
+  requesterName     String
+  requesterQuality  String
+  requesterEmailEnc String
+  contentUrl        String
+  grounds           String
+  lawReference      String?
+  goodFaith         Boolean            @default(false)
+  receivedAt        DateTime           @default(now())
+  internalDeadline  DateTime
+  status            LegalRequestStatus @default(RECEIVED)
+  assignedToId      String?
+  assignedTo        AdminUser?         @relation("legalAssigned", fields: [assignedToId], references: [id], onDelete: SetNull)
+  decision          String?
+  decisionReason    String?
+  decidedById       String?
+  decidedBy         AdminUser?         @relation("legalDecided", fields: [decidedById], references: [id], onDelete: SetNull)
+  decidedAt         DateTime?
+  isDemo            Boolean            @default(false)
+}
+
+model ContactMessage {
+  id        String    @id @default(cuid())
+  subject   String
+  emailEnc  String
+  link      String?
+  body      String
+  handledAt DateTime?
+  createdAt DateTime  @default(now())
+}
+
+// ──────────────────────────── Admin ────────────────────────────
+
+enum AdminRole {
+  ADMIN
+  MODERATOR
+  DATA_EDITOR
+  LEGAL
+}
+
+model AdminUser {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique // team emails are not personal student data; kept in clear for login
+  passwordHash    String?
+  totpSecretEnc   String?
+  totpEnabledAt   DateTime?
+  role            AdminRole
+  invitedAt       DateTime?
+  inviteTokenHash String?   @unique
+  lastLoginAt     DateTime?
+  failedAttempts  Int       @default(0)
+  lockedUntil     DateTime?
+  /// Locks in a row (progressive lock: 15 min, 1 h, 4 h); back to 0 after a successful login.
+  lockCount       Int       @default(0)
+  /// Last accepted TOTP time step: a code of this step or an earlier one is refused (replay).
+  totpLastStep    Int?
+  removedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  auditLogs          AuditLog[]
+  lockedFields       FieldProvenance[]
+  syncRuns           SyncRun[]
+  resolvedConflicts  DataConflict[]
+  resolvedAlerts     DataAlert[]
+  decidedVerifs      ProgramVerification[]
+  moderatedReviews   Review[]
+  decidedReports     Report[]
+  legalAssigned      LegalRequest[]        @relation("legalAssigned")
+  legalDecided       LegalRequest[]        @relation("legalDecided")
+  moderatedResponses ReviewResponse[]
+  moderatedQuestions Question[]
+  moderatedAnswers   Answer[]
+  launchZones        LaunchZone[]
+  savedViews         SavedView[]
+  recoveryCodes      AdminRecoveryCode[]
+  devices            AdminDevice[]
+}
+
+/// Single-use recovery codes of an admin (argon2id hashes), generated when TOTP is set up.
+model AdminRecoveryCode {
+  id        String    @id @default(cuid())
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([adminId])
+}
+
+/// Devices an admin already logged in from (keyed hash of a random device cookie): a login
+/// from any other device sends an alert mail.
+model AdminDevice {
+  id          String    @id @default(cuid())
+  adminId     String
+  admin       AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  deviceHash  String
+  userAgent   String?
+  firstSeenAt DateTime  @default(now())
+  lastSeenAt  DateTime  @default(now())
+
+  @@unique([adminId, deviceHash])
+}
+
+enum SessionKind {
+  ADMIN
+  STUDENT
+  STAFF
+}
+
+/// Server-side sessions. The cookie (sealed by iron-session) carries a random identifier; only
+/// its SHA-256 is stored. Logout revokes the row; inactivity and maximum age are checked here.
+model AuthSession {
+  id         String      @id
+  kind       SessionKind
+  subjectId  String
+  createdAt  DateTime    @default(now())
+  lastSeenAt DateTime    @default(now())
+  /// Last password + TOTP or TOTP confirmation (admin): sensitive actions need it recent.
+  reauthAt   DateTime?
+  revokedAt  DateTime?
+
+  @@index([kind, subjectId])
+  @@index([lastSeenAt])
+}
+
+/// « Mes vues » of an admin list (Fiches…): a name and the query string (filters + sort).
+model SavedView {
+  id        String    @id @default(cuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  /// Screen of the view: "fiches".
+  screen    String
+  /// Query string without page (« vue=a-traiter&ville=nantes&tri=nom »).
+  query     String
+  createdAt DateTime  @default(now())
+
+  @@index([userId, screen])
+}
+
+/// Categories of the audit log (filter « Catégorie », pill of each entry).
+enum AuditCategory {
+  FICHES
+  AVIS
+  VILLES
+  PARAMETRES
+  LEGAL
+  CONNEXION
+  DONNEES
+}
+
+/// Append-only: UPDATE is rejected by a database trigger, and so is DELETE except past the
+/// retention (1 year, 5 years for LEGAL: worker maintenance).
+model AuditLog {
+  id          String        @id @default(cuid())
+  actorId     String?
+  actor       AdminUser?    @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  actorLabel  String // snapshot ("Système" when actorId is null)
+  category    AuditCategory
+  /// Verb of the sentence: « a arbitré un conflit sur », « a publié l’avis ». Empty on old entries.
+  action      String        @default("")
+  /// PROGRAM, MENTION, UNIVERSITY, REVIEW, ZONE, SETTINGS, SOURCE, LEGAL, ADMIN…
+  targetType  String?
+  targetId    String?
+  targetLabel String        @map("objectLabel")
+  detail      String
+  /// Before / after of each field changed: [{ field, before, after }].
+  diff        Json?
+  /// Truncated IP (« 203.0.x.x ») and short reference of the admin session.
+  ip          String?
+  sessionRef  String?
+  at          DateTime      @default(now())
+
+  @@index([at])
+  @@index([actorId, at])
+  @@index([at(sort: Desc), category, actorId])
+  @@index([targetId, at(sort: Desc)])
+  @@index([at(sort: Desc), id(sort: Desc)])
+}
+
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+/// Technical connection data, kept 1 year, readable by the LEGAL role only.
+model ConnectionLog {
+  id         String   @id @default(cuid())
+  kind       String // STUDENT_LOGIN, ADMIN_LOGIN, REVIEW_SUBMIT, MESSAGE_SENT, REPORT…
+  subjectRef String? // student id / admin id / email hash (kept after account deletion)
+  ip         String?
+  userAgent  String?
+  at         DateTime @default(now())
+
+  @@index([at])
+  @@index([subjectRef])
+}
+
+// ──────────────────────────── Infrastructure ────────────────────────────
+
+/// Rate limiting counters (fixed window), shared by app instances.
+model RateLimitHit {
+  id     String   @id @default(cuid())
+  bucket String // e.g. "magic-link:<hash>"
+  at     DateTime @default(now())
+
+  @@index([bucket, at])
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  DONE
+  FAILED
+}
+
+/// Generic background jobs processed by the worker (data export…). Sync runs use SyncRun.
+model Job {
+  id        String    @id @default(cuid())
+  type      String
+  payload   Json
+  status    JobStatus @default(QUEUED)
+  runAt     DateTime  @default(now())
+  attempts  Int       @default(0)
+  lastError String?
+  /// Bulk actions and exports (admin): items done out of `total`, shown as a progress bar.
+  progress  Int       @default(0)
+  total     Int?
+  /// Summary shown at the end (« 183 fiches publiées, 2 ignorées »), or a download for an export.
+  result    Json?
+  createdById String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([status, runAt])
+}
+
+/// Last execution of each scheduled worker task.
+model ScheduledTask {
+  key       String   @id
+  lastRunAt DateTime
+}
+
+/// Weekly review activity used by the admin chart (demo history; real weeks are counted live).
+model ActivitySnapshot {
+  id        String   @id @default(cuid())
+  weekStart DateTime @unique
+  submitted Int
+  rejected  Int
+  isDemo    Boolean  @default(true)
+}
+
+enum BannerTone {
+  INFO
+  IMPORTANT
+  ALERT
+}
+
+enum BannerScope {
+  ALL
+  HOME
+}
+
+/// Information banner of the public site (Paramètres › Bandeau d'information). A single row: the
+/// screen always edits the same one. Visible when active, started and not ended.
+model SiteBanner {
+  id          String      @id @default(cuid())
+  /// Plain text, 160 characters at most, no HTML.
+  message     String
+  linkLabel   String?
+  /// Internal path (/a-propos) or https:// address.
+  linkUrl     String?
+  tone        BannerTone  @default(INFO)
+  scope       BannerScope @default(ALL)
+  startsAt    DateTime    @default(now())
+  endsAt      DateTime?
+  dismissible Boolean     @default(true)
+  active      Boolean     @default(true)
+  updatedById String?
+  updatedAt   DateTime    @updatedAt
+}
+
+/// A city opened on the public site, with its intercommunality (lightening of November 2026, part 9).
+/// Opening or closing one is a setting of the admin (Paramètres › Villes ouvertes): no import, no
+/// deployment. The communes are cached here (API Découpage administratif) and refreshed yearly.
+model LaunchZone {
+  id                  String     @id @default(cuid())
+  slug                String     @unique
+  /// « Strasbourg »
+  name                String
+  /// SIREN of the EPCI (« 246700488 ») and its official name.
+  epciCode            String     @unique
+  epciName            String
+  /// INSEE codes of the communes of the EPCI.
+  communeCodes        String[]
+  communesRefreshedAt DateTime?
+  open                Boolean    @default(false)
+  order               Int        @default(0)
+  openedAt            DateTime?
+  /// Figures of the card on /masters, denormalised from the search index (published parcours of
+  /// public establishments): lib/catalog/index-ratings.ts, after every sync, review change and
+  /// opening or closing of a city. 0 / null for a closed city.
+  /// INSEE region of the city (« Pays de la Loire »).
+  region              String?
+  programCount        Int        @default(0)
+  establishmentCount  Int        @default(0)
+  reviewCount         Int        @default(0)
+  avgRating           Float?
+  /// Published parcours by domain: { "droit-economie-gestion": 42, … } (domains without any left out).
+  domainCounts        Json       @default("{}")
+  updatedById         String?
+  updatedBy           AdminUser? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  @@index([open, order])
+}

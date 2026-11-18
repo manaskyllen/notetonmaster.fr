@@ -1,0 +1,31 @@
+{
+ "source": "univ-sites",
+ "observedAt": "2026-11-13",
+ "universities": {
+  "0912408Y": {
+   "name": "Université Paris-Saclay",
+   "domains": ["www.universite-paris-saclay.fr"],
+   "kind": "GENERIC_HTML",
+   "cms": "Drupal",
+   "discovery": "page mention /formation/master/<mention> -> liens /formation/master/<mention>/<m1|m2>-<parcours>",
+   "conditionalRequests": true,
+   "selectors": {
+    "capacityAnnounced": ".capacity .capacity-subtitle + div",
+    "coursesFragment": "GET /node/<id>/program-courses-ajax (JSON Drupal, id lu dans #program-courses-ajax-placeholder-<id>)"
+   },
+   "pii": ["field--name-name (noms)", "field--name-field-poste (rôle : à garder)"]
+  },
+  "0442953W": {
+   "name": "Nantes Université",
+   "domains": ["www.univ-nantes.fr", "formations.univ-nantes.fr"],
+   "kind": "AMETYS_ODF (supposé : /_authenticate + CAS gateway)",
+   "status": "inaccessible : CAS 403 pour le robot, sitemap vide"
+  },
+  "0511296G": {
+   "name": "Université de Reims Champagne-Ardenne",
+   "domains": ["www.univ-reims.fr"],
+   "kind": "inconnu",
+   "status": "TLS injoignable depuis le poste de reconnaissance"
+  }
+ }
+}

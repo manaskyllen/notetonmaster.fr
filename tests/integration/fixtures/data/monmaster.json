@@ -1,0 +1,390 @@
+{
+ "vnp": [
+  {
+   "code": "1703164RZYBS",
+   "session": 2023,
+   "applications": 113,
+   "offers": 23,
+   "capacity": 17,
+   "raw": {
+    "col": "17",
+    "ifc": "1703164RZYBS",
+    "inm": "1703164R",
+    "inmp": "1703164-05C",
+    "lieux": "UFR d'Histoire, Histoire de l'Art et Archéologie - NANTES (44)",
+    "n_can": "113",
+    "n_clas": "23",
+    "n_prop": "23",
+    "eta_nom": "Nantes Université",
+    "eta_uai": "0442953W",
+    "mention": "CIVILISATIONS, CULTURES ET SOCIETES",
+    "session": "2023",
+    "acad_lib": "Nantes",
+    "n_accept": "10",
+    "parcours": "Valorisation des nouveaux patrimoines",
+    "rankPhase": "PP",
+    "alternance": "0",
+    "id_paysage": "qUCQp",
+    "rankReason": null,
+    "disci_master": "S.H.S.",
+    "rang_dernier": "23",
+    "n_recrut_comp": "5",
+    "lieux_formation": "UFR d'Histoire, Histoire de l'Art et Archéologie - NANTES (44)",
+    "id_paysage_actuel": "qUCQp",
+    "secteur_disci_lib": "Pluridisciplinaire sciences humaines et sociales",
+    "modalite_enseignement": "INITIALE,CONTINUE,HYBRIDE"
+   }
+  },
+  {
+   "code": "1703164RZYBS",
+   "session": 2024,
+   "applications": 145,
+   "offers": 34,
+   "capacity": 19,
+   "raw": {
+    "pc": "1",
+    "pp": "1",
+    "col": "19",
+    "ifc": "1703164RZYBS",
+    "inm": "1703164R",
+    "inmp": "1703164-05C",
+    "lieux": "UFR d'Histoire, Histoire de l'Art et Archéologie - NANTES (44),Nantes Université - NANTES (44)",
+    "eta_nom": "Nantes Université",
+    "eta_uai": "0442953W",
+    "mention": "CIVILISATIONS, CULTURES ET SOCIETES",
+    "session": "2024",
+    "acad_lib": "Nantes",
+    "n_can_pc": "16",
+    "n_can_pp": "145",
+    "parcours": "Valorisation des nouveaux patrimoines (VNP)",
+    "rankPhase": "PC",
+    "alternance": "0",
+    "id_paysage": "qUCQp",
+    "rankReason": null,
+    "disci_master": "S.H.S.",
+    "n_clas_total": "39",
+    "n_prop_total": "34",
+    "n_accept_total": "17",
+    "id_paysage_actuel": "qUCQp",
+    "secteur_disci_lib": "Pluridisciplinaire sciences humaines et sociales",
+    "modalite_enseignement": "INITIALE,CONTINUE",
+    "rang_dernier_appele_pc": "38",
+    "rang_dernier_appele_pp": "33"
+   }
+  },
+  {
+   "code": "2500101KDKQN",
+   "session": 2025,
+   "applications": 320,
+   "offers": 47,
+   "capacity": 19,
+   "raw": {
+    "pc": "0",
+    "pp": "1",
+    "col": "19",
+    "ifc": "2500101KDKQN",
+    "inm": "2500101K",
+    "inmp": "2500101-02L",
+    "lieux": "Nantes Université - NANTES (44)|Faculté des Langues et cultures étrangères (FLCE) - NANTES (44)",
+    "eta_nom": "Nantes Université",
+    "eta_uai": "0442953W",
+    "mention": "CULTURE, PATRIMOINE ET MEDIATION",
+    "session": "2025",
+    "acad_lib": "Nantes",
+    "n_can_pc": "0",
+    "n_can_pp": "320",
+    "parcours": "Valorisation des nouveaux patrimoines",
+    "rankPhase": "PP",
+    "alternance": "0",
+    "id_paysage": "qUCQp",
+    "rankReason": null,
+    "disci_master": "SHS",
+    "n_clas_total": "50",
+    "n_prop_total": "47",
+    "n_accept_total": "18",
+    "id_paysage_actuel": "qUCQp",
+    "secteur_disci_lib": "Sciences de l'information et la communication",
+    "modalite_enseignement": "INITIALE",
+    "rang_dernier_appele_pp": "48"
+   }
+  }
+ ],
+ "acpci": [
+  {
+   "code": "2000144GHGRB",
+   "session": 2023,
+   "accepted": 9,
+   "acceptedSameInstitution": 0,
+   "acceptedSameAcademy": 2,
+   "acceptedAtMainPhaseStart": 0,
+   "origins": [
+    {
+     "origin": "LICENCE",
+     "applications": 185,
+     "offers": 19,
+     "accepted": 5
+    },
+    {
+     "origin": "LICENCE_PRO",
+     "applications": 6,
+     "offers": 0,
+     "accepted": 0
+    },
+    {
+     "origin": "BUT",
+     "applications": null,
+     "offers": null,
+     "accepted": null
+    },
+    {
+     "origin": "MASTER",
+     "applications": 20,
+     "offers": 4,
+     "accepted": 2
+    },
+    {
+     "origin": "OTHER",
+     "applications": 27,
+     "offers": 5,
+     "accepted": 0
+    },
+    {
+     "origin": "NOT_ENROLLED",
+     "applications": 51,
+     "offers": 11,
+     "accepted": 2
+    }
+   ]
+  },
+  {
+   "code": "2000144GHGRB",
+   "session": 2024,
+   "accepted": 11,
+   "acceptedSameInstitution": 0,
+   "acceptedSameAcademy": 1,
+   "acceptedAtMainPhaseStart": 3,
+   "origins": [
+    {
+     "origin": "LICENCE",
+     "applications": 175,
+     "offers": 21,
+     "accepted": 7
+    },
+    {
+     "origin": "LICENCE_PRO",
+     "applications": 2,
+     "offers": 0,
+     "accepted": 0
+    },
+    {
+     "origin": "BUT",
+     "applications": 6,
+     "offers": 1,
+     "accepted": 0
+    },
+    {
+     "origin": "MASTER",
+     "applications": 15,
+     "offers": 2,
+     "accepted": 1
+    },
+    {
+     "origin": "OTHER",
+     "applications": 25,
+     "offers": 5,
+     "accepted": 1
+    },
+    {
+     "origin": "NOT_ENROLLED",
+     "applications": 49,
+     "offers": 5,
+     "accepted": 2
+    }
+   ]
+  },
+  {
+   "code": "2000144GHGRB",
+   "session": 2025,
+   "accepted": 9,
+   "acceptedSameInstitution": 0,
+   "acceptedSameAcademy": 0,
+   "acceptedAtMainPhaseStart": 0,
+   "origins": [
+    {
+     "origin": "LICENCE",
+     "applications": 156,
+     "offers": 22,
+     "accepted": 5
+    },
+    {
+     "origin": "LICENCE_PRO",
+     "applications": 2,
+     "offers": 1,
+     "accepted": 0
+    },
+    {
+     "origin": "BUT",
+     "applications": 5,
+     "offers": 0,
+     "accepted": 0
+    },
+    {
+     "origin": "MASTER",
+     "applications": 21,
+     "offers": 4,
+     "accepted": 1
+    },
+    {
+     "origin": "OTHER",
+     "applications": 29,
+     "offers": 3,
+     "accepted": 1
+    },
+    {
+     "origin": "NOT_ENROLLED",
+     "applications": 39,
+     "offers": 9,
+     "accepted": 2
+    }
+   ]
+  },
+  {
+   "code": "2000144GJ2FE",
+   "session": 2023,
+   "accepted": 9,
+   "acceptedSameInstitution": 0,
+   "acceptedSameAcademy": 2,
+   "acceptedAtMainPhaseStart": 2,
+   "origins": [
+    {
+     "origin": "LICENCE",
+     "applications": 161,
+     "offers": 9,
+     "accepted": 5
+    },
+    {
+     "origin": "LICENCE_PRO",
+     "applications": 6,
+     "offers": 1,
+     "accepted": 1
+    },
+    {
+     "origin": "BUT",
+     "applications": null,
+     "offers": null,
+     "accepted": null
+    },
+    {
+     "origin": "MASTER",
+     "applications": 18,
+     "offers": 2,
+     "accepted": 1
+    },
+    {
+     "origin": "OTHER",
+     "applications": 21,
+     "offers": 6,
+     "accepted": 1
+    },
+    {
+     "origin": "NOT_ENROLLED",
+     "applications": 42,
+     "offers": 6,
+     "accepted": 1
+    }
+   ]
+  },
+  {
+   "code": "2000144GJ2FE",
+   "session": 2024,
+   "accepted": 11,
+   "acceptedSameInstitution": 0,
+   "acceptedSameAcademy": 0,
+   "acceptedAtMainPhaseStart": 3,
+   "origins": [
+    {
+     "origin": "LICENCE",
+     "applications": 113,
+     "offers": 14,
+     "accepted": 6
+    },
+    {
+     "origin": "LICENCE_PRO",
+     "applications": 0,
+     "offers": 0,
+     "accepted": 0
+    },
+    {
+     "origin": "BUT",
+     "applications": 4,
+     "offers": 0,
+     "accepted": 0
+    },
+    {
+     "origin": "MASTER",
+     "applications": 12,
+     "offers": 1,
+     "accepted": 0
+    },
+    {
+     "origin": "OTHER",
+     "applications": 14,
+     "offers": 1,
+     "accepted": 0
+    },
+    {
+     "origin": "NOT_ENROLLED",
+     "applications": 40,
+     "offers": 6,
+     "accepted": 5
+    }
+   ]
+  },
+  {
+   "code": "2000144GJ2FE",
+   "session": 2025,
+   "accepted": 9,
+   "acceptedSameInstitution": 0,
+   "acceptedSameAcademy": 0,
+   "acceptedAtMainPhaseStart": 2,
+   "origins": [
+    {
+     "origin": "LICENCE",
+     "applications": 108,
+     "offers": 16,
+     "accepted": 4
+    },
+    {
+     "origin": "LICENCE_PRO",
+     "applications": 1,
+     "offers": 0,
+     "accepted": 0
+    },
+    {
+     "origin": "BUT",
+     "applications": 3,
+     "offers": 1,
+     "accepted": 0
+    },
+    {
+     "origin": "MASTER",
+     "applications": 11,
+     "offers": 5,
+     "accepted": 0
+    },
+    {
+     "origin": "OTHER",
+     "applications": 14,
+     "offers": 2,
+     "accepted": 1
+    },
+    {
+     "origin": "NOT_ENROLLED",
+     "applications": 31,
+     "offers": 7,
+     "accepted": 4
+    }
+   ]
+  }
+ ]
+}

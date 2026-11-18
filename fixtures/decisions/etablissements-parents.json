@@ -1,0 +1,11 @@
+{
+  "$comment": "Décisions sur les établissements-composantes (décision I du 14/11/2026). LINK : rattacher l'établissement à son parent dès que les deux fiches existent ; REJECT : suggestion fausse (co-accréditation), ne plus la proposer. Les autres candidats de fixtures/live/esr-etablissements/etablissements-composantes-candidats.json restent des suggestions dans l'admin.",
+  "decidedAt": "2026-11-14",
+  "decisions": [
+    { "childUai": "0781944P", "childName": "Université de Versailles Saint-Quentin-en-Yvelines", "parentUai": "0912408Y", "parentName": "Université Paris-Saclay", "decision": "LINK" },
+    { "childUai": "0911975C", "childName": "Université Évry Paris-Saclay", "parentUai": "0912408Y", "parentName": "Université Paris-Saclay", "decision": "LINK" },
+    { "childUai": "0342490X", "childName": "Université de Montpellier", "parentUai": "0342569H", "parentName": "Université de Montpellier Paul-Valéry", "decision": "REJECT", "note": "co-accréditation" },
+    { "childUai": "0311381H", "childName": "Toulouse INP", "parentUai": "0753471R", "parentName": "Conservatoire national des arts et métiers", "decision": "REJECT", "note": "co-accréditation" },
+    { "childUai": "0681166Y", "childName": "Université de Haute-Alsace", "parentUai": "0673021V", "parentName": "Université de Strasbourg", "decision": "REJECT", "note": "co-accréditation" }
+  ]
+}

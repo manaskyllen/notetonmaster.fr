@@ -1,0 +1,419 @@
+{
+  "$comment": "Villes ouvertes au lancement (allègement, partie 9). Communes des intercommunalités lues le 16/11/2026 sur l'API Découpage administratif (geo.api.gouv.fr, Licence Ouverte) ; rafraîchies une fois par an par le worker.",
+  "zones": [
+    {
+      "slug": "strasbourg",
+      "name": "Strasbourg",
+      "epciCode": "246700488",
+      "epciName": "Eurométropole de Strasbourg",
+      "order": 1,
+      "open": true,
+      "communes": [
+        {
+          "code": "67001",
+          "nom": "Achenheim"
+        },
+        {
+          "code": "67043",
+          "nom": "Bischheim"
+        },
+        {
+          "code": "67049",
+          "nom": "Blaesheim"
+        },
+        {
+          "code": "67065",
+          "nom": "Breuschwickersheim"
+        },
+        {
+          "code": "67118",
+          "nom": "Eckbolsheim"
+        },
+        {
+          "code": "67119",
+          "nom": "Eckwersheim"
+        },
+        {
+          "code": "67124",
+          "nom": "Entzheim"
+        },
+        {
+          "code": "67131",
+          "nom": "Eschau"
+        },
+        {
+          "code": "67137",
+          "nom": "Fegersheim"
+        },
+        {
+          "code": "67152",
+          "nom": "Geispolsheim"
+        },
+        {
+          "code": "67182",
+          "nom": "Hangenbieten"
+        },
+        {
+          "code": "67204",
+          "nom": "Hœnheim"
+        },
+        {
+          "code": "67212",
+          "nom": "Holtzheim"
+        },
+        {
+          "code": "67218",
+          "nom": "Illkirch-Graffenstaden"
+        },
+        {
+          "code": "67247",
+          "nom": "Kolbsheim"
+        },
+        {
+          "code": "67256",
+          "nom": "Lampertheim"
+        },
+        {
+          "code": "67267",
+          "nom": "Lingolsheim"
+        },
+        {
+          "code": "67268",
+          "nom": "Lipsheim"
+        },
+        {
+          "code": "67296",
+          "nom": "Mittelhausbergen"
+        },
+        {
+          "code": "67309",
+          "nom": "Mundolsheim"
+        },
+        {
+          "code": "67326",
+          "nom": "Niederhausbergen"
+        },
+        {
+          "code": "67343",
+          "nom": "Oberhausbergen"
+        },
+        {
+          "code": "67350",
+          "nom": "Oberschaeffolsheim"
+        },
+        {
+          "code": "67363",
+          "nom": "Osthoffen"
+        },
+        {
+          "code": "67365",
+          "nom": "Ostwald"
+        },
+        {
+          "code": "67378",
+          "nom": "Plobsheim"
+        },
+        {
+          "code": "67389",
+          "nom": "Reichstett"
+        },
+        {
+          "code": "67447",
+          "nom": "Schiltigheim"
+        },
+        {
+          "code": "67471",
+          "nom": "Souffelweyersheim"
+        },
+        {
+          "code": "67482",
+          "nom": "Strasbourg"
+        },
+        {
+          "code": "67506",
+          "nom": "Vendenheim"
+        },
+        {
+          "code": "67519",
+          "nom": "La Wantzenau"
+        },
+        {
+          "code": "67551",
+          "nom": "Wolfisheim"
+        }
+      ]
+    },
+    {
+      "slug": "mulhouse",
+      "name": "Mulhouse",
+      "epciCode": "200066009",
+      "epciName": "CA Mulhouse Alsace Agglomération",
+      "order": 2,
+      "open": true,
+      "communes": [
+        {
+          "code": "68015",
+          "nom": "Baldersheim"
+        },
+        {
+          "code": "68020",
+          "nom": "Bantzenheim"
+        },
+        {
+          "code": "68022",
+          "nom": "Battenheim"
+        },
+        {
+          "code": "68032",
+          "nom": "Berrwiller"
+        },
+        {
+          "code": "68043",
+          "nom": "Bollwiller"
+        },
+        {
+          "code": "68055",
+          "nom": "Bruebach"
+        },
+        {
+          "code": "68056",
+          "nom": "Brunstatt-Didenheim"
+        },
+        {
+          "code": "68064",
+          "nom": "Chalampé"
+        },
+        {
+          "code": "68072",
+          "nom": "Dietwiller"
+        },
+        {
+          "code": "68084",
+          "nom": "Eschentzwiller"
+        },
+        {
+          "code": "68088",
+          "nom": "Feldkirch"
+        },
+        {
+          "code": "68093",
+          "nom": "Flaxlanden"
+        },
+        {
+          "code": "68101",
+          "nom": "Galfingue"
+        },
+        {
+          "code": "68118",
+          "nom": "Habsheim"
+        },
+        {
+          "code": "68129",
+          "nom": "Heimsbrunn"
+        },
+        {
+          "code": "68144",
+          "nom": "Hombourg"
+        },
+        {
+          "code": "68154",
+          "nom": "Illzach"
+        },
+        {
+          "code": "68166",
+          "nom": "Kingersheim"
+        },
+        {
+          "code": "68195",
+          "nom": "Lutterbach"
+        },
+        {
+          "code": "68218",
+          "nom": "Morschwiller-le-Bas"
+        },
+        {
+          "code": "68224",
+          "nom": "Mulhouse"
+        },
+        {
+          "code": "68238",
+          "nom": "Niffer"
+        },
+        {
+          "code": "68253",
+          "nom": "Ottmarsheim"
+        },
+        {
+          "code": "68254",
+          "nom": "Petit-Landau"
+        },
+        {
+          "code": "68256",
+          "nom": "Pfastatt"
+        },
+        {
+          "code": "68258",
+          "nom": "Pulversheim"
+        },
+        {
+          "code": "68267",
+          "nom": "Reiningue"
+        },
+        {
+          "code": "68270",
+          "nom": "Richwiller"
+        },
+        {
+          "code": "68271",
+          "nom": "Riedisheim"
+        },
+        {
+          "code": "68278",
+          "nom": "Rixheim"
+        },
+        {
+          "code": "68289",
+          "nom": "Ruelisheim"
+        },
+        {
+          "code": "68300",
+          "nom": "Sausheim"
+        },
+        {
+          "code": "68321",
+          "nom": "Staffelfelden"
+        },
+        {
+          "code": "68323",
+          "nom": "Steinbrunn-le-Bas"
+        },
+        {
+          "code": "68343",
+          "nom": "Ungersheim"
+        },
+        {
+          "code": "68375",
+          "nom": "Wittelsheim"
+        },
+        {
+          "code": "68376",
+          "nom": "Wittenheim"
+        },
+        {
+          "code": "68384",
+          "nom": "Zillisheim"
+        },
+        {
+          "code": "68386",
+          "nom": "Zimmersheim"
+        }
+      ]
+    },
+    {
+      "slug": "nantes",
+      "name": "Nantes",
+      "epciCode": "244400404",
+      "epciName": "Nantes Métropole",
+      "order": 3,
+      "open": true,
+      "communes": [
+        {
+          "code": "44009",
+          "nom": "Basse-Goulaine"
+        },
+        {
+          "code": "44018",
+          "nom": "Bouaye"
+        },
+        {
+          "code": "44020",
+          "nom": "Bouguenais"
+        },
+        {
+          "code": "44024",
+          "nom": "Brains"
+        },
+        {
+          "code": "44026",
+          "nom": "Carquefou"
+        },
+        {
+          "code": "44035",
+          "nom": "La Chapelle-sur-Erdre"
+        },
+        {
+          "code": "44047",
+          "nom": "Couëron"
+        },
+        {
+          "code": "44074",
+          "nom": "Indre"
+        },
+        {
+          "code": "44094",
+          "nom": "Mauves-sur-Loire"
+        },
+        {
+          "code": "44101",
+          "nom": "La Montagne"
+        },
+        {
+          "code": "44109",
+          "nom": "Nantes"
+        },
+        {
+          "code": "44114",
+          "nom": "Orvault"
+        },
+        {
+          "code": "44120",
+          "nom": "Le Pellerin"
+        },
+        {
+          "code": "44143",
+          "nom": "Rezé"
+        },
+        {
+          "code": "44150",
+          "nom": "Saint-Aignan-Grandlieu"
+        },
+        {
+          "code": "44162",
+          "nom": "Saint-Herblain"
+        },
+        {
+          "code": "44166",
+          "nom": "Saint-Jean-de-Boiseau"
+        },
+        {
+          "code": "44171",
+          "nom": "Saint-Léger-les-Vignes"
+        },
+        {
+          "code": "44172",
+          "nom": "Sainte-Luce-sur-Loire"
+        },
+        {
+          "code": "44190",
+          "nom": "Saint-Sébastien-sur-Loire"
+        },
+        {
+          "code": "44194",
+          "nom": "Sautron"
+        },
+        {
+          "code": "44198",
+          "nom": "Les Sorinières"
+        },
+        {
+          "code": "44204",
+          "nom": "Thouaré-sur-Loire"
+        },
+        {
+          "code": "44215",
+          "nom": "Vertou"
+        }
+      ]
+    }
+  ]
+}

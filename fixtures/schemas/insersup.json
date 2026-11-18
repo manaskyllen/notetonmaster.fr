@@ -1,0 +1,857 @@
+{
+ "source": "insersup",
+ "datasets": {
+  "fr-esr-insersup": {
+   "dataset": "fr-esr-insersup (filtre : type_diplome_long = Master LMD, genre = ensemble, nationalite = ensemble)",
+   "observedAt": "2026-11-13",
+   "rowCount": 62496,
+   "columns": [
+    {
+     "name": "date_jeu",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "reg_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "aca_nom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uo_lib",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "type_diplome_long",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "dom_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "discipli_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "sectdis_lib",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "libelle_diplome",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "source",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "obtention_diplome",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "genre",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "nationalite",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "regime_inscription",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "promo",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "nb_sortants_6",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_12",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_18",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_24",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_sortants_30",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_poursuivants_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_poursuivants_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_poursuivants_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_poursuivants_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_poursuivants_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "flag_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4557
+    },
+    {
+     "name": "flag_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4581
+    },
+    {
+     "name": "flag_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4581
+    },
+    {
+     "name": "flag_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.5517
+    },
+    {
+     "name": "flag_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.5517
+    },
+    {
+     "name": "exception_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4557
+    },
+    {
+     "name": "exception_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4581
+    },
+    {
+     "name": "exception_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.4581
+    },
+    {
+     "name": "exception_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.5517
+    },
+    {
+     "name": "exception_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.5517
+    },
+    {
+     "name": "nb_sortants_en_emploi_sal_fr_12",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_sal_fr_18",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_sal_fr_24",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_sortants_en_emploi_sal_fr_30",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "tx_sortants_en_emploi_sal_fr_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_sal_fr_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_sal_fr_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_sal_fr_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "tx_sortants_en_emploi_sal_fr_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_sortants_en_emploi_non_sal_6",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_non_sal_12",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_non_sal_18",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_non_sal_24",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_sortants_en_emploi_non_sal_30",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "tx_sortants_en_emploi_non_sal_6",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_non_sal_12",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_non_sal_18",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_non_sal_24",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "tx_sortants_en_emploi_non_sal_30",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_sortants_en_emploi_stable_6",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_stable_12",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_stable_18",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "nb_sortants_en_emploi_stable_24",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "nb_sortants_en_emploi_stable_30",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "tx_sortants_en_emploi_stable_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_stable_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_stable_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "tx_sortants_en_emploi_stable_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "tx_sortants_en_emploi_stable_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "salaire_q1_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q1_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q1_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q1_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "salaire_q1_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "salaire_q2_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q2_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q2_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q2_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "salaire_q2_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "salaire_q3_6",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q3_12",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q3_18",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.002
+    },
+    {
+     "name": "salaire_q3_24",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "salaire_q3_30",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.1789
+    },
+    {
+     "name": "tx_sortants_en_emploi_6",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "tx_sortants_en_emploi_12",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "tx_sortants_en_emploi_18",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "tx_sortants_en_emploi_etranger_6",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "tx_sortants_en_emploi_etranger_12",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "tx_sortants_en_emploi_etranger_18",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "reg_id",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "aca_id",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "id_paysage",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "id_paysage_actuel",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uo_lib_actuel",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "denomination_principale",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "type_diplome",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "dom",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "discipli",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "sectdis",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "diplome",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "id",
+     "type": "empty",
+     "required": false,
+     "emptyRate": 1.0
+    },
+    {
+     "name": "uai_fresq",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.2527
+    },
+    {
+     "name": "inf",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.2527
+    },
+    {
+     "name": "in_fresq",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.2527
+    }
+   ],
+   "keys": {
+    "etablissement": "etablissement (UAI) / id_paysage",
+    "mention": "inf (= inm Mon Master, plusieurs valeurs séparées par /)",
+    "mentionNationale": "diplome (= code SISE diplom)",
+    "record": [
+     "etablissement",
+     "diplome",
+     "inf",
+     "promo",
+     "obtention_diplome",
+     "regime_inscription"
+    ]
+   },
+   "filter": "type_diplome_long='Master LMD' and genre='ensemble' and nationalite='ensemble'"
+  },
+  "fr-esr-insertion_professionnelle-master": {
+   "dataset": "fr-esr-insertion_professionnelle-master",
+   "observedAt": "2026-11-13",
+   "rowCount": 19603,
+   "columns": [
+    {
+     "name": "annee",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "diplome",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "numero_de_l_etablissement",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissement",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "etablissementactuel",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.7728
+    },
+    {
+     "name": "code_de_l_academie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0184
+    },
+    {
+     "name": "academie",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0184
+    },
+    {
+     "name": "code_du_domaine",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "domaine",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "code_de_la_discipline",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "discipline",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "situation",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "remarque",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.92
+    },
+    {
+     "name": "nombre_de_reponses",
+     "type": "int",
+     "required": true,
+     "emptyRate": 0.0024
+    },
+    {
+     "name": "taux_de_reponse",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0164
+    },
+    {
+     "name": "poids_de_la_discipline",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.037
+    },
+    {
+     "name": "taux_dinsertion",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0209
+    },
+    {
+     "name": "taux_d_emploi",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.9013
+    },
+    {
+     "name": "taux_d_emploi_salarie_en_france",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.9013
+    },
+    {
+     "name": "emplois_cadre_ou_professions_intermediaires",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0209
+    },
+    {
+     "name": "emplois_stables",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0209
+    },
+    {
+     "name": "emplois_a_temps_plein",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0209
+    },
+    {
+     "name": "salaire_net_median_des_emplois_a_temps_plein",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0209
+    },
+    {
+     "name": "salaire_brut_annuel_estime",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0209
+    },
+    {
+     "name": "de_diplomes_boursiers",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0086
+    },
+    {
+     "name": "taux_de_chomage_regional",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "salaire_net_mensuel_median_regional",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "emplois_cadre",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.019
+    },
+    {
+     "name": "emplois_exterieurs_a_la_region_de_luniversite",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0192
+    },
+    {
+     "name": "femmes",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0193
+    },
+    {
+     "name": "salaire_net_mensuel_regional_1er_quartile",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1033
+    },
+    {
+     "name": "salaire_net_mensuel_regional_3eme_quartile",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.1033
+    },
+    {
+     "name": "cle_etab",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "cle_disc",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "id_paysage",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0184
+    }
+   ],
+   "keys": {
+    "record": [
+     "annee",
+     "numero_de_l_etablissement",
+     "code_de_la_discipline",
+     "situation"
+    ]
+   }
+  }
+ }
+}

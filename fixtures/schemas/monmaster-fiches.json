@@ -1,0 +1,10 @@
+{
+ "source": "monmaster-fiches",
+ "observedAt": "2026-11-13",
+ "robots": {
+  "url": "https://monmaster.gouv.fr/robots.txt",
+  "note": "www.monmaster.gouv.fr redirige (301) vers monmaster.gouv.fr : lire le robots.txt de l'hôte final",
+  "expectedRules": [["User-agent", "*"], ["Allow", "/$"], ["Allow", "/favicon.ico"], ["Allow", "/favicon.png"], ["Allow", "/apple-touch-icon.png"], ["Disallow", "/"]]
+ },
+ "behaviour": "SKIP"
+}

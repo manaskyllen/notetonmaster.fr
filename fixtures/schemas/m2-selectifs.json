@@ -1,0 +1,55 @@
+{
+ "source": "m2-selectifs",
+ "datasets": {
+  "liste_masters_2_selectifs": {
+   "dataset": "fr-esr-liste_masters_2_selectifs",
+   "observedAt": "2026-11-13",
+   "rowCount": 3500,
+   "columns": [
+    {
+     "name": "annee_universitaire",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "uai",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "libelle_d_etablissement",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "master",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "source",
+     "type": "string",
+     "required": false,
+     "emptyRate": 0.0
+    },
+    {
+     "name": "id_paysage",
+     "type": "string",
+     "required": true,
+     "emptyRate": 0.0
+    }
+   ],
+   "keys": {
+    "record": [
+     "annee_universitaire",
+     "uai",
+     "master"
+    ]
+   }
+  }
+ }
+}

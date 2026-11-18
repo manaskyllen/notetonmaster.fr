@@ -1,0 +1,279 @@
+{
+ "source": "rncp",
+ "observedAt": "2026-11-13",
+ "csv": {
+  "Ancienne_Nouvelle_Certification": {
+   "file": "export_fiches_CSV_Ancienne_Nouvelle_Certification_AAAA_MM_JJ.csv",
+   "rowCount": 18124,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Ancienne_Certification",
+     "type": "string"
+    },
+    {
+     "name": "Nouvelle_Certification",
+     "type": "string"
+    }
+   ]
+  },
+  "Blocs_De_Compétences": {
+   "file": "export_fiches_CSV_Blocs_De_Compétences_AAAA_MM_JJ.csv",
+   "rowCount": 56555,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Bloc_Competences_Code",
+     "type": "string"
+    },
+    {
+     "name": "Bloc_Competences_Libelle",
+     "type": "string"
+    }
+   ]
+  },
+  "CCN": {
+   "file": "export_fiches_CSV_CCN_AAAA_MM_JJ.csv",
+   "rowCount": 1171,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Ccn_1_Numero",
+     "type": "string"
+    },
+    {
+     "name": "Ccn_1_Libelle",
+     "type": "string"
+    },
+    {
+     "name": "Ccn_2_Numero",
+     "type": "string"
+    },
+    {
+     "name": "Ccn_2_Libelle",
+     "type": "string"
+    },
+    {
+     "name": "Ccn_3_Numero",
+     "type": "string"
+    },
+    {
+     "name": "Ccn_3_Libelle",
+     "type": "string"
+    }
+   ]
+  },
+  "Certificateurs": {
+   "file": "export_fiches_CSV_Certificateurs_AAAA_MM_JJ.csv",
+   "rowCount": 43101,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Siret_Certificateur",
+     "type": "string"
+    },
+    {
+     "name": "Nom_Certificateur",
+     "type": "string"
+    }
+   ]
+  },
+  "Formacode": {
+   "file": "export_fiches_CSV_Formacode_AAAA_MM_JJ.csv",
+   "rowCount": 36613,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Formacode_Code",
+     "type": "int"
+    },
+    {
+     "name": "Formacode_Libelle",
+     "type": "string"
+    }
+   ]
+  },
+  "Nsf": {
+   "file": "export_fiches_CSV_Nsf_AAAA_MM_JJ.csv",
+   "rowCount": 47654,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Nsf_Code",
+     "type": "string"
+    },
+    {
+     "name": "Nsf_Intitule",
+     "type": "string"
+    }
+   ]
+  },
+  "Partenaires": {
+   "file": "export_fiches_CSV_Partenaires_AAAA_MM_JJ.csv",
+   "rowCount": 405652,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Nom_Partenaire",
+     "type": "string"
+    },
+    {
+     "name": "Siret_Partenaire",
+     "type": "string"
+    },
+    {
+     "name": "Habilitation_Partenaire",
+     "type": "string"
+    }
+   ]
+  },
+  "Rome": {
+   "file": "export_fiches_CSV_Rome_AAAA_MM_JJ.csv",
+   "rowCount": 68185,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Codes_Rome_Code",
+     "type": "string"
+    },
+    {
+     "name": "Codes_Rome_Libelle",
+     "type": "string"
+    }
+   ]
+  },
+  "Standard": {
+   "file": "export_fiches_CSV_Standard_AAAA_MM_JJ.csv",
+   "rowCount": 30800,
+   "columns": [
+    {
+     "name": "Id_Fiche",
+     "type": "int"
+    },
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Intitule",
+     "type": "string"
+    },
+    {
+     "name": "Abrege_Libelle",
+     "type": "string"
+    },
+    {
+     "name": "Abrege_Intitule",
+     "type": "string"
+    },
+    {
+     "name": "Nomenclature_Europe_Niveau",
+     "type": "string"
+    },
+    {
+     "name": "Nomenclature_Europe_Intitule",
+     "type": "string"
+    },
+    {
+     "name": "Accessible_Nouvelle_Caledonie",
+     "type": "string"
+    },
+    {
+     "name": "Accessible_Polynesie_Francaise",
+     "type": "string"
+    },
+    {
+     "name": "Date_dernier_jo",
+     "type": "string"
+    },
+    {
+     "name": "Date_Decision",
+     "type": "string"
+    },
+    {
+     "name": "Date_Fin_Enregistrement",
+     "type": "string"
+    },
+    {
+     "name": "Date_Effet",
+     "type": "string"
+    },
+    {
+     "name": "Type_Enregistrement",
+     "type": "string"
+    },
+    {
+     "name": "Validation_Partielle",
+     "type": "empty"
+    },
+    {
+     "name": "Actif",
+     "type": "string"
+    }
+   ]
+  },
+  "VoixdAccès": {
+   "file": "export_fiches_CSV_VoixdAccès_AAAA_MM_JJ.csv",
+   "rowCount": 113742,
+   "columns": [
+    {
+     "name": "Numero_Fiche",
+     "type": "string"
+    },
+    {
+     "name": "Si_Jury",
+     "type": "string"
+    }
+   ]
+  }
+ },
+ "xml": {
+  "xsd": "rncp-rs-france-competence-v4.1.xsd",
+  "root": "FICHES/FICHE",
+  "usedElements": [
+   "NUMERO_FICHE",
+   "INTITULE",
+   "ABREGE/CODE",
+   "NOMENCLATURE_EUROPE/NIVEAU",
+   "ACTIF",
+   "ETAT_FICHE",
+   "DATE_EFFET",
+   "DATE_FIN_ENREGISTREMENT",
+   "DATE_LIMITE_DELIVRANCE",
+   "ANCIENNES_CERTIFICATIONS",
+   "NOUVELLES_CERTIFICATIONS",
+   "CERTIFICATEURS",
+   "BLOCS_COMPETENCES",
+   "CODES_ROME",
+   "TYPE_EMPLOI_ACCESSIBLES",
+   "ACTIVITES_VISEES"
+  ]
+ },
+ "keys": {
+  "fiche": "Numero_Fiche"
+ }
+}

@@ -1,0 +1,126 @@
+# Development stack: `make dev`
+name: notetonmaster
+
+x-app: &app
+  build:
+    context: .
+    target: dev
+  image: notetonmaster-dev
+  env_file: .env
+  environment:
+    # Dev and end-to-end tests log the same demo accounts in many times: limits × 20.
+    RATE_LIMIT_MULTIPLIER: ${RATE_LIMIT_MULTIPLIER:-20}
+    # Integration tests: their own database, dropped and recreated at each run (pnpm test:int).
+    DATABASE_URL_TEST: ${DATABASE_URL_TEST:-postgresql://notetonmaster:notetonmaster@db:5432/notetonmaster_test}
+  user: node
+  volumes:
+    - .:/app
+    - node_modules:/app/node_modules
+    - next_cache:/app/.next
+    - uploads:/data/uploads
+    # Raw snapshots of the data sources: private, never served nor committed, purged by retention.
+    - rawdata:/data/raw
+
+services:
+  db:
+    image: postgres:17-alpine
+    # Query statistics (pg_stat_statements) and slow queries (> 100 ms) in the logs.
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - log_min_duration_statement=100
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-notetonmaster}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-notetonmaster}
+      POSTGRES_DB: ${POSTGRES_DB:-notetonmaster}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '127.0.0.1:${DB_PORT:-5432}:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - '127.0.0.1:8025:8025'
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 'true'
+      MP_SMTP_AUTH_ALLOW_INSECURE: 'true'
+
+  # One-shot: installs dependencies, generates the Prisma client, applies migrations, seeds if asked.
+  migrate:
+    <<: *app
+    command:
+      - sh
+      - -c
+      - >-
+        pnpm install --frozen-lockfile &&
+        pnpm prisma generate &&
+        pnpm prisma migrate deploy &&
+        if [ "$$SEED_ON_START" = "true" ] && [ -f prisma/seed.ts ]; then pnpm db:seed; fi
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  app:
+    <<: *app
+    command: pnpm dev
+    networks:
+      default:
+        # Chrome forces HTTPS on the bare host "app" (.app is HSTS-preloaded): browsers use "web".
+        aliases: [web]
+    ports:
+      - '127.0.0.1:${APP_PORT:-3000}:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+
+  worker:
+    <<: *app
+    command: pnpm worker:dev
+    environment:
+      RATE_LIMIT_MULTIPLIER: ${RATE_LIMIT_MULTIPLIER:-20}
+      NM_PROCESS: worker
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # End-to-end tests and screenshots (Playwright browsers). `make e2e`
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.65.0-noble
+    profiles: ['e2e']
+    working_dir: /app
+    user: '1000:1000'
+    environment:
+      HOME: /tmp
+      BASE_URL: http://web:3000
+      MAILPIT_URL: http://mailpit:8025
+      CI: '1'
+    env_file: .env
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: ['node_modules/.bin/playwright', 'test']
+    depends_on:
+      app:
+        condition: service_started
+
+volumes:
+  pgdata:
+  uploads:
+  rawdata:
+  node_modules:
+  next_cache:

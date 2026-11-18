@@ -1,0 +1,115 @@
+# Production stack (run locally with `make prod-build && make prod-up`).
+# No Mailpit, no dev dependencies in the runtime image.
+name: notetonmaster-prod
+
+x-runtime: &runtime
+  image: notetonmaster:latest
+  env_file: .env
+  environment:
+    NODE_ENV: production
+    # The site and the worker connect with nm_app (rows only, lib/db/roles.ts); the owner
+    # account (POSTGRES_USER) is only used by the migrate service.
+    DATABASE_URL: postgresql://nm_app:${APP_DB_PASSWORD:?APP_DB_PASSWORD must be set}@db:5432/${POSTGRES_DB:-notetonmaster}
+    # Mails: if PROD_SMTP_HOST is empty, mails are only logged.
+    SMTP_HOST: ${PROD_SMTP_HOST:-}
+    SMTP_PORT: ${PROD_SMTP_PORT:-587}
+    SMTP_USER: ${PROD_SMTP_USER:-}
+    SMTP_PASS: ${PROD_SMTP_PASS:-}
+    APP_URL: ${PROD_APP_URL:-http://localhost:3001}
+    SEED_ON_START: 'false'
+    # Cloudflare Turnstile: real keys required (the server refuses to start without them,
+    # lib/env.ts). To try the production build on this machine, set PROD_ALLOW_INSECURE_LOCAL=1
+    # with PROD_TURNSTILE_MODE=mock and a local PROD_APP_URL.
+    TURNSTILE_MODE: ${PROD_TURNSTILE_MODE:-live}
+    TURNSTILE_SITE_KEY: ${PROD_TURNSTILE_SITE_KEY:-}
+    TURNSTILE_SECRET_KEY: ${PROD_TURNSTILE_SECRET_KEY:-}
+    # Only for a production build tried on this machine (localhost): never on the server.
+    ALLOW_INSECURE_LOCAL_PROD: ${PROD_ALLOW_INSECURE_LOCAL:-}
+    # Reverse proxy in front of the app (Caddy, which replaces X-Forwarded-For): lib/ip.ts.
+    TRUSTED_PROXY_HOPS: ${PROD_TRUSTED_PROXY_HOPS:-1}
+    RATE_LIMIT_MULTIPLIER: '1'
+    TRUST_CLOUDFLARE: ${PROD_TRUST_CLOUDFLARE:-false}
+    # Real connectors in production (mock in dev, tests and CI).
+    CONNECTORS_MODE: ${PROD_CONNECTORS_MODE:-live}
+    RAW_DATA_DIR: /data/raw
+    CRAWLER_INFO_URL: ${PROD_CRAWLER_INFO_URL:-http://localhost:3001/a-propos#notre-robot}
+    CRAWLER_CONTACT_EMAIL: ${PROD_CRAWLER_CONTACT_EMAIL:-robot@notetonmaster.example}
+  volumes:
+    - uploads:/data/uploads
+    - rawdata:/data/raw
+  restart: unless-stopped
+
+services:
+  db:
+    image: postgres:17-alpine
+    # Query statistics for the performance checks.
+    command: ['postgres', '-c', 'shared_preload_libraries=pg_stat_statements']
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-notetonmaster}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      POSTGRES_DB: ${POSTGRES_DB:-notetonmaster}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  # One-shot: exports the tables a migration drops, applies migrations, then the production bootstrap (settings, domains, data sources,
+  # first admin): idempotent, never demo data, never truncates.
+  migrate:
+    build:
+      context: .
+      target: build
+    image: notetonmaster-migrate:latest
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-notetonmaster}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-notetonmaster}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD must be set}
+    # Tables about to be dropped are exported first to ./backups (JSON, outside the site).
+    # Then the application role nm_app (privileges of the new tables too).
+    command:
+      [
+        'sh',
+        '-c',
+        'pnpm tsx scripts/backup-tables.ts && pnpm prisma migrate deploy && pnpm db:roles && pnpm tsx prisma/bootstrap.ts',
+      ]
+    volumes:
+      - ./backups:/app/backups
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  app:
+    <<: *runtime
+    build:
+      context: .
+      target: runner
+    ports:
+      - '127.0.0.1:${PROD_PORT:-3001}:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  worker:
+    <<: *runtime
+    command: ['node', 'dist/worker.js']
+    healthcheck:
+      disable: true
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      app:
+        condition: service_started
+
+volumes:
+  pgdata:
+  uploads:
+  rawdata:

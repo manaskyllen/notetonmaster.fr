@@ -1,0 +1,33 @@
+name: Un bug
+description: Quelque chose ne marche pas comme prévu sur le site.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci ! **N'écris aucune donnée personnelle** : ni nom, ni adresse mail, ni capture qui en montre, ni contenu d'un avis ou d'un message privé.
+        **Une faille de sécurité ?** Pas ici : voir [SECURITY.md](../blob/main/SECURITY.md).
+  - type: input
+    id: page
+    attributes:
+      label: Adresse de la page
+      placeholder: https://notetonmaster.fr/parcours/…
+    validations:
+      required: true
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Ce que tu attendais
+    validations:
+      required: true
+  - type: textarea
+    id: constate
+    attributes:
+      label: Ce que tu as vu
+    validations:
+      required: true
+  - type: input
+    id: navigateur
+    attributes:
+      label: Navigateur et appareil (facultatif)
+      placeholder: Firefox 140, Android
