@@ -240,9 +240,23 @@ depuis l'admin de production.
 
 Dans l'admin, **dans cet ordre**, avant d'ouvrir :
 
-1. **Lancer chaque source** (Administration › Récupération), en commençant par les établissements
-   (elle apporte aussi la liste des communes), puis Mon Master et les autres ; valider chaque
-   simulation avant de l'appliquer.
+1. **Lancer chaque source** (Administration › Récupération), **une à la fois**, chacune appliquée
+   avant de lancer la suivante :
+   1. « Établissements et campus » : elle apporte la liste des communes. Sans elle, Mon Master crée
+      des universités réduites à leur nom et aucun campus, et les parcours ne sont rattachés à
+      aucune ville ;
+   2. « Mon Master · données ouvertes » : universités, mentions, parcours. La première simulation
+      s'arrête pour validation : traiter les rapprochements, recalculer, puis « Appliquer » sans
+      nouvelle décision entre-temps ;
+   3. « France Compétences · RNCP » : ses fiches ne se relient qu'aux mentions déjà créées ;
+   4. « Sites des universités » : seulement après l'ouverture des villes (étape 5), il ne lit que
+      les parcours des villes ouvertes.
+
+   La première publication de Mon Master garde tout le catalogue en mémoire : pour elle,
+   `WORKER_MEM_LIMIT=1536m` et `WORKER_HEAP_MB=1152` (sinon `heap out of memory` dans
+   `docker compose … logs worker`, le worker redémarre et reprend le passage 10 minutes plus tard), puis retour
+   à `1g` et `768`.
+
 2. **Traiter les conflits et les doublons** proposés par les synchros.
 3. **Montbéliard** : vérifier ses fiches (ville renommée, `/masters/montbeliar` redirige).
 4. **Établissements privés masqués** : vérifier le secteur public / privé des établissements.

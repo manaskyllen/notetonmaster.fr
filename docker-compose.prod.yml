@@ -139,6 +139,10 @@ services:
       RATE_LIMIT_MULTIPLIER: '1'
       SEED_ON_START: 'false'
       NM_PROCESS: worker
+      # JavaScript heap of the worker, below WORKER_MEM_LIMIT (about 3/4 of it): the first
+      # publication of Mon Master holds the whole catalogue in memory; past Node's default limit,
+      # derived from the container's, it dies with « heap out of memory ».
+      NODE_OPTIONS: --max-old-space-size=${WORKER_HEAP_MB:-768}
     mem_limit: ${WORKER_MEM_LIMIT:-1g}
     cpus: ${WORKER_CPUS:-1}
     healthcheck:
