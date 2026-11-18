@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ReviewsTable } from '@/components/admin/ReviewsTable';
 import { AdminHeader, KpiCard } from '@/components/admin/ui';
-import { Pagination } from '@/components/ui';
+import { Pagination } from '@/components/ui/Pagination';
 import { requireAdmin } from '@/lib/auth/admin';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@/lib/db/generated/client';

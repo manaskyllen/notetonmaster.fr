@@ -3,18 +3,13 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Container } from '@/components/public/PageShell';
 import { HomeSearch } from '@/components/public/HomeSearch';
-import {
-  chipClasses,
-  ChipCount,
-  CtaArrow,
-  ctaClasses,
-  DomainTile,
-  MatchedBy,
-  Pagination,
-  ResultRow,
-  SearchCapNotice,
-  type IconName,
-} from '@/components/ui';
+import { chipClasses, ChipCount } from '@/components/ui/Chip';
+import { CtaArrow, ctaClasses } from '@/components/ui/Button';
+import { DomainTile } from '@/components/ui/DomainTile';
+import { MatchedBy } from '@/components/ui/MatchedBy';
+import { Pagination, SearchCapNotice } from '@/components/ui/Pagination';
+import { ResultRow } from '@/components/ui/ResultRow';
+import { type IconName } from '@/components/ui/Icon';
 import { SITE_DESCRIPTION, SLOGAN_HIGHLIGHT, SLOGAN_LEAD } from '@/lib/brand/copy';
 import { listIndexing, seoMetadata } from '@/lib/seo/meta';
 import { pagedSeoTitle } from '@/lib/seo/titles';

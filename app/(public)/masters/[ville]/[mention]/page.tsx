@@ -4,7 +4,7 @@ import { ContextBrowser } from '@/components/catalog/ContextBrowser';
 import { LinkLine } from '@/components/catalog/LinkLine';
 import type { FacetGroup } from '@/components/catalog/Facets';
 import { Container, SourceLine } from '@/components/public/PageShell';
-import { Breadcrumb } from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { getCityMention } from '@/lib/catalog/cities';
 import type { Params } from '@/lib/pagination';
 import { listIndexing, seoMetadata } from '@/lib/seo/meta';

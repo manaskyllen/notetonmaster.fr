@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Button, Notice } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Notice } from '@/components/ui/Notice';
 import { applyRun } from '@/app/admin/(panel)/recuperation/actions';
 import { recomputeRun } from '@/app/admin/(panel)/recuperation/rapprochements/actions';
 

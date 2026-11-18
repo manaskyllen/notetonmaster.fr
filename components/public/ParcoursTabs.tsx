@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { TabPanel, Tabs } from '@/components/ui';
+import { TabPanel, Tabs } from '@/components/ui/Tabs';
 import { FICHE_TAB_EVENT } from './ReviewsSummaryButton';
 
 /** Tabs of the program page. Panels are rendered on the server and only shown/hidden here. */

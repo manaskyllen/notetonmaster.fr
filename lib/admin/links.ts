@@ -1,3 +1,4 @@
+import 'server-only';
 import { prisma } from '@/lib/db';
 
 /** Resolves alert links like "program:slug" / "mention:slug" to admin URLs. */

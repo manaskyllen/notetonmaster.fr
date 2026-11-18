@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Button, controlClass, Notice } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { controlClass } from '@/components/ui/form/Controls';
+import { Notice } from '@/components/ui/Notice';
 import { containsContacts } from '@/lib/domain/masking';
 import { replyWithToken } from '@/app/(public)/messages/actions';
 

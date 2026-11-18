@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { CitiesBrowser } from '@/components/catalog/CitiesBrowser';
 import { Container } from '@/components/public/PageShell';
-import { Breadcrumb } from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { CITY_SORTS, regionSlug, type CitySort } from '@/lib/catalog/index-labels';
 import { cityIndex } from '@/lib/catalog/indexes';
 import type { Params } from '@/lib/pagination';

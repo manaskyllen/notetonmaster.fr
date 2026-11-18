@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Button, Notice } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Notice } from '@/components/ui/Notice';
 
 /**
  * Single-use links are consumed by a button press, not by the GET request,

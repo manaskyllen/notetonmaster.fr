@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
-import { controlClass } from '@/components/ui';
+import { controlClass } from '@/components/ui/form/Controls';
 
 /**
  * « Trier par » of a program list. A GET form (works without JavaScript, with its button); with

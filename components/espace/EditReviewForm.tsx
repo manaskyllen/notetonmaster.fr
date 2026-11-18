@@ -2,19 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import {
-  Button,
-  CheckboxCard,
-  ChoiceGroup,
-  Field,
-  formCardClass,
-  FormNav,
-  GradePicker,
-  Input,
-  NativeSelect,
-  Notice,
-  Textarea,
-} from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { CheckboxCard } from '@/components/ui/form/CheckboxCard';
+import { ChoiceGroup } from '@/components/ui/form/Choice';
+import { Field } from '@/components/ui/form/Field';
+import { formCardClass, FormNav } from '@/components/ui/form/FormCard';
+import { GradePicker } from '@/components/ui/GradePicker';
+import { Input, NativeSelect, Textarea } from '@/components/ui/form/Controls';
+import { Notice } from '@/components/ui/Notice';
 import { CURRENT_YEAR, REVIEW_MIN_CHARS } from '@/lib/validation';
 import { CRITERIA, CRITERION_LABEL, type CriterionKey } from '@/lib/domain/rating';
 import { detectNamedPerson } from '@/lib/domain/names';

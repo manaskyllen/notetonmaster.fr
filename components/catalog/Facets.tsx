@@ -2,7 +2,9 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useId, useMemo, useRef, useState, useTransition } from 'react';
-import { Button, Icon, Modal } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { Modal } from '@/components/ui/Modal';
 import { cn } from '@/lib/cn';
 import type { FacetOption, Facets } from '@/lib/catalog/browse';
 import {

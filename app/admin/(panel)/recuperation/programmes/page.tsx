@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Breadcrumb, StatusPill } from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { StatusPill } from '@/components/ui/StatusPill';
 import type { Status } from '@/components/ui/StatusPill';
 import {
   COVERAGE_STATUS_LABEL,

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { SavedMasters, type SavedMaster } from '@/components/espace/SavedMasters';
-import { Pagination } from '@/components/ui';
+import { Pagination } from '@/components/ui/Pagination';
 import { prisma } from '@/lib/db';
 import { getEspace } from '@/lib/espace';
 import { readPage, type Params } from '@/lib/pagination';

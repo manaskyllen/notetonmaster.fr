@@ -2,21 +2,17 @@
 
 import { useState } from 'react';
 import { FollowButton } from '@/components/public/FollowButton';
-import {
-  Button,
-  Chip,
-  CountUp,
-  CtaArrow,
-  ctaClasses,
-  GradePicker,
-  HelpfulButton,
-  ProgressBar,
-  ScoreBar,
-  SelectivityMeter,
-  Skeleton,
-  Stepper,
-  Toast,
-} from '@/components/ui';
+import { Button, CtaArrow, ctaClasses } from '@/components/ui/Button';
+import { Chip } from '@/components/ui/Chip';
+import { CountUp } from '@/components/ui/CountUp';
+import { GradePicker } from '@/components/ui/GradePicker';
+import { HelpfulButton } from '@/components/ui/ReviewCard';
+import { ProgressBar } from '@/components/ui/ProgressBar';
+import { ScoreBar } from '@/components/ui/ScoreBar';
+import { SelectivityMeter } from '@/components/ui/SelectivityMeter';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Stepper } from '@/components/ui/Stepper';
+import { Toast } from '@/components/ui/Toast';
 
 const row = 'flex flex-wrap items-center gap-4';
 

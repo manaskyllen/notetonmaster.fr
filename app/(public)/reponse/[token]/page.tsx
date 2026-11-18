@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { TokenReply } from '@/components/public/TokenReply';
-import { ChatBubble } from '@/components/ui';
+import { ChatBubble } from '@/components/ui/ChatBubble';
 import { peekToken } from '@/lib/auth/magic-link';
 import { prisma } from '@/lib/db';
 

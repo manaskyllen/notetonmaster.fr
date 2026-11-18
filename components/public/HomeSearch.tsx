@@ -2,7 +2,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState, useTransition } from 'react';
-import { Chip, SearchBar } from '@/components/ui';
+import { Chip } from '@/components/ui/Chip';
+import { SearchBar } from '@/components/ui/SearchBar';
 import { useSearchShortcut } from './SearchShortcut';
 
 const SUGGESTIONS = ['patrimoine', 'Nantes', 'alternance', 'RNCP42684', '2500101KDKQN'];

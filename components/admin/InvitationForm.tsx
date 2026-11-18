@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-import { Button, Logo, TextField } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
+import { TextField } from '@/components/ui/TextField';
 
 export function InvitationForm({
   email,

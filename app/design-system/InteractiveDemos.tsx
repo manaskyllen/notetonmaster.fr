@@ -1,17 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Chip,
-  FileInput,
-  HelpfulButton,
-  ReportLink,
-  ReviewCard,
-  SearchBar,
-  Switch,
-  TabPanel,
-  Tabs,
-} from '@/components/ui';
+import { Chip } from '@/components/ui/Chip';
+import { FileInput } from '@/components/ui/FileInput';
+import { HelpfulButton, ReportLink, ReviewCard } from '@/components/ui/ReviewCard';
+import { SearchBar } from '@/components/ui/SearchBar';
+import { Switch } from '@/components/ui/Switch';
+import { TabPanel, Tabs } from '@/components/ui/Tabs';
 
 export function InteractiveDemos() {
   const [tab, setTab] = useState('avis');

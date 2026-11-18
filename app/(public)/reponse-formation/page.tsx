@@ -3,14 +3,11 @@ import Link from 'next/link';
 import { Container } from '@/components/public/PageShell';
 import { DrReply } from '@/components/public/DrReply';
 import { DrSteps, ResponseEditor, StaffVerify } from '@/components/public/DroitReponse';
-import {
-  Breadcrumb,
-  chipClasses,
-  Grade,
-  Pagination,
-  ReviewCard,
-  type ReviewLevel,
-} from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { chipClasses } from '@/components/ui/Chip';
+import { Grade } from '@/components/ui/Grade';
+import { Pagination } from '@/components/ui/Pagination';
+import { ReviewCard, type ReviewLevel } from '@/components/ui/ReviewCard';
 import { getCurrentResponder } from '@/lib/auth/staff';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@/lib/db/generated/client';

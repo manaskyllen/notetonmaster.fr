@@ -40,6 +40,8 @@
     "smoke": "tsx scripts/smoke.ts",
     "links": "tsx scripts/links.ts",
     "lighthouse": "node scripts/lighthouse.mjs",
+    "analyze": "next analyze --output && node scripts/analyze-js.mjs --route=/a-propos && node scripts/analyze-js.mjs --route=/parcours/[slug]",
+    "budget": "sh scripts/budget.sh",
     "deploy:check": "sh scripts/deploy-check.sh",
     "prepare": "husky"
   },

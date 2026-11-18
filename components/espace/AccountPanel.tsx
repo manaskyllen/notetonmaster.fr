@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Button, Field, Input, Notice, TurnstileNotice, useTurnstile } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Field } from '@/components/ui/form/Field';
+import { Input } from '@/components/ui/form/Controls';
+import { Notice } from '@/components/ui/Notice';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import { requestEmailChange, type StudentPref } from '@/app/(public)/espace/actions';
 import { confirmEmailChangeByCode } from '@/app/(public)/connexion/actions';
 import { CodeEntry } from '@/components/public/CodeEntry';

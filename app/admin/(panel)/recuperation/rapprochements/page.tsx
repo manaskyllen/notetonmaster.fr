@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ProposalsBoard } from '@/components/admin/ProposalsBoard';
-import { Breadcrumb } from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import {
   PAGE_SIZE,
   filterProposals,

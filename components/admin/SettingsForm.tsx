@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Button, controlClass, Notice, Switch, TextField } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { controlClass } from '@/components/ui/form/Controls';
+import { Notice } from '@/components/ui/Notice';
+import { Switch } from '@/components/ui/Switch';
+import { TextField } from '@/components/ui/TextField';
 import { cn } from '@/lib/cn';
 import { FREQUENCIES, type Frequency } from '@/lib/admin/frequency';
 import { NOTIFICATION_EVENTS, type NotificationMatrix } from '@/lib/settings-defaults';

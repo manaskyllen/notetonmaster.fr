@@ -2,21 +2,16 @@
 
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
-import {
-  Button,
-  TurnstileNotice,
-  useTurnstile,
-  buttonClasses,
-  CheckboxCard,
-  ChoiceGroup,
-  FieldError,
-  formCardClass,
-  FormNav,
-  Notice,
-  RadioCard,
-  Select,
-  TextField,
-} from '@/components/ui';
+import { Button, buttonClasses } from '@/components/ui/Button';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
+import { CheckboxCard } from '@/components/ui/form/CheckboxCard';
+import { ChoiceGroup } from '@/components/ui/form/Choice';
+import { FieldError } from '@/components/ui/form/Field';
+import { formCardClass, FormNav } from '@/components/ui/form/FormCard';
+import { Notice } from '@/components/ui/Notice';
+import { RadioCard } from '@/components/ui/form/RadioCard';
+import { Select } from '@/components/ui/Select';
+import { TextField } from '@/components/ui/TextField';
 import { NOTICE_QUALITIES, REPORT_REASONS } from '@/lib/validation';
 import { submitNotice, submitReport, type ReportResult } from '@/app/(public)/signaler/actions';
 

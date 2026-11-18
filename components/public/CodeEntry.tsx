@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useId, useState, useTransition } from 'react';
-import { Button, CodeInput, TurnstileNotice, useTurnstile } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { CodeInput } from '@/components/ui/CodeInput';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import { RESEND_AFTER_S } from '@/lib/auth/login-code';
 import type { TurnstileForm } from '@/lib/turnstile-forms';
 

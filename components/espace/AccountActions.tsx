@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Button, Notice } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Notice } from '@/components/ui/Notice';
 import { deleteAccount, requestDataExport } from '@/app/(public)/espace/actions';
 
 export function AccountActions() {

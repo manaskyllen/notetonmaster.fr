@@ -2,7 +2,10 @@
 
 import { useReauth } from '@/components/admin/Reauth';
 import { useState, useTransition } from 'react';
-import { Button, controlClass, Notice, TextField } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { controlClass } from '@/components/ui/form/Controls';
+import { Notice } from '@/components/ui/Notice';
+import { TextField } from '@/components/ui/TextField';
 import { cn } from '@/lib/cn';
 import { ROLE_HELP, ROLE_LABEL, ROLES } from '@/lib/domain/permissions';
 import { changeRole, inviteMember, removeMember } from '@/app/admin/(panel)/equipe/actions';

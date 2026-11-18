@@ -1,16 +1,13 @@
 'use client';
 
 import { useRef, useState, useTransition } from 'react';
-import {
-  Button,
-  ChoiceGroup,
-  Field,
-  FileInput,
-  Input,
-  Notice,
-  TurnstileNotice,
-  useTurnstile,
-} from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { ChoiceGroup } from '@/components/ui/form/Choice';
+import { Field } from '@/components/ui/form/Field';
+import { FileInput } from '@/components/ui/FileInput';
+import { Input } from '@/components/ui/form/Controls';
+import { Notice } from '@/components/ui/Notice';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import { cn } from '@/lib/cn';
 import type { MasterVerificationState } from '@/lib/domain/verification';
 import { DOCUMENT_MAX_BYTES } from '@/lib/domain/verification';

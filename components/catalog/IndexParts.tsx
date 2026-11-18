@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef } from 'react';
 import { useSearchShortcut } from '@/components/public/SearchShortcut';
-import { Icon, ShortcutKbd } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
+import { ShortcutKbd } from '@/components/ui/Kbd';
 import { gradeColor } from '@/lib/domain/rating';
 import { formatGrade } from '@/components/ui/Grade';
 

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { Icon, type IconName } from '@/components/ui';
+import { Icon, type IconName } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
 
 const TABS: { href: string; label: string; icon: IconName; count?: 'toFix' | 'unread' }[] = [

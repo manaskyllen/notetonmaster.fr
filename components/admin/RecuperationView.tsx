@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef, useState, useTransition } from 'react';
-import { Switch } from '@/components/ui';
+import { Switch } from '@/components/ui/Switch';
 import {
   applyRule,
   configureProfile,

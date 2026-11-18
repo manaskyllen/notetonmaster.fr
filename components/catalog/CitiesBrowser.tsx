@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { BrandName } from '@/components/ui';
+import { BrandName } from '@/components/ui/BrandName';
 import { cn } from '@/lib/cn';
 import {
   CITY_SORTS,

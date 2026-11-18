@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   bannerKey,
-  bannerSchema,
   bannerShownOn,
   bannerStatus,
   parisDay,
   toParisDay,
   type BannerData,
 } from '@/lib/domain/banner';
+import { bannerSchema } from '@/lib/domain/banner-schema';
 
 const NOW = new Date('2026-11-16T10:00:00Z');
 const b = (o: Partial<BannerData> = {}): BannerData => ({

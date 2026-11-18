@@ -1,3 +1,4 @@
+import 'server-only';
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import type { BannerData } from '@/lib/domain/banner';

@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Icon, Logo, type IconName } from '@/components/ui';
+import { Icon, type IconName } from '@/components/ui/Icon';
+import { Logo } from '@/components/ui/Logo';
 import { cn } from '@/lib/cn';
 
 export interface NavItem {

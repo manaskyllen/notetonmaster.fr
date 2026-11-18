@@ -1,3 +1,4 @@
+import 'server-only';
 import { prisma } from '@/lib/db';
 import type { VerificationMethod } from '@/lib/db/generated/enums';
 import { refreshVerifiedForStudent } from '@/lib/reviews/verified';

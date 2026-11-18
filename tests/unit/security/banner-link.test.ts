@@ -1,6 +1,6 @@
 /** The banner link: an internal path or https://, never a path a browser reads as another site. */
 import { describe, expect, it } from 'vitest';
-import { bannerSchema } from '@/lib/domain/banner';
+import { bannerSchema } from '@/lib/domain/banner-schema';
 
 const banner = (linkUrl: string) => ({
   message: 'Un message de test pour le bandeau.',

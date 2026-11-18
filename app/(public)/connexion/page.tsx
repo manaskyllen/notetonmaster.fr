@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { LoginForm } from '@/components/public/LoginForm';
-import { Icon } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { getCurrentStudent } from '@/lib/auth/student';
 
 export const metadata: Metadata = {

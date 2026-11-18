@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, Tag, TH, URGENCY } from '@/components/admin/ui';
-import { Notice } from '@/components/ui';
+import { Notice } from '@/components/ui/Notice';
 import { adminCounts, overviewData } from '@/lib/admin/counts';
 import { buildSubjects, type SubjectIcon, type Urgency } from '@/lib/admin/overview';
 import { cap, formatWhen } from '@/lib/admin/when';

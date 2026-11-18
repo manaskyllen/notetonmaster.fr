@@ -1,7 +1,12 @@
 'use client';
 
 import { useActionState, useEffect, useRef, useState } from 'react';
-import { Button, CodeInput, Logo, Notice, TextField, useTurnstile } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { CodeInput } from '@/components/ui/CodeInput';
+import { Logo } from '@/components/ui/Logo';
+import { Notice } from '@/components/ui/Notice';
+import { TextField } from '@/components/ui/TextField';
+import { useTurnstile } from '@/components/ui/Turnstile';
 import { buttonClasses } from '@/components/ui/Button';
 import { loginAction, type LoginState } from '@/app/admin/login/actions';
 

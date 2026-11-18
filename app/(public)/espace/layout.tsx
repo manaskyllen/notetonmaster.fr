@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { EspaceNav, TabFade } from '@/components/espace/EspaceNav';
-import { CtaArrow, ctaClasses, DemoNotice } from '@/components/ui';
+import { CtaArrow, ctaClasses } from '@/components/ui/Button';
+import { DemoNotice } from '@/components/ui/Notice';
 import { cn } from '@/lib/cn';
 import { getEspace } from '@/lib/espace';
 import { logout } from '../connexion/actions';

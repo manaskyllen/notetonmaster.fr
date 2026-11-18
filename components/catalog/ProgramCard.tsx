@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Grade, MatchedBy } from '@/components/ui';
+import { Grade } from '@/components/ui/Grade';
+import { MatchedBy } from '@/components/ui/MatchedBy';
 import type { MatchedBy as MatchedByValue } from '@/lib/domain/search';
 import { cn } from '@/lib/cn';
 import { modalityLine, reviewsLine } from '@/lib/domain/program-card';

@@ -30,15 +30,11 @@ import { ReviewList, type ReviewItem } from '@/components/public/ReviewList';
 import { ReviewsSummaryButton } from '@/components/public/ReviewsSummaryButton';
 import { REVIEW_FILTERS } from '@/lib/domain/review-filters';
 import { splitParcoursTitle } from '@/lib/domain/titles';
-import {
-  Breadcrumb,
-  buttonClasses,
-  CtaArrow,
-  ctaClasses,
-  EmptyState,
-  Pagination,
-  ScoreBar,
-} from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { buttonClasses, CtaArrow, ctaClasses } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Pagination } from '@/components/ui/Pagination';
+import { ScoreBar } from '@/components/ui/ScoreBar';
 import { getCurrentStudent } from '@/lib/auth/student';
 import { prisma } from '@/lib/db';
 import { CRITERION_LABEL, LEVEL_LABEL } from '@/lib/domain/rating';

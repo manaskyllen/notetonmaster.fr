@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useActionState, useEffect, useState, useTransition } from 'react';
-import { TurnstileNotice, useTurnstile } from '@/components/ui';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import {
   answersLabel,
   ANSWER_MAX,

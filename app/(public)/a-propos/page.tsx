@@ -4,7 +4,8 @@ import { ContactForm } from '@/components/public/ContactForm';
 import { appUrl } from '@/emails/Layout';
 import { Container } from '@/components/public/PageShell';
 import { seoMetadata } from '@/lib/seo/meta';
-import { BrandName, Icon, withBrand } from '@/components/ui';
+import { BrandName, withBrand } from '@/components/ui/BrandName';
+import { Icon } from '@/components/ui/Icon';
 
 export function generateMetadata(): Metadata {
   return seoMetadata({

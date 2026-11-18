@@ -2,7 +2,10 @@
 
 import Link from 'next/link';
 import { useId, useState } from 'react';
-import { Icon, MatchedBy, ShortcutKbd, withBrand } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
+import { MatchedBy } from '@/components/ui/MatchedBy';
+import { ShortcutKbd } from '@/components/ui/Kbd';
+import { withBrand } from '@/components/ui/BrandName';
 import { cn } from '@/lib/cn';
 import { normalize } from '@/lib/domain/search';
 import { useSearch, type SearchHit } from './useSearch';

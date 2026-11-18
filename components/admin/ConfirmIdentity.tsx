@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, CodeInput } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { CodeInput } from '@/components/ui/CodeInput';
 import { confirmIdentity } from '@/app/admin/login/actions';
 
 /** The code of the authenticator app (or a recovery code), then the sensitive page itself. */

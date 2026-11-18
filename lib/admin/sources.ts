@@ -1,3 +1,4 @@
+import 'server-only';
 import { prisma } from '@/lib/db';
 import { SOURCE_ORDER, type SourceKey } from '@/lib/connectors/types';
 

@@ -3,7 +3,11 @@
 import { useReauth } from '@/components/admin/Reauth';
 import Link from 'next/link';
 import { useCallback, useMemo, useState, useTransition } from 'react';
-import { Button, controlClass, Icon, Notice, Toast } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { controlClass } from '@/components/ui/form/Controls';
+import { Icon } from '@/components/ui/Icon';
+import { Notice } from '@/components/ui/Notice';
+import { Toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/cn';
 import type { QueueItem, QueueKind } from '@/lib/admin/moderation';
 import { moderate } from '@/app/admin/(panel)/moderation/actions';

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { MyReviews, type MyReview } from '@/components/espace/MyReviews';
-import { CtaArrow, ctaClasses, Pagination } from '@/components/ui';
+import { CtaArrow, ctaClasses } from '@/components/ui/Button';
+import { Pagination } from '@/components/ui/Pagination';
 import { prisma } from '@/lib/db';
 import { getEspace } from '@/lib/espace';
 import { readPage, type Params } from '@/lib/pagination';

@@ -22,6 +22,21 @@ export default defineConfig([
       // Off: « obj[key] » is how typed records are read everywhere in this code base (keys
       // come from unions and zod enums); thousands of false positives, no signal.
       'security/detect-object-injection': 'off',
+      // Import each component from its own file: a barrel (`export *`) pulls every component of
+      // the folder into the browser JavaScript of any client component that imports one of them
+      // (about 30 KB on every public page, docs/performance.md).
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            { name: '@/components/ui', message: 'Importe depuis @/components/ui/<Composant>.' },
+            {
+              name: '@/components/ui/form',
+              message: 'Importe depuis @/components/ui/form/<Composant>.',
+            },
+          ],
+        },
+      ],
     },
   },
   prettier,

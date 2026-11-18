@@ -1,7 +1,9 @@
 'use client';
 
 import { createContext, useCallback, useContext, useRef, useState } from 'react';
-import { Button, CodeInput, TextField } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { CodeInput } from '@/components/ui/CodeInput';
+import { TextField } from '@/components/ui/TextField';
 import { Modal } from '@/components/ui/Modal';
 import { confirmIdentity } from '@/app/admin/login/actions';
 

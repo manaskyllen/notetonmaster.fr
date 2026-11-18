@@ -2,18 +2,20 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Button, controlClass, Switch, Toast } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { controlClass } from '@/components/ui/form/Controls';
+import { Switch } from '@/components/ui/Switch';
+import { Toast } from '@/components/ui/Toast';
 import { BannerStar } from '@/components/site/SiteBanner';
 import { cn } from '@/lib/cn';
 import {
   BANNER_MAX,
   BANNER_TONES,
-  bannerSchema,
   bannerStatus,
   parisDay,
-  type BannerForm as Values,
   type BannerTone,
 } from '@/lib/domain/banner';
+import { bannerSchema, type BannerForm as Values } from '@/lib/domain/banner-schema';
 import { saveBanner } from '@/app/admin/(panel)/parametres/actions';
 
 const STATUS_STYLE = {

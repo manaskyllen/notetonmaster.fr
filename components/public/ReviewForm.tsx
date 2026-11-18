@@ -3,27 +3,17 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
-import {
-  Button,
-  buttonClasses,
-  CheckboxCard,
-  ChoiceGroup,
-  Field,
-  FieldError,
-  FormCard,
-  FormNav,
-  FormPreview,
-  GradePicker,
-  Input,
-  Modal,
-  NativeSelect,
-  Notice,
-  Stepper,
-  StepTitle,
-  Textarea,
-  TurnstileNotice,
-  useTurnstile,
-} from '@/components/ui';
+import { Button, buttonClasses } from '@/components/ui/Button';
+import { CheckboxCard } from '@/components/ui/form/CheckboxCard';
+import { ChoiceGroup } from '@/components/ui/form/Choice';
+import { Field, FieldError } from '@/components/ui/form/Field';
+import { FormCard, FormNav, FormPreview, StepTitle } from '@/components/ui/form/FormCard';
+import { GradePicker } from '@/components/ui/GradePicker';
+import { Input, NativeSelect, Textarea } from '@/components/ui/form/Controls';
+import { Modal } from '@/components/ui/Modal';
+import { Notice } from '@/components/ui/Notice';
+import { Stepper } from '@/components/ui/Stepper';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import { QUIT_REVIEW_EVENT } from '@/components/ui/TopNav';
 import { cn } from '@/lib/cn';
 import {

@@ -1,3 +1,4 @@
+import 'server-only';
 import { prisma } from '@/lib/db';
 import { isReviewVerified } from '@/lib/domain/verification';
 import { afterReviewChange } from '@/lib/cache/next';

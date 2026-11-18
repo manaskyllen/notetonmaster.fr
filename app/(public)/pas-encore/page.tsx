@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { NotYetOpen } from '@/components/launch/OpenCities';
-import { buttonClasses } from '@/components/ui';
+import { buttonClasses } from '@/components/ui/Button';
 import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';

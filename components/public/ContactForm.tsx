@@ -1,14 +1,11 @@
 'use client';
 
 import { useActionState, useEffect, useState } from 'react';
-import {
-  Button,
-  formCardClass,
-  Select,
-  TextField,
-  TurnstileNotice,
-  useTurnstile,
-} from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { formCardClass } from '@/components/ui/form/FormCard';
+import { Select } from '@/components/ui/Select';
+import { TextField } from '@/components/ui/TextField';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import { idle } from '@/lib/form';
 import { sendContact } from '@/app/(public)/a-propos/actions';
 

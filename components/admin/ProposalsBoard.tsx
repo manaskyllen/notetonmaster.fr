@@ -2,7 +2,9 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Button, Modal, Notice } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import { Notice } from '@/components/ui/Notice';
 import {
   confirmNotRenewed,
   decideParent,

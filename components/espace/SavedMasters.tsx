@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
-import { buttonClasses } from '@/components/ui';
+import { buttonClasses } from '@/components/ui/Button';
 import { Toast } from '@/components/ui/Toast';
 import { CompareButton } from '@/components/catalog/CompareButton';
 import { ProgramCard, type ProgramCardData } from '@/components/catalog/ProgramCard';

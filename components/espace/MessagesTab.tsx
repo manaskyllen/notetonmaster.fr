@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Pagination } from '@/components/ui';
+import { Pagination } from '@/components/ui/Pagination';
 import { getEspace } from '@/lib/espace';
 import {
   CONVERSATIONS_PER_PAGE,

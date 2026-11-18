@@ -2,7 +2,11 @@
 
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
-import { Button, chipClasses, controlClass, Icon, Notice } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { chipClasses } from '@/components/ui/Chip';
+import { controlClass } from '@/components/ui/form/Controls';
+import { Icon } from '@/components/ui/Icon';
+import { Notice } from '@/components/ui/Notice';
 import { cn } from '@/lib/cn';
 import { bulkReviews } from '@/app/admin/(panel)/avis/actions';
 import { useListUrl } from './useListUrl';

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { EditReviewForm } from '@/components/espace/EditReviewForm';
-import { Breadcrumb, Notice } from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { Notice } from '@/components/ui/Notice';
 import { getCurrentStudent } from '@/lib/auth/student';
 import { prisma } from '@/lib/db';
 

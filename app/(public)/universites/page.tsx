@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { UniversitiesBrowser } from '@/components/catalog/UniversitiesBrowser';
 import { Container, SourceLine } from '@/components/public/PageShell';
-import { BrandName } from '@/components/ui';
+import { BrandName } from '@/components/ui/BrandName';
 import { UNIVERSITY_SORTS, type UniversitySort } from '@/lib/catalog/index-labels';
 import { universityIndex } from '@/lib/catalog/indexes';
 import type { Params } from '@/lib/pagination';

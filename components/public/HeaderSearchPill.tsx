@@ -1,7 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Icon, ShortcutKbd } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
+import { ShortcutKbd } from '@/components/ui/Kbd';
 import { useOpenPalette } from './SearchShortcut';
 
 /** Fiches (program, mention, university): the header search is this pill, which opens the palette. */

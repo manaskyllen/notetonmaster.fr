@@ -1,10 +1,9 @@
 /**
- * Information banner of the public site. Pure: visibility,
- * status of the admin preview, validation (shared by the form and the server action), the
+ * Information banner of the public site. Pure: visibility, status of the admin preview, the
  * dismissal key and the tones. Tested in tests/unit/banner.test.ts.
+ * Loaded by the public layout in the browser (SiteBanner): no dependency here. The validation
+ * of the admin form (zod) lives in ./banner-schema.
  */
-import { z } from 'zod';
-
 export const BANNER_MAX = 160;
 
 export type BannerTone = 'INFO' | 'IMPORTANT' | 'ALERT';
@@ -86,54 +85,6 @@ export function bannerStatus(
 /** localStorage key of a dismissal: a new message (new updatedAt) shows again. */
 export const bannerKey = (b: Pick<BannerData, 'id' | 'updatedAt'>) =>
   `banner:${b.id}:${new Date(b.updatedAt).getTime()}`;
-
-const dateField = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date au format AAAA-MM-JJ.');
-
-/** Form values (dates as « AAAA-MM-JJ », Paris days). */
-export const bannerSchema = z
-  .object({
-    active: z.boolean(),
-    tone: z.enum(['INFO', 'IMPORTANT', 'ALERT']),
-    message: z
-      .string()
-      .trim()
-      .min(1, 'Le message est requis.')
-      .max(BANNER_MAX, `${BANNER_MAX} caractères au maximum.`)
-      .refine((v) => !/[<>]/.test(v), 'Texte simple seulement, sans balise.'),
-    linkLabel: z.string().trim().max(40, '40 caractères au maximum pour le lien.'),
-    linkUrl: z.string().trim().max(300),
-    startsAt: dateField,
-    endsAt: dateField.or(z.literal('')),
-    scope: z.enum(['ALL', 'HOME']),
-    dismissible: z.boolean(),
-  })
-  .superRefine((v, ctx) => {
-    if (!!v.linkLabel !== !!v.linkUrl)
-      ctx.addIssue({
-        code: 'custom',
-        path: [v.linkLabel ? 'linkUrl' : 'linkLabel'],
-        message: 'Le lien doit avoir un texte et une adresse, ou rester vide.',
-      });
-    if (
-      v.linkUrl &&
-      // An internal path: never « // » nor « /\ », which browsers read as another site.
-      !/^\/(?![\/\\])[^\s\\]*$/.test(v.linkUrl) &&
-      !/^https:\/\/[^\s/]+\.[^\s]+$/.test(v.linkUrl)
-    )
-      ctx.addIssue({
-        code: 'custom',
-        path: ['linkUrl'],
-        message: 'Adresse interne commençant par / ou adresse https://.',
-      });
-    if (v.endsAt && v.endsAt < v.startsAt)
-      ctx.addIssue({
-        code: 'custom',
-        path: ['endsAt'],
-        message: 'La date de fin doit suivre la date de début.',
-      });
-  });
-
-export type BannerForm = z.infer<typeof bannerSchema>;
 
 /** « 2026-11-14 » (Paris day) → start of that day, end → end of that day, in UTC. */
 export function parisDay(date: string, end = false): Date {

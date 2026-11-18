@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { FicheEditor } from '@/components/admin/FicheEditor';
-import { Breadcrumb, Notice } from '@/components/ui';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { Notice } from '@/components/ui/Notice';
 import { getFicheForEdit } from '@/lib/admin/fiche-edit';
 import { getFicheEditExtras } from '@/lib/admin/fiche-edit-extras';
 import { parentSuggestions } from '@/lib/admin/parent-candidates';

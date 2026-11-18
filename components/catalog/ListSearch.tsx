@@ -2,7 +2,8 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useId, useRef, useState, useTransition } from 'react';
-import { Icon, ShortcutKbd } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
+import { ShortcutKbd } from '@/components/ui/Kbd';
 import { useSearchShortcut } from '@/components/public/SearchShortcut';
 
 /**

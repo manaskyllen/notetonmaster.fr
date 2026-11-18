@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
-import { buttonClasses, Button, CtaArrow, ctaClasses, Grade } from '@/components/ui';
+import { buttonClasses, Button, CtaArrow, ctaClasses } from '@/components/ui/Button';
+import { Grade } from '@/components/ui/Grade';
 import { cn } from '@/lib/cn';
 import { deleteMyReview } from '@/app/(public)/espace/actions';
 

@@ -11,7 +11,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { buttonClasses, Icon } from '@/components/ui';
+import { buttonClasses } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
 import { CompareButton } from './CompareButton';
 
 /**

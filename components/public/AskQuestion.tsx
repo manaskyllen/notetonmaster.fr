@@ -2,17 +2,13 @@
 
 import Link from 'next/link';
 import { useId, useState, useTransition } from 'react';
-import {
-  Button,
-  Field,
-  Icon,
-  Input,
-  Modal,
-  Notice,
-  Textarea,
-  TurnstileNotice,
-  useTurnstile,
-} from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Field } from '@/components/ui/form/Field';
+import { Icon } from '@/components/ui/Icon';
+import { Input, Textarea } from '@/components/ui/form/Controls';
+import { Modal } from '@/components/ui/Modal';
+import { Notice } from '@/components/ui/Notice';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import { containsContacts } from '@/lib/domain/masking';
 import { askQuestion } from '@/app/(public)/messages/actions';
 

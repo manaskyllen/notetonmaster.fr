@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { buttonClasses, Icon } from '@/components/ui';
+import { buttonClasses } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
 
 /**
  * Body of the 404 page: under the root (an unknown address, app/not-found.tsx) and inside the

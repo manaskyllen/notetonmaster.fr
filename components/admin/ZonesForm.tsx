@@ -3,7 +3,10 @@
 import { useReauth } from '@/components/admin/Reauth';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Button, controlClass, Switch, Toast } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { controlClass } from '@/components/ui/form/Controls';
+import { Switch } from '@/components/ui/Switch';
+import { Toast } from '@/components/ui/Toast';
 import { addLaunchZone, findEpcis, saveZones } from '@/app/admin/(panel)/parametres/villes-actions';
 import type { ZoneRow } from '@/lib/launch/admin';
 import { cn } from '@/lib/cn';

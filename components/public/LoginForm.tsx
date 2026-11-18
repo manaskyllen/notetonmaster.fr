@@ -2,7 +2,10 @@
 
 import Link from 'next/link';
 import { useActionState, useEffect, useState } from 'react';
-import { Button, Icon, TextField, TurnstileNotice, useTurnstile } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { TextField } from '@/components/ui/TextField';
+import { TurnstileNotice, useTurnstile } from '@/components/ui/Turnstile';
 import type { FormState } from '@/lib/form';
 import {
   requestLoginCode,

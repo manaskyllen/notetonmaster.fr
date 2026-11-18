@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
-import { Button, buttonClasses, Notice } from '@/components/ui';
+import { Button, buttonClasses } from '@/components/ui/Button';
+import { Notice } from '@/components/ui/Notice';
 import { confirmReview } from '@/app/(public)/avis/actions';
 
 export function ConfirmReviewButton({ token }: { token: string }) {

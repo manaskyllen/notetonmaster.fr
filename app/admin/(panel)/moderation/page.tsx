@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { ModerationBoard } from '@/components/admin/ModerationBoard';
-import { Pagination } from '@/components/ui';
+import { Pagination } from '@/components/ui/Pagination';
 import { buildQueues, QUEUE_PER_PAGE, queueCounts, type QueueKind } from '@/lib/admin/moderation';
 import { requireAdmin } from '@/lib/auth/admin';
 import { can } from '@/lib/domain/permissions';

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { MentionsBrowser } from '@/components/catalog/MentionsBrowser';
 import { Container, SourceLine } from '@/components/public/PageShell';
-import { BrandName } from '@/components/ui';
+import { BrandName } from '@/components/ui/BrandName';
 import { MENTION_SORTS, type MentionSort } from '@/lib/catalog/index-labels';
 import { mentionIndex } from '@/lib/catalog/indexes';
 import type { Params } from '@/lib/pagination';

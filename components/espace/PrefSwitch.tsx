@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Switch } from '@/components/ui';
+import { Switch } from '@/components/ui/Switch';
 import { updatePreference, type StudentPref } from '@/app/(public)/espace/actions';
 
 export function PrefSwitch({

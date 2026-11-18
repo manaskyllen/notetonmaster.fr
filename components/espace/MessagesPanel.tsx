@@ -3,7 +3,11 @@
 import { maskContacts } from '@/lib/domain/masking';
 import Link from 'next/link';
 import { useEffect, useState, useTransition } from 'react';
-import { Button, ChatBubble, Field, NativeSelect, Notice, Textarea } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { ChatBubble } from '@/components/ui/ChatBubble';
+import { Field } from '@/components/ui/form/Field';
+import { NativeSelect, Textarea } from '@/components/ui/form/Controls';
+import { Notice } from '@/components/ui/Notice';
 import { cn } from '@/lib/cn';
 import { containsContacts } from '@/lib/domain/masking';
 import { formatRelative } from '@/lib/format';

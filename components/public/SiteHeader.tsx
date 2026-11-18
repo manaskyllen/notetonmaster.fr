@@ -1,4 +1,4 @@
-import { TopNav } from '@/components/ui';
+import { TopNav } from '@/components/ui/TopNav';
 import { getCurrentStudent, unreadCount } from '@/lib/auth/student';
 import { draftOwnerOf } from '@/lib/review-draft-owner';
 import { DraftJanitor } from './DraftJanitor';

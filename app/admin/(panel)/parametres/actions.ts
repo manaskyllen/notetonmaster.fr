@@ -114,7 +114,10 @@ export async function saveSettings(raw: unknown) {
  */
 export async function saveBanner(raw: unknown) {
   return guard('team.manage', async (admin) => {
-    const { bannerSchema, parisDay } = await import('@/lib/domain/banner');
+    const [{ bannerSchema }, { parisDay }] = await Promise.all([
+      import('@/lib/domain/banner-schema'),
+      import('@/lib/domain/banner'),
+    ]);
     const p = bannerSchema.safeParse(raw);
     if (!p.success)
       return {

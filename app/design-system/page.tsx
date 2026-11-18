@@ -1,39 +1,33 @@
 import type { Metadata } from 'next';
 import { AnimationDemos } from './AnimationDemos';
 import { notFound } from 'next/navigation';
-import {
-  Badge,
-  Breadcrumb,
-  Button,
-  ChatBubble,
-  Code,
-  DataTable,
-  DomainTile,
-  EmptyState,
-  Grade,
-  GradePicker,
-  Icon,
-  ICON_NAMES,
-  IconButton,
-  Logo,
-  Notice,
-  PageSummary,
-  Pagination,
-  PerPageChoice,
-  ProgressBar,
-  ResultRow,
-  ReviewCard,
-  ScoreBar,
-  Select,
-  SelectivityMeter,
-  StatCard,
-  StatusPill,
-  Stepper,
-  Tag,
-  TextField,
-  ThemeSwitcher,
-  TopNav,
-} from '@/components/ui';
+import { Badge } from '@/components/ui/Badge';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { Button } from '@/components/ui/Button';
+import { ChatBubble } from '@/components/ui/ChatBubble';
+import { Code, DataTable } from '@/components/ui/DataTable';
+import { DomainTile } from '@/components/ui/DomainTile';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Grade } from '@/components/ui/Grade';
+import { GradePicker } from '@/components/ui/GradePicker';
+import { Icon, ICON_NAMES } from '@/components/ui/Icon';
+import { IconButton } from '@/components/ui/IconButton';
+import { Logo } from '@/components/ui/Logo';
+import { Notice } from '@/components/ui/Notice';
+import { PageSummary, Pagination, PerPageChoice } from '@/components/ui/Pagination';
+import { ProgressBar } from '@/components/ui/ProgressBar';
+import { ResultRow } from '@/components/ui/ResultRow';
+import { ReviewCard } from '@/components/ui/ReviewCard';
+import { ScoreBar } from '@/components/ui/ScoreBar';
+import { Select } from '@/components/ui/Select';
+import { SelectivityMeter } from '@/components/ui/SelectivityMeter';
+import { StatCard } from '@/components/ui/StatCard';
+import { StatusPill } from '@/components/ui/StatusPill';
+import { Stepper } from '@/components/ui/Stepper';
+import { Tag } from '@/components/ui/Tag';
+import { TextField } from '@/components/ui/TextField';
+import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
+import { TopNav } from '@/components/ui/TopNav';
 import { SiteFooter } from '@/components/site/SiteFooter';
 import { InteractiveDemos } from './InteractiveDemos';
 import { ProgramCard, type ProgramCardData } from '@/components/catalog/ProgramCard';

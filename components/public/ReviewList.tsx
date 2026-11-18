@@ -2,13 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState, useTransition } from 'react';
-import {
-  chipClasses,
-  HelpfulButton,
-  ReportLink,
-  ReviewCard,
-  type ReviewLevel,
-} from '@/components/ui';
+import { chipClasses } from '@/components/ui/Chip';
+import { HelpfulButton, ReportLink, ReviewCard, type ReviewLevel } from '@/components/ui/ReviewCard';
 import { todayLine } from '@/lib/domain/graduate';
 import type { ReviewLevelId } from '@/lib/domain/review-filters';
 import { gradeColor, LEVEL_SHORT } from '@/lib/domain/rating';

@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation';
+import { EmptyState } from '@/components/ui/EmptyState';
 import {
-  EmptyState,
   PageSummary,
   Pagination,
   PerPageChoice,
   SearchCapNotice,
-} from '@/components/ui';
+} from '@/components/ui/Pagination';
 import { type BrowseContext, type BrowseResult } from '@/lib/catalog/browse';
 import { cachedBrowse } from '@/lib/catalog/cached';
 import { SORTS, type Filters } from '@/lib/catalog/filters';

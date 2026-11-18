@@ -9,19 +9,23 @@ const BASE = arg('base', process.env.PERF_BASE ?? 'http://localhost:3002');
 const N = Number(arg('n', 20));
 const C = Number(arg('c', 2));
 
-async function firstParcours() {
-  const html = await (await fetch(`${BASE}/mentions/droit`)).text();
-  return (
-    html.match(/href="(\/parcours\/[^"#?]+)"/)?.[1] ??
-    '/parcours/valorisation-des-nouveaux-patrimoines'
-  );
+// The fiches are found on the site itself, so that they exist on any database (demo seed in the
+// CI, national data with `make perf`): never a fixed address that may answer 404.
+async function firstLink(page, prefix) {
+  const res = await fetch(BASE + page);
+  const html = await res.text();
+  const at = html.indexOf(`href="${prefix}`);
+  const href = at < 0 ? null : html.slice(at + 6, html.indexOf('"', at + 6)).split(/[#?]/)[0];
+  if (!href) throw new Error(`${page} (${res.status}): aucun lien ${prefix}… à mesurer`);
+  return href;
 }
-async function uvsq() {
-  const html = await (await fetch(`${BASE}/universites?q=versailles`)).text();
-  return (
-    html.match(/href="(\/universites\/[^"#?]*versailles[^"#?]*)"/)?.[1] ??
-    '/universites/universite-de-versailles-saint-quentin-en-yvelines'
-  );
+const firstMention = () => firstLink('/mentions', '/mentions/');
+const biggestMention = () => firstLink('/mentions?tri=parcours', '/mentions/');
+const firstUniversity = () => firstLink('/universites?tri=masters', '/universites/');
+const firstParcours = async () => firstLink(await biggestMention(), '/parcours/');
+async function reviewReply() {
+  const slug = (await firstParcours()).replace('/parcours/', '');
+  return `/reponse-formation?parcours=${slug}`;
 }
 
 // Performance budgets (TTFB p95, ms): 100 for pages served from cache, 300 for Explorer, the
@@ -38,21 +42,11 @@ const ROUTES = [
   ],
   ['Explorer · page 2', '/explorer?page=2', null, 300],
   ['Fiche parcours', null, firstParcours, 300],
-  ['Fiche mention Droit', '/mentions/droit', null, 300],
-  [
-    'Fiche mention MEEF 2d degré (856 parcours)',
-    '/mentions/metiers-de-l-enseignement-de-l-education-et-de-la-formation-meef-2e-degre',
-    null,
-    300,
-  ],
-  ['Fiche université UVSQ', null, uvsq, 300],
+  ['Fiche mention (première de l’index)', null, firstMention, 300],
+  ['Fiche mention (la plus grosse)', null, biggestMention, 300],
+  ['Fiche université (la plus grosse)', null, firstUniversity, 300],
   ['À propos', '/a-propos', null, 100],
-  [
-    'Répondre aux avis',
-    '/reponse-formation?parcours=valorisation-des-nouveaux-patrimoines',
-    null,
-    300,
-  ],
+  ['Répondre aux avis', null, reviewReply, 300],
   ['Index des mentions', '/mentions', null, 100],
   ['Suggestions « patrimoine nantes »', '/api/search?q=patrimoine%20nantes&limit=8', null, 80],
   ['Suggestions « dro »', '/api/search?q=dro&limit=8', null, 80],
@@ -72,6 +66,7 @@ const JS_TARGET_KB = BUDGET.jsKbTarget;
 // --js-only: only the JavaScript weight (CI machines skew timings).
 const JS_ONLY = process.argv.includes('--js-only');
 const failures = [];
+const warnings = [];
 
 const pct = (xs, p) => {
   const s = [...xs].sort((a, b) => a - b);
@@ -113,7 +108,14 @@ const out = [];
 for (const [label, fixed, resolve, budget] of ROUTES.filter(
   ([l, fixed]) => (!only || l.includes(only)) && !(JS_ONLY && fixed?.startsWith('/api/')),
 )) {
-  const path = fixed ?? (await resolve());
+  let path;
+  try {
+    path = fixed ?? (await resolve());
+  } catch (e) {
+    failures.push(`${label}: ${e.message}`);
+    console.log(`${label.padEnd(42)} introuvable (${e.message})`);
+    continue;
+  }
   const url = BASE + path;
   await ttfb(url); // warm-up (compilation, caches)
   const runs = [];
@@ -138,14 +140,17 @@ for (const [label, fixed, resolve, budget] of ROUTES.filter(
   };
   row.budget = budget;
   out.push(row);
+  // A page that does not answer 200 measures an error page, not the page: always a failure.
+  if (runs.some((r) => r.status !== 200))
+    failures.push(`${label}: ${path} répond ${[...new Set(runs.map((r) => r.status))].join(', ')}`);
   if (!JS_ONLY && row.p95 > budget)
     failures.push(`${label}: TTFB p95 ${row.p95} ms > ${budget} ms`);
   if (row.jsKb != null && row.jsKb > JS_BUDGET_KB)
     failures.push(`${label}: JS ${row.jsKb} Ko > ${JS_BUDGET_KB} Ko`);
   else if (row.jsKb != null && row.jsKb > JS_TARGET_KB)
-    console.warn(`⚠️ ${label}: JS ${row.jsKb} Ko, au-dessus de l’objectif de ${JS_TARGET_KB} Ko`);
+    warnings.push(`${label}: JS ${row.jsKb} Ko, au-dessus de l’objectif de ${JS_TARGET_KB} Ko`);
   console.log(
-    `${label.padEnd(40)} ${String(row.status).padEnd(4)} TTFB p50 ${String(row.p50).padStart(6)} ms  p95 ${String(row.p95).padStart(6)} ms  p99 ${String(row.p99).padStart(6)} ms  complet p95 ${String(row.full95).padStart(6)} ms  HTML ${String(row.kb).padStart(6)} Ko  JS ${row.jsKb ?? '–'} Ko gz`,
+    `${label.padEnd(42)} ${String(row.status).padEnd(4)} TTFB p50 ${String(row.p50).padStart(6)} ms  p95 ${String(row.p95).padStart(6)} ms  p99 ${String(row.p99).padStart(6)} ms  complet p95 ${String(row.full95).padStart(6)} ms  HTML ${String(row.kb).padStart(6)} Ko  JS ${row.jsKb ?? '–'} Ko gz`,
   );
 }
 const json = arg('json', null);
@@ -155,7 +160,8 @@ if (json)
     JSON.stringify({ base: BASE, n: N, at: new Date().toISOString(), routes: out }, null, 2),
   );
 
-if (process.argv.includes('--assert') && failures.length) {
-  console.error(`\nBudgets dépassés :\n- ${failures.join('\n- ')}`);
-  process.exit(1);
-}
+// Everything on stdout, in order, after the table; exitCode rather than exit(), which may cut a
+// piped stdout before its end (the CI log showed a line after the summary).
+if (warnings.length) console.log(`\n⚠️ Au-dessus de l’objectif :\n- ${warnings.join('\n- ')}`);
+if (failures.length) console.log(`\nBudgets dépassés :\n- ${failures.join('\n- ')}`);
+if (process.argv.includes('--assert') && failures.length) process.exitCode = 1;

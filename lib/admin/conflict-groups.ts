@@ -1,3 +1,4 @@
+import 'server-only';
 import { prisma } from '@/lib/db';
 import { Prisma } from '@/lib/db/generated/client';
 import { sourceFamilyLabel, sourceFamilySql } from './source-family';

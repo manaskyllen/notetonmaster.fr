@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { buttonClasses, CountUp, Grade, Icon, type IconName } from '@/components/ui';
+import { buttonClasses } from '@/components/ui/Button';
+import { CountUp } from '@/components/ui/CountUp';
+import { Grade } from '@/components/ui/Grade';
+import { Icon, type IconName } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
 import { masterVerificationState } from '@/lib/domain/verification';
 import { getEspace } from '@/lib/espace';
