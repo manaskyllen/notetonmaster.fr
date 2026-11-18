@@ -15,14 +15,15 @@ set -euo pipefail
 
 main() {
 	local src=${1:-}
-	[ -n "$src" ] && [ -f "$src/db.dump.age" ] ||
+	if [ -z "$src" ] || [ ! -f "$src/db.dump.age" ]; then
 		die "usage : scripts/restore.sh <dossier de sauvegarde> < clé-privée-age"
+	fi
 	src=$(cd "$src" && pwd)
 	[ ! -t 0 ] || die "la clé privée age est attendue sur l'entrée standard (… < clé)"
 	command -v age >/dev/null || die "age manque sur l'hôte (apt install age)"
 
 	local keydir=/dev/shm
-	[ -d "$keydir" ] && [ -w "$keydir" ] || keydir=${TMPDIR:-/tmp}
+	if [ ! -d "$keydir" ] || [ ! -w "$keydir" ]; then keydir=${TMPDIR:-/tmp}; fi
 	# Global, not local: the EXIT trap runs after main has returned.
 	RESTORE_KEY=$(mktemp "$keydir/nm-restore.XXXXXX")
 	local key=$RESTORE_KEY
