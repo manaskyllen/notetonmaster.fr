@@ -233,8 +233,11 @@ automatiquement les seuls correctifs de sécurité de Dependabot quand toute la 
     job sauté comme réussi, il peut donc rester obligatoire.
 - **Code security** : _Secret scanning_ et _Push protection_ activés ; _Dependabot alerts_ et
   _Dependabot security updates_ activés ; _Private vulnerability reporting_ activé (SECURITY.md).
-- **Code scanning** : CodeQL tourne dans le job `security` (configuration avancée, ne pas activer
-  la configuration par défaut en plus).
+- **Code scanning** : une fois le dépôt public, activer CodeQL en _Default setup_ (il n'est pas dans
+  la CI : sur un dépôt privé sans GitHub Advanced Security, ses résultats ne peuvent pas être
+  envoyés). Ne jamais l'ajouter aussi à un workflow : GitHub refuse les analyses d'un workflow
+  quand la configuration par défaut est active. L'étape « Nouvelles dépendances » du job `security`
+  ne tourne elle aussi que sur un dépôt public.
 - **Actions** : _Fork pull request workflows_ : demander une approbation pour les contributions
   extérieures ; aucun secret dans les variables d'Actions (la CI n'en a besoin d'aucun). Si un
   secret devient nécessaire, le placer dans un _environment_ protégé, jamais au niveau du dépôt.

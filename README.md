@@ -204,12 +204,12 @@ Les tests d'intégration (`notetonmaster_test`) et de bout en bout (`make e2e-fu
 
 **Intégration continue** (`.github/workflows/ci.yml`) : à chaque pull request et à chaque push sur
 `main`, en parallèle, `lint-type`, `unit`, `integration`, `migrations`, `build` (un seul build de
-production, réutilisé), `e2e`, `security` (gitleaks, `pnpm audit`, Semgrep, CodeQL, revue des
-nouvelles dépendances), `build-budget` et `seo`. La suite de bout en bout tourne en entier : sur
+production, réutilisé), `e2e`, `security` (gitleaks, `pnpm audit`, Semgrep, revue des
+nouvelles dépendances une fois le dépôt public), `build-budget` et `seo`. La suite de bout en bout tourne en entier : sur
 une pull request seulement si le site, ses dépendances ou ses tests changent, toujours sur `main`.
 Aucune modification n'arrive sur `main` sans eux. Chaque nuit, `nightly.yml` lance un scan
-OWASP ZAP sur un build local, l'audit des dépendances, gitleaks sur tout l'historique et la suite de
-bout en bout complète.
+OWASP ZAP sur un build local, l'audit des dépendances, gitleaks sur tout l'historique, Lighthouse sur toutes
+les pages et la suite de bout en bout complète.
 
 **Contrôles d'une adresse** (lecture seule, ✅ / ❌) : `pnpm smoke`, `pnpm seo:check`,
 `pnpm lighthouse` et `pnpm links`, avec `--url=http://localhost:3002` sur `make prod-local` ou

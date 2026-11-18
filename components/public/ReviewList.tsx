@@ -136,6 +136,8 @@ export function ReviewList({
   criteria?: React.ReactNode;
 }) {
   // One read per visitor and per day for the reviews of this page (Mon espace › Lectures).
+  // A plain fetch, sent once the page is displayed: not `keepalive`, which Chromium never reports
+  // as finished to its DevTools protocol, so Lighthouse waited for it until its time limit.
   const ids = reviews.map((r) => r.id).join(',');
   useEffect(() => {
     if (!ids) return;
@@ -143,7 +145,6 @@ export function ReviewList({
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ ids: ids.split(',') }),
-      keepalive: true,
     }).catch(() => {});
   }, [ids]);
   const shown = reviews;

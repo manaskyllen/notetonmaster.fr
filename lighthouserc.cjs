@@ -1,9 +1,12 @@
 /**
  * Lighthouse CI (`make lhci`, the CI job, or by hand after a deploy):
  *   LHCI_BASE_URL=https://notetonmaster.fr npx @lhci/cli@0.14.0 autorun --config=lighthouserc.cjs
- * Mobile (simulated 4G, CPU ×4), median of 3 runs, on the four pages of the SEO brief: home,
- * Explorer, a fiche parcours, a city page. Fails when a threshold is not met; LCP warns above
- * 2.5 s and fails above 3.5 s (simulated mobile: see the LCP note in the assertions below).
+ * Mobile (simulated 4G, CPU ×4). Two lists (LHCI_LIST):
+ * - `models` (pull requests): one page of each kind, one run each: home, fiche parcours, mention,
+ *   university, city, Explorer;
+ * - `full` (default: main, the night, by hand): the same plus the three indexes, median of 3 runs.
+ * Same thresholds in both: fails when one is not met; LCP warns above 2.5 s and fails above 3.5 s
+ * (simulated mobile: see the LCP note in the assertions below).
  *
  * Outside production the site answers « X-Robots-Tag: noindex » on purpose (proxy.ts): the
  * `is-crawlable` audit is skipped there, so that « SEO = 100 » measures everything else.
@@ -17,18 +20,22 @@ const BASE = (process.env.LHCI_BASE_URL || 'http://localhost:3002').replace(/\/$
 const ciRunner = process.env.LHCI_RUNNER === 'github';
 const timing = ciRunner ? 'warn' : 'error';
 const production = BASE === 'https://notetonmaster.fr';
-const PAGES = [
+const MODELS = [
   '/',
-  '/explorer',
   `/parcours/${process.env.LHCI_PARCOURS || 'valorisation-des-nouveaux-patrimoines'}`,
+  `/mentions/${process.env.LHCI_MENTION || 'culture-patrimoine-et-mediation'}`,
+  `/universites/${process.env.LHCI_UNIVERSITE || 'nantes-universite'}`,
   `/masters/${process.env.LHCI_VILLE || 'nantes'}`,
+  '/explorer',
 ];
+const models = process.env.LHCI_LIST === 'models';
+const PAGES = models ? MODELS : [...MODELS, '/mentions', '/universites', '/masters'];
 
 module.exports = {
   ci: {
     collect: {
       url: PAGES.map((p) => BASE + p),
-      numberOfRuns: 3,
+      numberOfRuns: models ? 1 : 3,
       ...(process.env.CHROME_PATH ? { chromePath: process.env.CHROME_PATH } : {}),
       settings: {
         preset: 'perf',

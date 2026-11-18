@@ -133,6 +133,21 @@ jobs:
           name: zap
           path: zap/
           retention-days: 7
+      # Every page, median of 3 runs (lighthouserc.cjs), on the site started above; Lighthouse
+      # uses the Google Chrome of the runner image.
+      - name: Lighthouse CI, toutes les pages
+        env:
+          LHCI_RUNNER: github
+          LHCI_LIST: full
+          LHCI_OUTPUT_DIR: lighthouse-nuit
+        run: pnpm lighthouse --url=http://localhost:3002
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse-nuit
+          path: lighthouse-nuit/
+          retention-days: 7
+          if-no-files-found: ignore
       - name: Bout en bout complet, une base et un serveur par processus
         env:
           E2E_SERVERS: '4'

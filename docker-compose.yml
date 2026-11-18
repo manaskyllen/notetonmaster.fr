@@ -102,6 +102,10 @@ services:
   e2e:
     image: mcr.microsoft.com/playwright:v1.65.0-noble
     profiles: ['e2e']
+    # As in the CI: the shared memory of the host (Chromium is slow with the 64 MB of a
+    # container) and an init process that reaps the browsers.
+    ipc: host
+    init: true
     working_dir: /app
     user: '1000:1000'
     environment:

@@ -58,9 +58,11 @@ se connectent une fois par serveur, par les écrans, dans le projet `setup`
 --project=visual` (`tests/visual`).
 - En CI, la suite complète tourne à chaque pull request qui touche le site, ses dépendances ou ses
   tests, à chaque push sur `main` et chaque nuit ; `pnpm deploy:check` refuse un commit dont la
-  suite n'est pas verte sur `main`. Le job tourne dans l'image officielle Playwright de la version
-  de `@playwright/test` (navigateur et dépendances système compris) ; l'image de
-  `docker-compose.yml` doit suivre la même version (`scripts/check-playwright-image.mjs`).
+  suite n'est pas verte sur `main`. Le job tourne directement sur la machine de GitHub, avec le
+  seul Chromium « headless shell » de la version de `@playwright/test`, mis en cache (dans l'image
+  Playwright, chaque test y prenait deux fois plus de temps). En local, `make e2e-full` utilise
+  l'image Playwright de `docker-compose.yml`, qui doit suivre la même version
+  (`scripts/check-playwright-image.mjs`).
 
 ## Avant chaque commit
 
@@ -78,8 +80,11 @@ chose, et davantage.
 
 Chaque pull request passe par `.github/workflows/ci.yml` : lint et typage, tests unitaires, tests
 d'intégration sur une vraie base, cohérence des migrations, bout en bout et accessibilité,
-sécurité (gitleaks, audit des dépendances, Semgrep, CodeQL, revue des nouvelles dépendances),
-budget JavaScript et SEO. Tous ces jobs sont obligatoires pour fusionner.
+sécurité (gitleaks, audit des dépendances, Semgrep, revue des nouvelles dépendances une fois le
+dépôt public), budget JavaScript et SEO (Lighthouse : un passage par type de page sur une pull
+request, trois passages sur toutes les pages sur `main` et chaque nuit). Tous ces jobs sont
+obligatoires pour fusionner. CodeQL n'est pas dans la CI : il sera activé dans les réglages du
+dépôt (« Default setup ») quand celui-ci sera public.
 
 - Une contribution venant d'un fork n'a accès à aucun secret : la CI n'en utilise aucun, seulement
   des valeurs de test et la base du job.
