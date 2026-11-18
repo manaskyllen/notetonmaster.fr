@@ -49,10 +49,8 @@ const schema = z.object({
     'notifications.matrix': z.object(
       Object.fromEntries(NOTIFICATION_EVENTS.map((e) => [e.id, roleMap])),
     ),
-    'legal.contactEmail': z.string().trim().email(),
     'legal.internalDelayDays': z.number().int().min(1).max(30),
     'legal.inactiveAccountYears': z.number().int().min(1).max(10),
-    'legal.rgpdContactEmail': z.string().trim().email().or(z.literal('')),
   }),
 });
 

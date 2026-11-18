@@ -293,8 +293,10 @@ son année. Chaque source a une fiche dans [docs/sources/](docs/sources/), avec 
   des CMS universitaires (Ametys, K-Sup, Drupal) et des intitulés de cours, mais un texte inventé :
   aucun contenu d'une vraie université n'est versionné.
 
-**Collecte polie.** Le robot du site (User-Agent `notetonmasterBot/1.0`, avec une page de contact
-définie par `CRAWLER_INFO_URL`) :
+**Collecte polie.** Le robot du site (User-Agent `notetonmasterBot/1.0`, avec l'adresse de sa
+page, `CRAWLER_INFO_URL`, en production `https://notetonmaster.fr/a-propos#notre-robot`, et son
+adresse de contact) est présenté sur [`/a-propos#notre-robot`](<app/(public)/a-propos/page.tsx>) :
+ce qu'il lit, à quel rythme, et comment exclure un site. Il :
 
 - respecte `robots.txt` et ne lit que les domaines déclarés pour chaque établissement ;
 - espace ses requêtes vers un même hôte ;

@@ -1,4 +1,5 @@
 import 'server-only';
+import { notifyIncoming, shortRef } from '@/lib/admin/notify';
 import { prisma } from '@/lib/db';
 import { HOUR, rateLimit } from '@/lib/rate-limit';
 import { getSettings } from '@/lib/settings';
@@ -53,6 +54,11 @@ export async function submitDocument(studentId: string, fd: FormData): Promise<U
   });
   // The document is identified by its first verification (shared if it validates others).
   await prisma.programVerification.update({ where: { id: v.id }, data: { documentId: v.id } });
+  await notifyIncoming(
+    'document.submitted',
+    shortRef('JUS', v.id),
+    '/admin/moderation?file=justif',
+  );
   return {
     ok: true,
     message: 'Justificatif envoyé. On le vérifie sous 72 h, puis il est supprimé.',

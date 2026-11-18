@@ -94,18 +94,20 @@ une sauvegarde restaurée ne peut plus lire les données chiffrées. Il n'est ja
 | `POSTGRES_PASSWORD`, `APP_DB_PASSWORD`       | `openssl rand -hex 32` (hexadécimal : ils entrent dans une URL) |
 | `SESSION_SECRET`                             | `openssl rand -base64 48`                                       |
 | `APP_ENCRYPTION_KEY`                         | `openssl rand -base64 32`                                       |
-| `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`        | adresse du domaine créée chez OVH (voir [Mails](#mails))        |
+| `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`        | boîte d'envoi créée chez OVH (voir [Mails](#mails))             |
+| `CONTACT_EMAIL`                              | `contact@notetonmaster.fr` (voir [Mails](#mails))               |
 | `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Cloudflare › Turnstile, hôte `notetonmaster.fr`                 |
-| `CRAWLER_INFO_URL`, `CRAWLER_CONTACT_EMAIL`  | page qui présente le robot, adresse de contact du robot         |
+| `CRAWLER_INFO_URL`, `CRAWLER_CONTACT_EMAIL`  | `https://notetonmaster.fr/a-propos#notre-robot`, `robot@…`      |
 | `BACKUP_AGE_RECIPIENT`                       | clé publique age (voir [Sauvegardes](#sauvegardes))             |
 | `INDEXNOW_KEY`                               | `openssl rand -hex 16`                                          |
 
 Le serveur refuse de démarrer (`lib/env.ts`) avec une variable manquante ou une valeur factice de
 `.env.prod.example`, `DEMO_DATA`, `SEED_ON_START=true`, `CONNECTORS_MODE` autre que `live`,
 `TURNSTILE_MODE=mock`, les clés de test Turnstile, les secrets de `.env.example`, un `APP_URL` en
-`http://`, `ALLOW_INSECURE_LOCAL_PROD`, ou sans l'identité du robot (`CRAWLER_INFO_URL` en
-`https://` et `CRAWLER_CONTACT_EMAIL`, envoyées dans le User-Agent de chaque requête de la
-collecte). Au démarrage, le site refuse aussi une base qui contient des données de démo
+`http://`, `ALLOW_INSECURE_LOCAL_PROD`, un `MAIL_FROM` ou un `CONTACT_EMAIL` absent ou factice,
+`SMTP_HOST` sans `SMTP_USER`, ou sans la page du robot (`CRAWLER_INFO_URL` en `https://`, envoyée
+dans le User-Agent de chaque requête de la collecte avec `CRAWLER_CONTACT_EMAIL`, ou
+`CONTACT_EMAIL` si elle est vide). Au démarrage, le site refuse aussi une base qui contient des données de démo
 (`lib/auth/demo.ts`).
 
 Les commandes Compose prennent toujours ce fichier :
@@ -147,8 +149,9 @@ Dans l'ordre. Le dépôt est cloné dans `/opt/notetonmaster` (chemin d'exemple)
 
 **4. Chez OVH, pour les mails**
 
-- [ ] Créer l'adresse d'envoi (ex. `ne-pas-repondre@notetonmaster.fr`), reporter son mot de passe
-      dans `SMTP_PASS`.
+- [ ] Créer les adresses du [tableau des adresses](#adresses-à-créer) : la boîte d'envoi
+      `ne-pas-repondre@` (son mot de passe dans `SMTP_PASS`), la boîte `contact@`, les
+      redirections et `dmarc@`.
 - [ ] Activer DKIM pour le domaine, ajouter les enregistrements donnés.
 - [ ] `pnpm mail:test --to <ton adresse>` (section [Mails](#mails)) : arrivé, SPF/DKIM/DMARC à
       « pass ».
@@ -327,8 +330,25 @@ vérifie les mêmes chiffres avant et après.
 
 ## Mails
 
-Envoi par le SMTP d'OVH, depuis une adresse du domaine (`SMTP_HOST=ssl0.ovh.net`, port 465,
-`SMTP_USER` = l'adresse, `MAIL_FROM` = la même). Enregistrements DNS de `notetonmaster.fr` :
+Envoi par le SMTP d'OVH, depuis une boîte du domaine (`SMTP_HOST=ssl0.ovh.net`, port 465,
+`SMTP_USER` = la boîte, `MAIL_FROM` = la même). Chaque mail part avec `Reply-To: CONTACT_EMAIL` et
+se termine par « Une question ? Écris-nous à contact@notetonmaster.fr. » : une réponse arrive à
+l'équipe, jamais dans la boîte d'envoi. Les mails de la messagerie anonyme précisent qu'une réponse
+par mail arriverait à l'équipe, pas à l'interlocuteur.
+
+### Adresses à créer
+
+| Adresse                            | Type                        | Rôle                                                                                |
+| ---------------------------------- | --------------------------- | ----------------------------------------------------------------------------------- |
+| `ne-pas-repondre@notetonmaster.fr` | boîte                       | authentification SMTP et expéditeur (`SMTP_USER`, `MAIL_FROM`) ; personne ne la lit |
+| `contact@notetonmaster.fr`         | boîte                       | `CONTACT_EMAIL` : Reply-To des mails, mentions légales, confidentialité, robot      |
+| `robot@notetonmaster.fr`           | redirection vers `contact@` | `CRAWLER_CONTACT_EMAIL` : User-Agent et page du robot                               |
+| `securite@notetonmaster.fr`        | redirection vers `contact@` | signalement de faille ([SECURITY.md](../SECURITY.md))                               |
+| `postmaster@notetonmaster.fr`      | redirection vers `contact@` | adresse attendue par les autres serveurs de mail (RFC 5321)                         |
+| `abuse@notetonmaster.fr`           | redirection vers `contact@` | signalement d'abus (RFC 2142)                                                       |
+| `dmarc@notetonmaster.fr`           | boîte ou redirection à part | rapports DMARC (`rua`), nombreux et automatiques : hors de `contact@`               |
+
+Enregistrements DNS de `notetonmaster.fr` :
 
 | Type  | Nom                                       | Valeur                                                                 |
 | ----- | ----------------------------------------- | ---------------------------------------------------------------------- |
@@ -336,8 +356,7 @@ Envoi par le SMTP d'OVH, depuis une adresse du domaine (`SMTP_HOST=ssl0.ovh.net`
 | CNAME | `<sélecteur>._domainkey.notetonmaster.fr` | donné par OVH à l'activation de DKIM (espace client › E-mails › DKIM)  |
 | TXT   | `_dmarc.notetonmaster.fr`                 | `v=DMARC1; p=none; rua=mailto:dmarc@notetonmaster.fr; adkim=s; aspf=s` |
 
-- `p=none` au début : les rapports arrivent à `dmarc@notetonmaster.fr` (adresse ou alias à créer)
-  sans rien bloquer. Après quelques semaines sans échec légitime : `p=quarantine`, puis `p=reject`.
+- `p=none` au début : les rapports arrivent à `dmarc@notetonmaster.fr` sans rien bloquer. Après quelques semaines sans échec légitime : `p=quarantine`, puis `p=reject`.
 - Mail de test, depuis le conteneur :
 
   ```sh

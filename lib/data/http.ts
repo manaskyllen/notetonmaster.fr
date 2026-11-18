@@ -14,6 +14,7 @@ import { createHash } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
 import { mkdir, rename, rm } from 'node:fs/promises';
 import { dirname } from 'node:path';
+import { crawlerContactEmail } from '@/lib/contact';
 import { isAllowed, robotsForStatus, type Robots } from './robots';
 import { isReservedByFile, isReservedByHeader, parseTdmRep, type TdmRule } from './tdm';
 import { allowHttpFromEnv, assertFetchableUrl, BlockedUrlError, safeFetch } from './net-guard';
@@ -511,13 +512,13 @@ export function parseRetryAfter(headers: Headers, now: number): number | null {
 }
 
 /**
- * User-Agent of the robot: notetonmasterBot/1.0 (+<CRAWLER_INFO_URL>; <CRAWLER_CONTACT_EMAIL>).
- * Both are required in production (lib/env.ts).
+ * User-Agent of the robot: notetonmasterBot/1.0 (+<CRAWLER_INFO_URL>; <contact>), the contact
+ * being CRAWLER_CONTACT_EMAIL, else CONTACT_EMAIL (lib/contact.ts). Shown as is on
+ * /a-propos#notre-robot.
  */
 export function crawlerUserAgent() {
-  const info = process.env.CRAWLER_INFO_URL ?? 'https://notetonmaster.example/a-propos#sources';
-  const contact = process.env.CRAWLER_CONTACT_EMAIL?.trim();
-  return `notetonmasterBot/1.0 (+${info}${contact ? `; ${contact}` : ''})`;
+  const info = process.env.CRAWLER_INFO_URL ?? 'https://notetonmaster.example/a-propos#notre-robot';
+  return `notetonmasterBot/1.0 (+${info}; ${crawlerContactEmail()})`;
 }
 
 /** URL patterns of the open-data exception, shared by the connectors. */

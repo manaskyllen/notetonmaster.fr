@@ -16,7 +16,9 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
   if (!canMod && !canLegal) redirect('/admin?refus=1');
   const sp = await searchParams;
   const allowed: QueueKind[] = [
-    ...(canMod ? (['avis', 'justif', 'msg', 'signal', 'reponses', 'questions'] as const) : []),
+    ...(canMod
+      ? (['avis', 'justif', 'msg', 'signal', 'reponses', 'questions', 'contact'] as const)
+      : []),
     ...(canLegal ? (['legal'] as const) : []),
   ];
   const file = Array.isArray(sp.file) ? sp.file[0] : sp.file;

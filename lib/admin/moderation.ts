@@ -7,10 +7,12 @@ import { detectNamedPerson } from '@/lib/domain/names';
 import { LEVEL_LABEL } from '@/lib/domain/rating';
 import { normalize } from '@/lib/domain/search';
 import { formatDate, formatRelative } from '@/lib/format';
+import { shortRef } from '@/lib/admin/notify';
 import { getSettings } from '@/lib/settings';
 import { REVIEW_STATUS_LABEL } from '@/lib/domain/review-status';
 
-export type QueueKind = 'avis' | 'justif' | 'msg' | 'signal' | 'reponses' | 'questions' | 'legal';
+export type QueueKind =
+  'avis' | 'justif' | 'msg' | 'signal' | 'reponses' | 'questions' | 'contact' | 'legal';
 export type Tone = 'ok' | 'warn' | 'bad';
 
 export interface QueueAction {
@@ -87,18 +89,20 @@ export async function queueCounts(canModerate: boolean, canLegal: boolean) {
         where: { targetType: type, status: 'OPEN' },
       })
     ).length;
-  const [avis, justif, msg, signal, reponses, qPending, aPending, legal] = await Promise.all([
-    canModerate ? prisma.review.count({ where: { status: 'PENDING' } }) : 0,
-    canModerate
-      ? prisma.programVerification.count({ where: { method: 'DOCUMENT', status: 'PENDING' } })
-      : 0,
-    canModerate ? distinct('MESSAGE') : 0,
-    canModerate ? distinct('REVIEW') : 0,
-    canModerate ? prisma.reviewResponse.count({ where: { status: 'PENDING' } }) : 0,
-    canModerate ? prisma.question.count({ where: { status: 'PENDING' } }) : 0,
-    canModerate ? prisma.answer.count({ where: { status: 'PENDING' } }) : 0,
-    canLegal ? prisma.legalRequest.count({ where: { status: { not: 'CLOSED' } } }) : 0,
-  ]);
+  const [avis, justif, msg, signal, reponses, qPending, aPending, contact, legal] =
+    await Promise.all([
+      canModerate ? prisma.review.count({ where: { status: 'PENDING' } }) : 0,
+      canModerate
+        ? prisma.programVerification.count({ where: { method: 'DOCUMENT', status: 'PENDING' } })
+        : 0,
+      canModerate ? distinct('MESSAGE') : 0,
+      canModerate ? distinct('REVIEW') : 0,
+      canModerate ? prisma.reviewResponse.count({ where: { status: 'PENDING' } }) : 0,
+      canModerate ? prisma.question.count({ where: { status: 'PENDING' } }) : 0,
+      canModerate ? prisma.answer.count({ where: { status: 'PENDING' } }) : 0,
+      canModerate ? prisma.contactMessage.count({ where: { handledAt: null } }) : 0,
+      canLegal ? prisma.legalRequest.count({ where: { status: { not: 'CLOSED' } } }) : 0,
+    ]);
   return {
     avis,
     justif,
@@ -106,6 +110,7 @@ export async function queueCounts(canModerate: boolean, canLegal: boolean) {
     signal,
     reponses,
     questions: qPending + aPending,
+    contact,
     legal,
   } satisfies Record<QueueKind, number>;
 }
@@ -312,7 +317,7 @@ export async function buildQueues(
               ]),
           ).values(),
         ],
-        meta: `Espace ${maskEmail(decrypt(v.student.emailEnc))}`,
+        meta: `${shortRef('JUS', v.id)} · Espace ${maskEmail(decrypt(v.student.emailEnc))}`,
         body: `Pièce jointe : ${v.documentName ?? 'document'}\nLe document sera supprimé automatiquement dès ta décision.`,
         checks,
         reasons: [
@@ -672,6 +677,40 @@ export async function buildQueues(
         });
       }
     }
+  }
+
+  // ── Messages of the contact form (/a-propos), oldest first, until marked as handled
+  if (canModerate && page.tab === 'contact') {
+    const messages = await prisma.contactMessage.findMany({
+      where: { handledAt: null },
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      skip,
+      take,
+    });
+    for (const m of messages)
+      items.push({
+        kind: 'contact',
+        id: m.id,
+        flag: m.subject,
+        tone: 'warn',
+        when: formatRelative(m.createdAt),
+        title: m.subject,
+        target: shortRef('CON', m.id),
+        // The address is needed to answer (from the contact mailbox); never in a notification.
+        meta: `Répondre à ${decrypt(m.emailEnc)}${m.link ? ` · lien : ${m.link}` : ''}`,
+        body: m.body,
+        checks: [
+          {
+            label: 'Réponse',
+            detail: 'depuis la boîte de contact, puis « Marquer comme traité »',
+            k: 'ok',
+          },
+        ],
+        reasons: [],
+        actions: [
+          { id: 'handled', label: 'Marquer comme traité', variant: 'primary', needsReason: false },
+        ],
+      });
   }
 
   if (canLegal && page.tab === 'legal') {

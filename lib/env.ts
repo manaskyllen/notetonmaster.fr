@@ -89,14 +89,23 @@ export function validateEnv(env: Env = process.env): { ok: boolean; errors: stri
   }
   if (!env.SMTP_HOST || env.SMTP_HOST === 'mailpit')
     errors.push('SMTP_HOST : serveur de mail réel obligatoire');
-  if (!env.MAIL_FROM) errors.push('MAIL_FROM manque');
+  if (env.SMTP_HOST && !env.SMTP_USER?.trim())
+    errors.push('SMTP_USER : identifiant de la boîte d’envoi, obligatoire avec SMTP_HOST');
+  // « notetonmaster <ne-pas-repondre@notetonmaster.fr> » or the bare address.
+  const from = /<([^>]+)>\s*$/.exec(env.MAIL_FROM ?? '')?.[1] ?? env.MAIL_FROM?.trim();
+  if (!isRealEmail(from)) errors.push('MAIL_FROM : adresse d’envoi réelle du domaine, obligatoire');
+  if (!isRealEmail(env.CONTACT_EMAIL?.trim()))
+    errors.push(
+      'CONTACT_EMAIL : adresse de contact réelle (Reply-To des mails, pages légales), obligatoire',
+    );
   if (env.CONNECTORS_MODE !== 'live')
     errors.push('CONNECTORS_MODE : « live » obligatoire en production (vrais connecteurs)');
   // Identity of the robot, sent with every request of the collector (lib/data/http.ts).
   if (!isPublicHttpsUrl(env.CRAWLER_INFO_URL))
     errors.push('CRAWLER_INFO_URL : page publique https:// qui présente le robot, obligatoire');
-  if (!isRealEmail(env.CRAWLER_CONTACT_EMAIL))
-    errors.push('CRAWLER_CONTACT_EMAIL : adresse de contact du robot, obligatoire');
+  // Optional: CONTACT_EMAIL otherwise (lib/contact.ts).
+  if (env.CRAWLER_CONTACT_EMAIL && !isRealEmail(env.CRAWLER_CONTACT_EMAIL))
+    errors.push('CRAWLER_CONTACT_EMAIL : adresse réelle, ou vide pour utiliser CONTACT_EMAIL');
   if (env.PUBLIC_INDEXING && !['true', 'false'].includes(env.PUBLIC_INDEXING))
     errors.push('PUBLIC_INDEXING : « true » ou « false »');
   if (env.SEED_ON_START === 'true') errors.push('SEED_ON_START : interdit en production');

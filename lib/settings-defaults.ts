@@ -9,6 +9,7 @@ export const NOTIFICATION_EVENTS = [
   { id: 'document.submitted', label: 'Justificatif reçu' },
   { id: 'message.reported', label: 'Message signalé' },
   { id: 'legal.received', label: 'Demande légale reçue' },
+  { id: 'contact.received', label: 'Message du formulaire de contact' },
   { id: 'sync.failed', label: 'Échec d’une récupération' },
   { id: 'data.conflict', label: 'Nouveau conflit de données' },
 ] as const;
@@ -61,14 +62,13 @@ export const SETTINGS_DEFAULTS = {
     'document.submitted': { ADMIN: false, MODERATOR: true, DATA_EDITOR: false, LEGAL: false },
     'message.reported': { ADMIN: false, MODERATOR: true, DATA_EDITOR: false, LEGAL: false },
     'legal.received': { ADMIN: true, MODERATOR: false, DATA_EDITOR: false, LEGAL: true },
+    'contact.received': { ADMIN: true, MODERATOR: true, DATA_EDITOR: false, LEGAL: false },
     'sync.failed': { ADMIN: true, MODERATOR: false, DATA_EDITOR: true, LEGAL: false },
     'data.conflict': { ADMIN: false, MODERATOR: false, DATA_EDITOR: true, LEGAL: false },
   } as NotificationMatrix,
-  // Légal & RGPD
-  'legal.contactEmail': 'contact@notetonmaster.fr',
+  // Légal & RGPD (the contact address is CONTACT_EMAIL, lib/contact.ts)
   'legal.internalDelayDays': 3,
   'legal.inactiveAccountYears': 3,
-  'legal.rgpdContactEmail': 'contact@notetonmaster.fr',
 } as const;
 
 export type SettingKey = keyof typeof SETTINGS_DEFAULTS;

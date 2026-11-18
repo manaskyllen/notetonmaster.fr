@@ -13,6 +13,7 @@ import { can } from '@/lib/domain/permissions';
 import { prisma } from '@/lib/db';
 import { getSettings } from '@/lib/settings';
 import { FIXED_SETTINGS } from '@/lib/settings-defaults';
+import { contactEmail } from '@/lib/contact';
 
 export const metadata: Metadata = { title: 'Paramètres' };
 
@@ -68,6 +69,7 @@ export default async function ParametresPage({
           />
         }
         fixed={{
+          contactEmail: contactEmail(),
           connectionLogs: FIXED_SETTINGS.connectionLogRetention,
           documents: FIXED_SETTINGS.documentRetention,
           messages: `Supprimés ${FIXED_SETTINGS.messageRetentionMonths} mois après le dernier échange`,

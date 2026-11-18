@@ -55,7 +55,8 @@ APP_ENCRYPTION_KEY=$(openssl rand -base64 32)
 PROXY_NETWORK=$NET
 TRUSTED_PROXY_HOPS=1
 MAIL_FROM="notetonmaster <ne-pas-repondre@notetonmaster.fr>"
-CRAWLER_INFO_URL=https://notetonmaster.fr/a-propos#sources
+CONTACT_EMAIL=contact@notetonmaster.fr
+CRAWLER_INFO_URL=https://notetonmaster.fr/a-propos#notre-robot
 CRAWLER_CONTACT_EMAIL=robot@notetonmaster.fr
 BACKUP_AGE_RECIPIENT=$RECIPIENT
 BACKUP_DIR=$WORK/backups
@@ -72,6 +73,7 @@ TURNSTILE_MODE=live
 TURNSTILE_SITE_KEY=0x4AAAAAAAdeploytestsite
 TURNSTILE_SECRET_KEY=0x4AAAAAAAdeploytestsecret
 SMTP_HOST=smtp.invalid
+SMTP_USER=ne-pas-repondre@notetonmaster.fr
 CONNECTORS_MODE=live
 EOF
 } >"$WORK/nm-test-empty.env"

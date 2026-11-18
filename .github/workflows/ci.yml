@@ -33,6 +33,7 @@ env:
   SMTP_HOST: localhost
   SMTP_PORT: '1025'
   MAIL_FROM: 'notetonmaster <ne-pas-repondre@notetonmaster.example>'
+  CONTACT_EMAIL: contact@notetonmaster.example
   CRAWLER_INFO_URL: http://localhost:3002/a-propos#notre-robot
   CRAWLER_CONTACT_EMAIL: robot@notetonmaster.example
   RAW_DATA_DIR: /tmp/nm/raw

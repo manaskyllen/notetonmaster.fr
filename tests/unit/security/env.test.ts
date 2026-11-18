@@ -19,9 +19,11 @@ const good = {
   TURNSTILE_SITE_KEY: `0x4${'A'.repeat(7)}site`,
   TURNSTILE_SECRET_KEY: `0x4${'A'.repeat(7)}secret`,
   SMTP_HOST: 'smtp.example.net',
+  SMTP_USER: 'ne-pas-repondre@notetonmaster.fr',
   MAIL_FROM: 'notetonmaster <ne-pas-repondre@notetonmaster.fr>',
+  CONTACT_EMAIL: 'contact@notetonmaster.fr',
   CONNECTORS_MODE: 'live',
-  CRAWLER_INFO_URL: 'https://notetonmaster.fr/a-propos#sources',
+  CRAWLER_INFO_URL: 'https://notetonmaster.fr/a-propos#notre-robot',
   CRAWLER_CONTACT_EMAIL: 'robot@notetonmaster.fr',
 };
 
@@ -53,10 +55,19 @@ describe('environment validation in production', () => {
     ['CRAWLER_INFO_URL', 'http://notetonmaster.fr/a-propos'],
     ['CRAWLER_INFO_URL', 'https://notetonmaster.example/a-propos#sources'],
     ['CRAWLER_INFO_URL', 'https://localhost/a-propos'],
-    ['CRAWLER_CONTACT_EMAIL', undefined],
     ['CRAWLER_CONTACT_EMAIL', 'robot@notetonmaster.example'],
     ['CRAWLER_CONTACT_EMAIL', 'pas-une-adresse'],
     ['PUBLIC_INDEXING', 'oui'],
+    ['MAIL_FROM', undefined],
+    ['MAIL_FROM', 'notetonmaster <ne-pas-repondre@notetonmaster.example>'],
+    ['MAIL_FROM', 'ne-pas-repondre@notetonmaster.local'],
+    ['MAIL_FROM', 'notetonmaster'],
+    ['CONTACT_EMAIL', undefined],
+    ['CONTACT_EMAIL', ''],
+    ['CONTACT_EMAIL', 'contact@notetonmaster.example'],
+    ['CONTACT_EMAIL', 'pas-une-adresse'],
+    ['SMTP_USER', undefined],
+    ['SMTP_USER', ' '],
     ['TURNSTILE_SECRET_KEY', 'a-remplacer'],
     ['SMTP_PASS', 'a-remplacer'],
     ['SEED_ON_START', 'true'],
@@ -96,6 +107,15 @@ describe('environment validation in production', () => {
   it('the server and the worker check it at startup', () => {
     expect(readFileSync('instrumentation.ts', 'utf8')).toMatch(/assertEnv\(/);
     expect(readFileSync('worker/index.ts', 'utf8')).toMatch(/assertEnv\(/);
+  });
+
+  it('MAIL_FROM: with a display name or the bare address', () => {
+    expect(validateEnv({ ...good, MAIL_FROM: 'ne-pas-repondre@notetonmaster.fr' }).ok).toBe(true);
+  });
+
+  it('CRAWLER_CONTACT_EMAIL is optional (CONTACT_EMAIL then), but real when set', () => {
+    expect(validateEnv({ ...good, CRAWLER_CONTACT_EMAIL: undefined }).ok).toBe(true);
+    expect(validateEnv({ ...good, CRAWLER_CONTACT_EMAIL: '' }).ok).toBe(true);
   });
 
   it('PUBLIC_INDEXING accepts true and false', () => {

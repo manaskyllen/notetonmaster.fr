@@ -9,7 +9,7 @@
       "verification": {
         "method": "UNIVERSITY_EMAIL",
         "program": "valorisation-des-nouveaux-patrimoines",
-        "universityEmail": "anna.l@etu.univ-nantes.fr",
+        "universityEmail": "demo.fictif@etu.univ-nantes.fr",
         "daysAgo": 40
       },
       "follows": [

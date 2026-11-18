@@ -6,6 +6,9 @@ import { Container } from '@/components/public/PageShell';
 import { seoMetadata } from '@/lib/seo/meta';
 import { BrandName, withBrand } from '@/components/ui/BrandName';
 import { Icon } from '@/components/ui/Icon';
+import { crawlerContactEmail } from '@/lib/contact';
+import { crawlerUserAgent } from '@/lib/data/http';
+import { getSetting } from '@/lib/settings';
 
 export function generateMetadata(): Metadata {
   return seoMetadata({
@@ -31,6 +34,26 @@ const SOURCES = [
     'Sites des universités',
     'Programmes, livrets pédagogiques, brochures. Lus uniquement quand les sites l’autorisent.',
     'Mise à jour : mensuelle',
+  ],
+] as const;
+
+/** What the robot reads, where, how often (prisma/fixtures/sources.json, lib/connectors). */
+const ROBOT_SOURCES = [
+  [
+    'Données ouvertes du ministère',
+    'data.enseignementsup-recherche.gouv.fr : catalogue et admission Mon Master, établissements, insertion professionnelle, diplômes préparés.',
+    'Chaque semaine ou chaque mois, selon le jeu de données',
+  ],
+  ['Mon Master', 'monmaster.gouv.fr : la fiche détaillée de chaque parcours.', 'Chaque semaine'],
+  [
+    'France compétences',
+    'data.gouv.fr : le fichier d’export des fiches RNCP, publié en données ouvertes.',
+    'Chaque jour',
+  ],
+  [
+    'Sites des universités',
+    'Les pages publiques du catalogue de formation : présentation, programme, admission. Jamais d’espace connecté ni de page personnelle.',
+    'Une passe par nuit ; une page inchangée n’est pas retéléchargée',
   ],
 ] as const;
 
@@ -95,6 +118,8 @@ export default async function AProposPage({
     parcours && /^[a-z0-9-]{1,120}$/.test(parcours)
       ? `${appUrl()}/parcours/${parcours}`
       : undefined;
+  const minDelay = Math.max(2, await getSetting('collect.minDelaySeconds'));
+  const robotContact = crawlerContactEmail();
   return (
     <main>
       <Container className="flex flex-col gap-14 pt-8 pb-20">
@@ -131,8 +156,66 @@ export default async function AProposPage({
           </ul>
           <p className="m-0 text-[15px] text-ink-muted">
             Chaque chiffre du site indique sa source et son année. Quand une donnée manque, on
-            l’écrit plutôt que de l’inventer.
+            l’écrit plutôt que de l’inventer. Ces données sont lues par{' '}
+            <Link href="#notre-robot">notre robot</Link>.
           </p>
+        </section>
+
+        <section id="notre-robot" className="flex scroll-mt-24 flex-col gap-4.5">
+          <h2 className="m-0 font-display text-[36px] font-extrabold tracking-[-0.03em]">
+            Notre robot
+          </h2>
+          <p className="m-0 max-w-[760px] text-[16px] leading-[1.55]">
+            Pour tenir les fiches à jour, un robot lit des données publiques sur les formations. Il
+            ne garde aucune donnée personnelle : sur les sites des universités, les adresses mail,
+            les numéros de téléphone et les noms des responsables sont retirés avant d’être
+            enregistrés.
+          </p>
+          <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(250px,100%),1fr))] gap-3.5">
+            {ROBOT_SOURCES.map(([t, d, u]) => (
+              <li
+                key={t}
+                className="flex flex-col gap-2 rounded-lg border border-border bg-surface-0 p-5.5"
+              >
+                <span className="font-display text-[20px] font-bold">{t}</span>
+                <span className="text-[15px] leading-[1.5]">{d}</span>
+                <span className="mt-auto text-[13px] font-semibold text-ink-muted">{u}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex max-w-[760px] flex-col gap-3 text-[16px] leading-[1.55]">
+            <p className="m-0">
+              <strong>Il respecte robots.txt</strong>, relu au moins une fois par jour, ainsi que
+              les réserves de fouille de textes et de données (TDMRep). Seule exception : le fichier
+              d’export RNCP publié en données ouvertes sur data.gouv.fr.
+            </p>
+            <p className="m-0">
+              <strong>Il limite son rythme</strong> : une seule requête à la fois par site, au moins{' '}
+              {minDelay} secondes entre deux requêtes, davantage si le site indique un{' '}
+              <code>Crawl-delay</code>. Après trois erreurs de suite, il laisse le site tranquille
+              pendant 24 h.
+            </p>
+            <p className="m-0">Il s’annonce toujours avec ce User-Agent :</p>
+            <code
+              data-testid="robot-user-agent"
+              className="block overflow-x-auto rounded-md bg-surface-50 px-4 py-3 text-[14px] break-all"
+            >
+              {crawlerUserAgent()}
+            </code>
+            <p className="m-0">
+              Contact :{' '}
+              <a href={`mailto:${robotContact}`} data-testid="robot-contact">
+                {robotContact}
+              </a>
+            </p>
+            <h3 className="m-0 mt-2 font-display text-[22px] font-bold">Exclure votre site</h3>
+            <p className="m-0">
+              Ajoutez à votre robots.txt les deux lignes <code>User-agent: notetonmasterBot</code>{' '}
+              et <code>Disallow: /</code> : c’est pris en compte à la prochaine lecture de
+              robots.txt, sous 24 h au plus. Vous pouvez aussi écrire à {robotContact} : on retire
+              votre site de la collecte sous 72 h.
+            </p>
+          </div>
         </section>
 
         <section className="flex flex-col gap-4.5">
