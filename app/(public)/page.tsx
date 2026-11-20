@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Fragment } from 'react';
 import { CityCard } from '@/components/catalog/CityCard';
 import { DomainTiles } from '@/components/home/DomainTiles';
 import { HomeReviews } from '@/components/home/HomeReviews';
@@ -9,11 +10,10 @@ import {
   quickFallbacks,
   WhereFallback,
 } from '@/components/home/HomeSearchStatic';
-import { Container } from '@/components/public/PageShell';
 import { CtaArrow, ctaClasses } from '@/components/ui/Button';
 import { HoverLink } from '@/components/ui/HoverLink';
 import { Icon, type IconName } from '@/components/ui/Icon';
-import { SLOGAN_HIGHLIGHT, SLOGAN_LEAD } from '@/lib/brand/copy';
+import { HOME_HEADLINE } from '@/lib/brand/copy';
 import { homeData, REVIEWS_MIN } from '@/lib/home/data';
 import { firstReviewCities, NO_QUICK, QUICK_FILTERS, type Quick } from '@/lib/home/labels';
 import { suggestCount } from '@/lib/home/suggest';
@@ -53,6 +53,16 @@ export async function generateMetadata({
 
 export const dynamic = 'force-dynamic';
 
+/** At display size the tight tracking glues a comma to the letter before: it gets its own room. */
+function Commas({ text }: { text: string }) {
+  return text.split(',').map((part, i) => (
+    <Fragment key={i}>
+      {i > 0 && <span className="ml-[0.03em] tracking-normal">,</span>}
+      {part}
+    </Fragment>
+  ));
+}
+
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
 
 /** Sections below the fold: rendered by the browser when they come near the screen. */
@@ -82,11 +92,12 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
   return (
     <main>
-      <Container className="hero flex flex-col items-center gap-4.5 pt-18 pb-14 text-center max-sm:pt-10 max-sm:pb-10">
-        <h1 className="m-0 max-w-[900px] font-display text-[clamp(38px,5.4vw,68px)] leading-[1.02] font-extrabold tracking-[-0.035em]">
-          {SLOGAN_LEAD}{' '}
-          <span className="rounded-[16px] bg-lime-400 px-3 text-on-lime [-webkit-box-decoration-break:clone] [box-decoration-break:clone]">
-            {SLOGAN_HIGHLIGHT}
+      <div className="hero mx-auto flex w-full max-w-[1360px] flex-col items-center gap-4.5 px-6 pt-18 pb-14 text-center max-sm:px-4 max-sm:pt-10 max-sm:pb-10">
+        <h1 className="m-0 max-w-[1320px] font-display text-[clamp(42px,8.2vw,118px)] leading-[0.94] font-extrabold tracking-[-0.045em]">
+          <Commas text={HOME_HEADLINE.line1} /> <br className="max-[760px]:hidden" />
+          {HOME_HEADLINE.line2}{' '}
+          <span className="inline-block rounded-[0.14em] bg-lime-400 px-[0.12em] pb-[0.06em] whitespace-nowrap text-on-lime [transform:rotate(-2deg)]">
+            {HOME_HEADLINE.highlight}
           </span>
         </h1>
         <p className="m-0 max-w-[720px] text-[19px] leading-normal text-balance text-ink-muted max-sm:text-[17px]">
@@ -106,7 +117,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             icons: formIcons(),
           }}
         />
-      </Container>
+      </div>
 
       {hasReviews && <HomeReviews items={reviews.items} now={now} />}
 

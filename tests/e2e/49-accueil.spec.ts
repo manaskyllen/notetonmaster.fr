@@ -285,7 +285,7 @@ for (const scheme of ['light', 'dark'] as const)
     );
   });
 
-for (const width of [320, 390, 1440])
+for (const width of [320, 390, 1024, 1440])
   test(`no horizontal scroll at ${width} px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await home(page);
@@ -294,6 +294,65 @@ for (const width of [320, 390, 1440])
     );
     expect(over).toBe(0);
   });
+
+/** The lines of the h1 as laid out: its words grouped by the middle of their box. */
+const headlineLines = (page: Page) =>
+  page.locator('h1').evaluate((h) => {
+    const label = h.querySelector('.whitespace-nowrap')!;
+    const lh = parseFloat(getComputedStyle(h).lineHeight);
+    const words: [string, number][] = [];
+    const walk = (node: Node) => {
+      for (const c of node.childNodes) {
+        if (c === label || c.nodeType !== Node.TEXT_NODE) {
+          if (c === label) {
+            const b = label.getBoundingClientRect();
+            words.push([c.textContent!, (b.top + b.bottom) / 2]);
+          } else walk(c);
+          continue;
+        }
+        const text = c.textContent!;
+        for (const m of text.matchAll(/\S+/g)) {
+          const r = document.createRange();
+          r.setStart(c, m.index);
+          r.setEnd(c, m.index + m[0].length);
+          const b = r.getBoundingClientRect();
+          words.push([m[0], (b.top + b.bottom) / 2]);
+        }
+      }
+    };
+    walk(h);
+    const lines: { t: string; y: number }[] = [];
+    for (const [t, y] of words) {
+      const last = lines.at(-1);
+      if (last && Math.abs(last.y - y) < lh / 2) last.t += (t.startsWith(',') ? '' : ' ') + t;
+      else lines.push({ t, y });
+    }
+    const box = label.getBoundingClientRect();
+    return {
+      lines: lines.map((l) => l.t.replace(/\s+/g, ' ')),
+      labelOneLine: getComputedStyle(label).whiteSpace === 'nowrap' && box.height < lh * 1.5,
+    };
+  });
+
+test('hero headline: two lines on desktop, « combien ? » never broken, read in one go', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await home(page);
+  const h1 = page.getByRole('heading', { level: 1 });
+  // the <br> and the spans add nothing to the reading
+  await expect(h1).toHaveAccessibleName('Ton master, tu lui mets combien ?');
+  expect(await headlineLines(page)).toEqual({
+    lines: ['Ton master, tu lui', 'mets combien ?'],
+    labelOneLine: true,
+  });
+  for (const width of [1024, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    const { lines, labelOneLine } = await headlineLines(page);
+    expect(labelOneLine, `${width} px`).toBe(true);
+    expect(lines.at(-1), `${width} px`).toMatch(/combien \?$/);
+  }
+});
 
 test('SEO: one h1, indexable bare, noindex with parameters, canonical without them', async ({
   page,
