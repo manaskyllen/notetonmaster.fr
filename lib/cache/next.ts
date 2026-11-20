@@ -3,10 +3,19 @@ import { revalidateTag } from 'next/cache';
 import { refreshProgramIndexRows } from '@/lib/catalog/program-index';
 import { refreshProgramRatings } from '@/lib/catalog/program-ratings';
 import { queueIndexNow } from '@/lib/seo/indexnow';
+import { clearSearchCache } from '@/lib/search-guard';
 import { TAGS } from './tags';
 
-/** Inside Next.js (server actions, route handlers): expire these tags now. */
+/** Tags whose change can alter an answer of /api/search or /api/suggest (cities, ratings). */
+const SEARCH_TAGS: string[] = [TAGS.catalog, TAGS.zones, TAGS.reviews];
+
+/**
+ * Inside Next.js (server actions, route handlers): expire these tags now. The small memory cache
+ * of the searches (lib/search-guard.ts) is emptied with them: a city just closed must not still
+ * be suggested for a minute.
+ */
 export function expireTags(tags: string[]) {
+  if (tags.some((t) => SEARCH_TAGS.includes(t))) clearSearchCache();
   for (const t of new Set(tags))
     try {
       revalidateTag(t, { expire: 0 });

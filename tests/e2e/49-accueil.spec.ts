@@ -197,8 +197,10 @@ test.describe('latest reviews', () => {
       await expireTags(page, ['reviews']);
     }
   }
+  // exact: the dark block under 3 reviews is titled « Ici, tu liras ce qu’en disent les
+  // étudiant·es. », which a substring match would take for the section
   const section = (page: Page) =>
-    page.getByRole('region', { name: 'Ce qu’en disent les étudiant·es' });
+    page.getByRole('region', { name: 'Ce qu’en disent les étudiant·es', exact: true });
   /** Reloads the home until it reflects the reviews just changed (expired tag, cache refilled). */
   const onHome = (page: Page, check: () => Promise<void>) =>
     expect(async () => {

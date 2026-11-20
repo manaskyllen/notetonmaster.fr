@@ -41,6 +41,18 @@ describe('/api/search', () => {
     );
   });
 
+  it('emptied when the catalog, the open cities or the reviews change', async () => {
+    const { expireTags } = await import('@/lib/cache/next');
+    for (const tag of ['launch-zones', 'catalog', 'reviews']) {
+      await guard.cachedSearch('lyon', async () => 'open');
+      expireTags(['footer']);
+      expect(await guard.cachedSearch('lyon', async () => 'closed')).toBe('open');
+      expireTags([tag]);
+      expect(await guard.cachedSearch('lyon', async () => 'closed')).toBe('closed');
+      guard.clearSearchCache();
+    }
+  });
+
   it('no server data-cache entry keyed by the raw query', () => {
     expect(readFileSync('app/api/search/route.ts', 'utf8')).not.toMatch(/unstable_cache/);
   });
