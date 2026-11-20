@@ -3,6 +3,7 @@
  * Two schemas: `fr-esr-mon_master` (sessions 2024, 2025: phases PP/PC) and
  * `fr-esr-mon_master_2023` (no phases, `rang_dernier`, `lieux_formation`).
  */
+import { domainOfDiscipline } from '@/lib/domain/discipline-domain';
 import {
   normCode,
   normMention,
@@ -158,16 +159,8 @@ export function prettyMention(m: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-/** Discipline → one of the 4 domains of the site. */
-export function domainOf(disci: string): string | null {
-  const d = disci.toLowerCase();
-  if (/\bshs\b|humaines|sociales/.test(d)) return 'sciences-humaines-et-sociales';
-  if (/lettres|langues|\barts?\b/.test(d)) return 'arts-lettres-langues';
-  if (/droit|econom|gestion|politique|\baes\b/.test(d)) return 'droit-economie-gestion';
-  if (/sc\.|science|sant|staps|technolog|fondamentales/.test(d))
-    return 'sciences-technologies-sante';
-  return null;
-}
+/** Discipline → one of the 4 domains of the site (lib/domain/discipline-domain.ts). */
+export const domainOf = (disci: string): string | null => domainOfDiscipline(disci);
 
 export function normalizeRow(r: Record<string, string>, dataset: 'main' | '2023'): MMRecord {
   const mention = r.mention?.trim() ?? '';

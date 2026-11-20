@@ -103,6 +103,7 @@ describe('home: one line, whatever the number of open cities', () => {
     expect(text(openCitiesLine(z(['Strasbourg'])))).toBe(
       'Déjà ouvert à Strasbourg · Voir les universités →',
     );
+    expect(openCitiesLine(z(['Strasbourg', 'Nantes', 'Mulhouse'])).href).toBe('/universites');
   });
 
   it('ten cities: three names, then « et 7 autres »', () => {
@@ -123,5 +124,7 @@ describe('home: one line, whatever the number of open cities', () => {
     expect(text(l)).toBe(
       'Déjà ouvert dans 10 villes : Lyon, Marseille, Strasbourg et 7 autres · Voir toutes les villes →',
     );
+    // « Voir toutes les villes » leads to the cities, not to the universities
+    expect(l.href).toBe('/masters');
   });
 });

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { HoverLink as Link } from '@/components/ui/HoverLink';
 import { getCurrentStudent } from '@/lib/auth/student';
 import {
   footerFigures,

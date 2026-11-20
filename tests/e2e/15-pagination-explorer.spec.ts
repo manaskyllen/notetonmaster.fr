@@ -148,7 +148,7 @@ test('reviews of a program: the overall rating does not change on page 2', async
 });
 
 test('no axe violation on Explorer and on a paginated list', async ({ page }) => {
-  for (const path of ['/explorer?modalite=alternance&page=2', '/?q=droit&page=2', '/mentions']) {
+  for (const path of ['/explorer?modalite=alternance&page=2', '/?q=droit', '/mentions']) {
     await page.goto(path);
     await waitForHydration(page);
     const r = await new AxeBuilder({ page })

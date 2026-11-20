@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
-import { Icon, type IconName } from './Icon';
+import { Glyph } from './Glyph';
+import { MONITOR, MOON, SUN } from './glyphs';
 
 /**
  * Theme of the site: « Clair », « Sombre » or « Auto » (follows prefers-color-scheme). The choice
@@ -11,10 +12,10 @@ import { Icon, type IconName } from './Icon';
  */
 export type Theme = 'light' | 'dark' | 'auto';
 
-export const THEME_OPTIONS: { id: Theme; label: string; icon: IconName }[] = [
-  { id: 'light', label: 'Clair', icon: 'sun' },
-  { id: 'dark', label: 'Sombre', icon: 'moon' },
-  { id: 'auto', label: 'Auto', icon: 'monitor' },
+export const THEME_OPTIONS: { id: Theme; label: string; icon: readonly string[] }[] = [
+  { id: 'light', label: 'Clair', icon: SUN },
+  { id: 'dark', label: 'Sombre', icon: MOON },
+  { id: 'auto', label: 'Auto', icon: MONITOR },
 ];
 
 export const THEME_COOKIE = 'nm-theme';
@@ -132,7 +133,7 @@ export function ThemeSwitcher({
                   : 'bg-transparent text-ink',
             )}
           >
-            <Icon name={o.icon} size={16} />
+            <Glyph parts={o.icon} size={16} />
             {o.label}
           </button>
         );

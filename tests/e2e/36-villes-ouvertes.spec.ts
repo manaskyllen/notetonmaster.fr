@@ -38,17 +38,23 @@ test('home, three cities: one line « Déjà ouvert à A, B et C · Voir les uni
     expect(zones).toHaveLength(3);
     await page.goto('/');
     await waitForHydration(page);
-    const nav = page.getByRole('navigation', { name: 'Villes ouvertes' });
-    await expect(nav).toHaveText(
+    const line = page.getByRole('group', { name: 'Villes ouvertes' });
+    await expect(line).toHaveText(
       `Déjà ouvert à ${zones[0]!.name}, ${zones[1]!.name} et ${zones[2]!.name} Voir les universités →`,
     );
-    // one line: no pill, no « + n villes »
-    await expect(nav.getByRole('button')).toHaveCount(0);
-    const links = nav.getByRole('link');
-    await expect(links).toHaveCount(4);
-    await expect(links.last()).toHaveAttribute('href', '/universites');
-    // the city leads to its landing page (/masters/{ville}), which counts its parcours
-    await links.first().click();
+    // one line: each city is a button that fills « Où ? », one link at the end
+    await expect(line.getByRole('button')).toHaveCount(3);
+    await expect(line.getByRole('link')).toHaveCount(1);
+    await expect(line.getByRole('link')).toHaveAttribute('href', '/universites');
+    await line.getByRole('button', { name: `Choisir ${zones[0]!.name}` }).click();
+    await expect(page.getByRole('button', { name: /^Où \?/ })).toHaveAccessibleName(
+      `Où ? ${zones[0]!.name}`,
+    );
+    // the city card leads to its landing page (/masters/{ville}), which counts its parcours
+    await page
+      .getByRole('region', { name: 'Pars de ta ville' })
+      .getByRole('link', { name: new RegExp(`^Masters à ${zones[0]!.name} :`) })
+      .click();
     await expect(page).toHaveURL(new RegExp(`/masters/${zones[0]!.slug}$`));
     await expect(
       page.getByRole('heading', { level: 1, name: `Les masters à ${zones[0]!.name}` }),
@@ -57,11 +63,6 @@ test('home, three cities: one line « Déjà ouvert à A, B et C · Voir les uni
       page.getByText(
         new RegExp(`^${zones[0]!.n.toLocaleString('fr-FR').replace(/\s/g, '\\s')} parcours dans`),
       ),
-    ).toBeVisible();
-    // the subtitle counts the cities
-    await page.goto('/');
-    await expect(
-      page.getByText(/Pour commencer : les universités publiques de trois villes\./),
     ).toBeVisible();
   } finally {
     await sql(`UPDATE "LaunchZone" SET open = slug = ANY($1)`, [before]);
@@ -110,23 +111,27 @@ test('home, more than three cities: three names then « et n autres », a city w
     expect(counted.length).toBeGreaterThan(3);
     await page.goto('/');
     await waitForHydration(page);
-    const nav = page.getByRole('navigation', { name: 'Villes ouvertes' });
+    const line = page.getByRole('group', { name: 'Villes ouvertes' });
     const others = counted.length - 3;
-    await expect(nav).toHaveText(
+    await expect(line).toHaveText(
       `Déjà ouvert dans ${counted.length} villes : ${counted
         .slice(0, 3)
         .map((z) => z.name)
         .join(', ')} et ${others} autre${others > 1 ? 's' : ''} Voir toutes les villes →`,
     );
-    await expect(nav).not.toContainText('Sarrebourg');
-    await expect(nav.getByRole('link')).toHaveCount(4);
-    await expect(nav.getByRole('link').last()).toHaveAttribute('href', '/universites');
+    await expect(line).not.toContainText('Sarrebourg');
+    await expect(line.getByRole('button')).toHaveCount(3);
+    // beyond three cities, the link leads to the cities
+    await expect(line.getByRole('link')).toHaveAttribute('href', '/masters');
     // one line on desktop
-    const box = (await nav.locator('p').boundingBox())!;
+    const box = (await line.boundingBox())!;
     expect(box.height).toBeLessThan(60);
-    // « Lyon » open: no « pas encore » card
-    await page.goto('/?q=Lyon');
-    await expect(page.getByRole('heading', { name: /n’est pas encore sur/ })).toHaveCount(0);
+    // « Lyon » open: a city to choose, no « pas encore »
+    await page.getByRole('combobox', { name: 'Quoi ?' }).fill('Lyon');
+    await expect(
+      page.getByRole('group', { name: 'Villes' }).getByRole('option', { name: /Masters à Lyon/ }),
+    ).toBeVisible();
+    await expect(page.getByText(/n’est pas encore sur/)).toHaveCount(0);
   } finally {
     await sql(`UPDATE "LaunchZone" SET "communeCodes" = $1 WHERE slug = 'sarrebourg'`, [codes]);
     if (opened.length) {
@@ -144,17 +149,25 @@ test('home, more than three cities: three names then « et n autres », a city w
 test('« Lyon »: not on notetonmaster yet, on the home, in Explorer and in the palette', async ({
   page,
 }) => {
-  for (const url of ['/?q=Lyon', '/explorer?q=Lyon']) {
-    await page.goto(url);
-    await expect(
-      page.getByRole('heading', { name: 'Lyon n’est pas encore sur notetonmaster' }),
-    ).toBeVisible();
-    const card = page.getByText(NOT_YET);
-    await expect(card).toBeVisible();
-    // no list of cities in the card: the line under the search names them
-    await expect(card.locator('..').getByRole('link')).toHaveCount(0);
-    await expect(page.getByText('Rien pour l’instant…')).toHaveCount(0);
-  }
+  await page.goto('/explorer?q=Lyon');
+  await expect(
+    page.getByRole('heading', { name: 'Lyon n’est pas encore sur notetonmaster' }),
+  ).toBeVisible();
+  const card = page.getByText(NOT_YET);
+  await expect(card).toBeVisible();
+  // no list of cities in the card: the line under the search names them
+  await expect(card.locator('..').getByRole('link')).toHaveCount(0);
+  await expect(page.getByText('Rien pour l’instant…')).toHaveCount(0);
+  // the home says it in its suggestions, with the open cities to choose instead
+  await page.goto('/');
+  await waitForHydration(page);
+  await page.getByRole('combobox', { name: 'Quoi ?' }).fill('Lyon');
+  await expect(page.getByText('Lyon n’est pas encore sur notetonmaster')).toBeVisible();
+  await page.getByRole('button', { name: /^Masters à Strasbourg$/ }).click();
+  await expect(page.getByRole('button', { name: /^Où \?/ })).toHaveAccessibleName(
+    'Où ? Strasbourg',
+  );
+  await expect(page.getByRole('combobox', { name: 'Quoi ?' })).toHaveValue('');
   await page.goto(`/parcours/${VNP}`);
   await waitForHydration(page);
   const palette = page.getByRole('dialog', { name: 'Recherche et navigation' });

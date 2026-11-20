@@ -5,8 +5,10 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { useState } from 'react';
 import { cn } from '@/lib/cn';
-import { CtaArrow, ctaClasses } from './Button';
-import { Icon } from './Icon';
+import { CtaArrow, ctaClasses } from './button-classes';
+import { HoverLink } from './HoverLink';
+import { Glyph } from './Glyph';
+import { CLOSE, MENU } from './glyphs';
 import { Logo } from './Logo';
 
 export interface TopNavLink {
@@ -70,7 +72,7 @@ export function TopNav({
       ? active === l.href
       : pathname === l.href || pathname.startsWith(`${l.href}/`);
     return (
-      <Link
+      <HoverLink
         key={l.href}
         href={l.href}
         aria-current={current ? 'page' : undefined}
@@ -91,7 +93,7 @@ export function TopNav({
             <span className="sr-only"> non lu{l.badge > 1 ? 's' : ''}</span>
           </span>
         ) : null}
-      </Link>
+      </HoverLink>
     );
   });
 
@@ -128,7 +130,7 @@ export function TopNav({
           onClick={() => setOpen((o) => !o)}
           className="inline-flex size-tap items-center justify-center rounded-sm bg-surface-100 text-ink sm:hidden"
         >
-          <Icon name={open ? 'close' : 'menu'} size={20} />
+          <Glyph parts={open ? CLOSE : MENU} size={20} />
           <span className="sr-only">Menu</span>
         </button>
         {/* Phones: the links slide in from the right over a dimmed page (nm-drawer, nm-scrim). */}
@@ -154,19 +156,19 @@ export function TopNav({
             onClick={() => setOpen(false)}
             className="mb-2 inline-flex size-tap items-center justify-center self-end rounded-sm bg-surface-100 text-ink sm:hidden"
           >
-            <Icon name="close" size={20} />
+            <Glyph parts={CLOSE} size={20} />
             <span className="sr-only">Fermer le menu</span>
           </button>
           {linkEls}
           {!hideCta && (
-            <Link
+            <HoverLink
               href={ctaHref}
               onClick={() => setOpen(false)}
               className={ctaClasses('night', 'm', 'sm:ml-2')}
             >
               {ctaLabel}
               <CtaArrow />
-            </Link>
+            </HoverLink>
           )}
         </div>
       </nav>

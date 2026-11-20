@@ -1,7 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Icon } from '@/components/ui/Icon';
+import { Glyph } from '@/components/ui/Glyph';
+import { SEARCH } from '@/components/ui/glyphs';
 import { ShortcutKbd } from '@/components/ui/Kbd';
 import { useOpenPalette } from './SearchShortcut';
 
@@ -21,7 +22,7 @@ export function HeaderSearchPill() {
       onClick={(e) => openPalette(e.currentTarget)}
       className="nm-hpill flex max-w-[420px] min-w-[200px] flex-1 cursor-pointer items-center gap-2.5 rounded-pill border border-border bg-surface-0 px-4 py-3 text-left font-sans text-[15px] text-ink-muted max-sm:order-last max-sm:max-w-none max-sm:basis-full"
     >
-      <Icon name="search" size={18} strokeWidth={2.2} className="text-ink" />
+      <Glyph parts={SEARCH} size={18} strokeWidth={2.2} className="text-ink" />
       Rechercher un master…
       <ShortcutKbd className="ml-auto" />
     </button>

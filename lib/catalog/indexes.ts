@@ -169,7 +169,7 @@ async function computeCities(): Promise<{ entries: CityEntry[]; domains: DomainL
     }),
     prisma.domain.findMany({
       orderBy: { position: 'asc' },
-      select: { slug: true, name: true, tone: true },
+      select: { slug: true, name: true, tone: true, icon: true },
     }),
   ]);
   return {

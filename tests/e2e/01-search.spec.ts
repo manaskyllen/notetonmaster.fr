@@ -4,20 +4,14 @@ import { waitForHydration } from './helpers';
 test('search "patrimoine nantes" on the home page, then open the program', async ({ page }) => {
   await page.goto('/');
   await waitForHydration(page);
-  await page.getByRole('searchbox', { name: /Rechercher un master/ }).fill('PATRIMOINE   nantés');
-  // the search is applied after a short debounce (address, then list): until then the home
-  // lists the whole catalogue, where this parcours may already be first, and a click on it
-  // would be lost when the list is replaced
-  await expect(page).toHaveURL(/[?&]q=PATRIMOINE/);
-  const results = page.getByRole('region', { name: 'Résultats de recherche' });
+  await page.getByRole('combobox', { name: 'Quoi ?' }).fill('PATRIMOINE   nantés');
+  // the suggestions, grouped; the master found leads to its fiche
+  const masters = page.getByRole('group', { name: 'Masters' });
   await expect(
-    results.getByRole('heading', { name: /^Résultats pour « PATRIMOINE/ }),
-  ).toBeAttached();
-  await expect(
-    results.getByRole('link', { name: /Valorisation des nouveaux patrimoines/ }),
+    masters.getByRole('option', { name: /Valorisation des nouveaux patrimoines/ }),
   ).toBeVisible();
-  await expect(results.getByRole('link', { name: /Événementiel/ })).toHaveCount(0);
-  await results.getByRole('link', { name: /Valorisation des nouveaux patrimoines/ }).click();
+  await expect(masters.getByRole('option', { name: /Événementiel/ })).toHaveCount(0);
+  await masters.getByRole('option', { name: /Valorisation des nouveaux patrimoines/ }).click();
   await expect(
     page.getByRole('heading', { level: 1, name: 'Valorisation des nouveaux patrimoines' }),
   ).toBeVisible();
@@ -37,18 +31,23 @@ test('search "patrimoine nantes" on the home page, then open the program', async
   );
 });
 
-test('search by RNCP number: results show « Trouvé par RNCP · RNCP42684 »', async ({ page }) => {
-  await page.goto('/?q=RNCP42684');
-  const results = page.getByRole('region', { name: 'Résultats de recherche' });
-  const row = results.getByRole('link', { name: /Valorisation des nouveaux patrimoines/ });
+test('search by RNCP number: suggestions show « Trouvé par RNCP · RNCP42684 »', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await waitForHydration(page);
+  const q = page.getByRole('combobox', { name: 'Quoi ?' });
+  const masters = page.getByRole('group', { name: 'Masters' });
+  await q.fill('RNCP42684');
+  const row = masters.getByRole('option', { name: /Valorisation des nouveaux patrimoines/ });
   await expect(row).toBeVisible();
   await expect(row.getByText('Trouvé par RNCP · RNCP42684')).toBeVisible();
   // Written another way, and by Mon Master number.
-  await page.goto('/?q=rncp%2042684');
-  await expect(results.getByText('Trouvé par RNCP · RNCP42684').first()).toBeVisible();
-  await page.goto('/?q=2500101KDKQN');
-  await expect(results.getByRole('listitem').getByRole('link')).toHaveCount(1);
-  await expect(results.getByText('Trouvé par Mon Master · 2500101KDKQN')).toBeVisible();
+  await q.fill('rncp 42684');
+  await expect(masters.getByText('Trouvé par RNCP · RNCP42684').first()).toBeVisible();
+  await q.fill('2500101KDKQN');
+  await expect(masters.getByRole('option')).toHaveCount(1);
+  await expect(masters.getByText('Trouvé par Mon Master · 2500101KDKQN')).toBeVisible();
 });
 
 test('⌘K: palette on a fiche, the page field on Explorer and the home page', async ({ page }) => {
@@ -92,10 +91,10 @@ test('⌘K: palette on a fiche, the page field on Explorer and the home page', a
   }).toPass({ timeout: 20_000 });
   await expect(palette).toBeHidden();
 
-  // Home page: the hero bar.
+  // Home page: « Quoi ? » of the guided search.
   await page.goto('/');
   await waitForHydration(page);
-  const hero = page.getByRole('searchbox', { name: /Rechercher un master/ });
+  const hero = page.getByRole('combobox', { name: 'Quoi ?' });
   await expect(async () => {
     // A page inside a loading boundary hydrates after the root: a first press may still
     // open the palette. Close it and press again.

@@ -1,7 +1,5 @@
 import { BrandName } from '@/components/ui/BrandName';
 
-export { OpenCitiesLine } from './OpenCitiesLine';
-
 /** Why a city is not there yet: the same words on the card, the « pas encore » page and ⌘K. */
 export const NOT_YET_TEXT =
   'On ouvre les villes petit à petit, pour avoir assez d’avis dans chacune avant de la mettre en ligne. La tienne arrive bientôt.';

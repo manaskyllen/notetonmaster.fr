@@ -4,8 +4,9 @@ import { useEffect, useId, useRef } from 'react';
 import { useSearchShortcut } from '@/components/public/SearchShortcut';
 import { Icon } from '@/components/ui/Icon';
 import { ShortcutKbd } from '@/components/ui/Kbd';
-import { gradeColor } from '@/lib/domain/rating';
-import { formatGrade } from '@/components/ui/Grade';
+
+// Server-safe (also on the home): re-exported for the indexes.
+export { IndexRating } from './IndexRating';
 
 /**
  * Pieces shared by the indexes /mentions and /universites: the filter field (⌘K puts the cursor
@@ -76,28 +77,6 @@ export function IndexSort<T extends string>({
 }
 
 /** « 4,1/5 » tilted −3° on the colour of the rating, then « 12 avis »; or « Pas encore d’avis ». */
-export function IndexRating({ avg, reviews }: { avg: number | null; reviews: number }) {
-  if (avg == null || reviews === 0)
-    return <span className="text-[13px] text-ink-muted">Pas encore d’avis</span>;
-  const v = formatGrade(avg);
-  return (
-    <span className="inline-flex items-center gap-2 text-[13px] text-ink-muted">
-      <span
-        role="img"
-        aria-label={`Note moyenne : ${v} sur 5`}
-        style={{ backgroundColor: gradeColor(avg, 5) }}
-        className="inline-flex -rotate-3 items-baseline rounded-[8px] px-[7px] pt-0.5 pb-[3px] font-display text-[15px] leading-tight font-extrabold text-on-lime tabular-nums"
-      >
-        <span aria-hidden="true">{v}</span>
-        <span aria-hidden="true" className="text-[10px] opacity-80">
-          /5
-        </span>
-      </span>
-      {reviews} avis
-    </span>
-  );
-}
-
 export function IndexEmpty({ title, onReset }: { title: string; onReset: () => void }) {
   return (
     <div className="flex flex-col items-center gap-2.5 rounded-lg border-[1.5px] border-dashed border-border-control bg-surface-0 px-6 py-9 text-center">

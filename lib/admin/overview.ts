@@ -174,6 +174,25 @@ export function buildSubjects(c: AdminCounts, role: AdminRole): Subject[] {
       icon: 'cms',
     });
 
+  // The home and /mentions count the mentions of each domain: one without (or with another one
+  // than its parcours) is missing from a tile, or counted in the wrong one.
+  if (c.mentionDomains.n > 0)
+    out.push({
+      key: 'mention-domain',
+      urgency: 'high',
+      n: c.mentionDomains.n,
+      title: plural(
+        c.mentionDomains.n,
+        'mention publiée sans domaine ou au domaine incohérent',
+        'mentions publiées sans domaine ou au domaine incohérent',
+      ),
+      detail: `${list(c.mentionDomains.names, c.mentionDomains.n)} · domaine à choisir d’après les parcours`,
+      role: 'Données',
+      cta: 'Voir les mentions',
+      href: '/admin/fiches?vue=publiees&type=mention',
+      icon: 'conflict',
+    });
+
   const noUai = issueTotal(c, 'NO_UAI', { published: true });
   if (noUai > 0)
     out.push({

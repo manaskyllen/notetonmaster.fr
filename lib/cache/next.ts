@@ -21,7 +21,7 @@ export async function afterReviewChange(programIds: (string | null | undefined)[
   // Ratings denormalised on Program, then the copy of the lists (cards and sorts).
   await refreshProgramRatings(ids);
   await refreshProgramIndexRows(ids);
-  expireTags([TAGS.footer, TAGS.catalog, ...ids.map((id) => TAGS.program(id))]);
+  expireTags([TAGS.footer, TAGS.catalog, TAGS.reviews, ...ids.map((id) => TAGS.program(id))]);
   // Bing & co. (production with INDEXNOW_KEY only): the fiche changed.
   await queueIndexNow(ids);
 }
