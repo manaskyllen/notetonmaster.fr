@@ -1,17 +1,17 @@
-import { cn } from '@/lib/cn';
+import { Glyph } from './Glyph';
+import { ALERT, CHECK, CLOSE, MENU, MONITOR, MOON, SEARCH, SUN } from './glyphs';
 
 /**
- * Stroke icons: 2 px, round caps, 24 grid, currentColor.
- * Path syntax: "C cx cy r" circle, "E cx cy rx ry" ellipse, "R x y w h rx" rect, otherwise a path.
+ * Stroke icons by name (drawn by Glyph): 2 px, round caps, 24 grid, currentColor.
  * The first 17 icons come from the reference bundle; the others follow the same rules.
  */
 const PATHS = {
-  search: ['M20 20l-3.5-3.5', 'C11 11 7'],
+  search: SEARCH,
   arrow: ['M5 12h14', 'M13 6l6 6-6 6'],
   'arrow-left': ['M19 12H5', 'M11 6l-6 6 6 6'],
   external: ['M7 17L17 7', 'M9 7h8v8'],
-  close: ['M6 6l12 12', 'M18 6L6 18'],
-  check: ['M5 12l5 5L20 7'],
+  close: CLOSE,
+  check: CHECK,
   heart: ['M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z'],
   thumb: ['M7 11v9H4v-9h3z', 'M7 11l4-7a2 2 0 012 2v4h5.5a2 2 0 012 2.3l-1.2 6A2 2 0 0117.3 20H7'],
   universite: ['M3 10l9-6 9 6', 'M5 10v9', 'M19 10v9', 'M9.5 10v9', 'M14.5 10v9', 'M3 20h18'],
@@ -19,7 +19,7 @@ const PATHS = {
   parcours: ['C6 18 2.5', 'C18 6 2.5', 'M8.5 18H15a3.5 3.5 0 000-7H9a3.5 3.5 0 010-7h6.5'],
   pin: ['M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21z', 'C12 9.5 2.5'],
   info: ['C12 12 9', 'M12 11v5', 'M12 8h.01'],
-  alert: ['M12 3l9.5 17h-19L12 3z', 'M12 10v4', 'M12 17h.01'],
+  alert: ALERT,
   refresh: [
     'M20 11a8 8 0 00-14.6-4.5L4 8',
     'M4 3v5h5',
@@ -29,7 +29,7 @@ const PATHS = {
   flag: ['M5 21V4', 'M5 4h11l-2 4 2 4H5'],
   database: ['E12 5 8 3', 'M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5', 'M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'],
   star: ['M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z'],
-  menu: ['M4 7h16', 'M4 12h16', 'M4 17h16'],
+  menu: MENU,
   plus: ['M12 5v14', 'M5 12h14'],
   minus: ['M5 12h14'],
   'chevron-down': ['M6 9l6 6 6-6'],
@@ -53,19 +53,9 @@ const PATHS = {
     'M6.6 6.6A17 17 0 002 12s3.6 7 10 7a9.6 9.6 0 005.4-1.6',
     'M9.9 9.9a3 3 0 004.2 4.2',
   ],
-  sun: [
-    'C12 12 4',
-    'M12 2v2',
-    'M12 20v2',
-    'M4.9 4.9l1.4 1.4',
-    'M17.7 17.7l1.4 1.4',
-    'M2 12h2',
-    'M20 12h2',
-    'M4.9 19.1l1.4-1.4',
-    'M17.7 6.3l1.4-1.4',
-  ],
-  moon: ['M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z'],
-  monitor: ['R3 4 18 12 2', 'M8 20h8', 'M12 16v4'],
+  sun: SUN,
+  moon: MOON,
+  monitor: MONITOR,
   clock: ['C12 12 9', 'M12 7v5l3 2'],
   calendar: ['R3 5 18 16 3', 'M3 10h18', 'M8 3v4', 'M16 3v4'],
   filter: ['M4 5h16l-6 7v6l-4 2v-8L4 5z'],
@@ -118,34 +108,6 @@ export interface IconProps {
   className?: string;
 }
 
-export function Icon({ name, size = 20, strokeWidth = 2, label, className }: IconProps) {
-  const parts = PATHS[name] ?? PATHS.arrow;
-  const a11y = label
-    ? ({ role: 'img', 'aria-label': label } as const)
-    : ({ 'aria-hidden': true } as const);
-  return (
-    <svg
-      className={cn('inline-block flex-none align-middle', className)}
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      focusable="false"
-      {...a11y}
-    >
-      {parts.map((p, i) => {
-        const kind = p.charAt(0);
-        const n = p.slice(1).trim().split(' ').map(Number);
-        if (kind === 'C') return <circle key={i} cx={n[0]} cy={n[1]} r={n[2]} />;
-        if (kind === 'E') return <ellipse key={i} cx={n[0]} cy={n[1]} rx={n[2]} ry={n[3]} />;
-        if (kind === 'R')
-          return <rect key={i} x={n[0]} y={n[1]} width={n[2]} height={n[3]} rx={n[4]} />;
-        return <path key={i} d={p} />;
-      })}
-    </svg>
-  );
+export function Icon({ name, ...rest }: IconProps) {
+  return <Glyph parts={PATHS[name] ?? PATHS.arrow} {...rest} />;
 }

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { HoverLink } from './HoverLink';
 import { cn } from '@/lib/cn';
 
 export type LogoTone = 'light' | 'dark' | 'coral' | 'mono' | 'outline';
@@ -89,9 +89,9 @@ export function Logo({ href, tone = 'light', size = 'm', iconOnly, className }: 
 
   if (href)
     return (
-      <Link href={href} className={cls} {...a11y}>
+      <HoverLink href={href} className={cls} {...a11y}>
         {content}
-      </Link>
+      </HoverLink>
     );
   return (
     <span className={cls} {...a11y}>

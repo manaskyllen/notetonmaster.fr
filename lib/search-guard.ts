@@ -9,7 +9,15 @@ export const SEARCH_PER_MINUTE = 120;
 export const SEARCH_CACHE_MAX = 500;
 const TTL_MS = 60_000;
 
-const cache = new Map<string, { at: number; value: unknown }>();
+/**
+ * On globalThis: Next.js may load this module once per route bundle, and the server action that
+ * closes a city (expireTags → clearSearchCache) must empty the very cache /api/suggest reads.
+ */
+const KEY = Symbol.for('notetonmaster.searchCache');
+const store = globalThis as typeof globalThis & {
+  [KEY]?: Map<string, { at: number; value: unknown }>;
+};
+const cache = (store[KEY] ??= new Map());
 
 export async function cachedSearch<T>(key: string, compute: () => Promise<T>): Promise<T> {
   const hit = cache.get(key);

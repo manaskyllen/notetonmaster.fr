@@ -201,7 +201,7 @@ test('city picker: keyboard, search without accents, Escape, outside click, no c
     await expect(options.nth(1)).toHaveText(/\d+ mentions?/);
     await expect(dialog).not.toContainText('Zzville');
     await expect(dialog).toContainText(
-      `${zones.length} ville${zones.length > 1 ? 's ouvertes' : ' ouverte'} · les autres arrivent petit à petit`,
+      `${zones.length} ville${zones.length > 1 ? 's ouvertes' : ' ouverte'} · on ouvre les suivantes petit à petit`,
     );
     // search: upper case and an accent added, still found
     const city = zones[0]!;

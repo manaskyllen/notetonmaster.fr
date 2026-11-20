@@ -44,6 +44,8 @@ export interface DomainLegend {
   slug: string;
   name: string;
   tone: string;
+  /** Icon of its tile on the home (components/ui/Icon). */
+  icon?: string;
 }
 
 /** Below this many reviews a city shows its count only, not its average (as the promos). */

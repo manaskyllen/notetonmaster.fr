@@ -136,3 +136,33 @@ les plus lourds (analyse Turbopack : `@next/bundle-analyzer` ne lit que les buil
 public, max-age=60, stale-while-revalidate=300`), contournement du cache pour `/espace*`,
   `/admin*`, `/api/*` et les Server Actions. Désactivé par défaut : une page HTML mise en cache
   sert le même nonce CSP à tous les visiteurs.
+
+## Accueil (recherche guidée, novembre 2026)
+
+Mesuré sur le jeu national, build de production (`make prod-local`), avant / après la nouvelle
+accueil. Lighthouse : mobile simulé, médiane de 3 passages ; « mesuré » : `scripts/web-vitals.mjs`.
+
+| Mesure                           | Avant         | Après       |
+| -------------------------------- | ------------- | ----------- |
+| TTFB p95 (`perf.mjs`, 40 req.)   | 33 ms         | 31 ms       |
+| HTML                             | 127 Ko        | 115 Ko      |
+| JavaScript au premier affichage  | 187 Ko        | 186 Ko      |
+| Suggestions p95 (`/api/suggest`) | —             | 11–14 ms    |
+| LCP mesuré / INP mesuré          | 1 008 / 40 ms | 980 / 72 ms |
+| Lighthouse Performance           | 77            | 90          |
+| LCP simulé                       | 2,45 s        | 2,42–3,18 s |
+| CLS                              | 0,026         | 0,026       |
+| TBT simulé                       | 880 ms        | 188 ms      |
+| Lighthouse SEO                   | 100           | 100         |
+
+- Tout ce qui est visible est rendu par le serveur ; le seul îlot client est le formulaire. Les
+  suggestions et le sélecteur de ville sont chargés par `import()` à la première interaction.
+- Le formulaire fonctionne sans JavaScript (liste et cases natives, rendues par le serveur).
+- Les liens de l'accueil, de l'en-tête et du pied de page ne préchargent leur page qu'au survol, au
+  focus ou au toucher (`HoverLink`), plus quand ils deviennent visibles.
+- Le jeu complet d'icônes n'est plus dans le JavaScript commun à toutes les pages : l'en-tête, le
+  pied de page et les notifications n'en importent que les quelques glyphes qu'ils dessinent
+  (`components/ui/glyphs.ts`), et les classes de bouton sont séparées du composant `Button`.
+- Non tenu en local : Performance ≥ 95, LCP simulé < 2 s, TBT < 150 ms. Le LCP (le titre H1) est
+  retardé à 80 % par la feuille de style globale, bloquante (24 Ko gz, toutes les pages), et le TBT
+  vient du runtime React. Le LCP réellement mesuré est de 1 s.

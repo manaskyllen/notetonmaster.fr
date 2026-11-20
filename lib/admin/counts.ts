@@ -3,6 +3,7 @@ import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import type { DataIssueKind, IssueSeverity, IssueTarget } from '@/lib/db/generated/enums';
 import { TAGS } from '@/lib/cache/tags';
+import { mentionDomainIssues } from '@/lib/data/mention-domains';
 import { conflictGroups } from './conflict-groups';
 import { OPEN_ISSUE_SQL } from './issues';
 
@@ -74,11 +75,13 @@ export interface AdminCounts {
   legalDeadlineDays: number | null;
   conflictGroups: { groups: number; fields: string[]; isolated: number };
   noProfile: { n: number; names: string[] };
+  /** Published mentions without a domain, or whose domain is not the one of their parcours. */
+  mentionDomains: { n: number; names: string[] };
   computedAt: string;
 }
 
 export async function readCounts(): Promise<AdminCounts> {
-  const [issues, fiches, errors, byCity, moderation, oldest, legal, groups, noProfile] =
+  const [issues, fiches, errors, byCity, moderation, oldest, legal, groups, noProfile, domains] =
     await Promise.all([
       // raw-sql: constant SQL (OPEN_ISSUE_SQL); no value from a request.
       prisma.$queryRawUnsafe<IssueCount[]>(
@@ -125,6 +128,7 @@ export async function readCounts(): Promise<AdminCounts> {
          WHERE ep.id IS NULL
            AND EXISTS (SELECT 1 FROM "Program" p WHERE p."universityId" = u.id AND p."inOpenZone")
          ORDER BY u.name`,
+      mentionDomainIssues(),
     ]);
   const now = Date.now();
   const sources = errors.filter((e) => e.type === 'SOURCE').map((e) => e.name);
@@ -149,6 +153,7 @@ export async function readCounts(): Promise<AdminCounts> {
       isolated: groups.isolated,
     },
     noProfile: { n: noProfile.length, names: noProfile.slice(0, 3).map((u) => u.name) },
+    mentionDomains: { n: domains.length, names: domains.slice(0, 3).map((m) => m.name) },
     computedAt: new Date().toISOString(),
   };
 }

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import { rebuildProgramSearchIndex } from '@/lib/catalog/program-index';
 import { fillMailDomains, refreshUniversitySectors } from '@/lib/data/sectors';
+import { fillMentionDomains } from '@/lib/data/mention-domains';
 import { renameHomonymSlugs } from '@/lib/data/slugs';
 
 /**
@@ -14,6 +15,8 @@ export async function refreshSearchIndex(opts: { sectors?: boolean } = {}): Prom
   if (opts.sectors) {
     await refreshUniversitySectors();
     await fillMailDomains();
+    // New mentions of the sync: their domain from the disciplines of their parcours.
+    await fillMentionDomains();
   }
   // Through a SECURITY DEFINER function: the application role does not own the view.
   await prisma.$executeRaw`SELECT nm_refresh_search_document()`;

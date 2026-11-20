@@ -363,11 +363,20 @@ function FacetAutocomplete({
                 <button
                   type="button"
                   onClick={() => onToggle(k)}
-                  className="inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-pill border-0 bg-night px-3 text-[13px] font-semibold text-on-night"
+                  // One run of text (the count glued to the last word), the cross apart: a long
+                  // label (« Strasbourg et agglomération ») wraps cleanly, left-aligned.
+                  className="inline-flex min-h-8 max-w-full cursor-pointer items-center gap-2 rounded-[16px] border-0 bg-night py-1 pr-2.5 pl-3 text-left text-[13px] leading-snug font-semibold text-on-night"
                 >
-                  {o?.label ?? k}
-                  {o && <span className="text-on-night-muted"> · {nf.format(o.count)}</span>}
-                  <Icon name="close" size={12} />
+                  <span className="min-w-0">
+                    {o?.label ?? k}
+                    {o && (
+                      <span className="whitespace-nowrap text-on-night-muted">
+                        {' '}
+                        · {nf.format(o.count)}
+                      </span>
+                    )}
+                  </span>
+                  <Icon name="close" size={12} className="flex-none" />
                   <span className="sr-only">(retirer)</span>
                 </button>
               </li>

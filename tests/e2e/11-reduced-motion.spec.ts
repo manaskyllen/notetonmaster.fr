@@ -56,12 +56,14 @@ test('reduced motion: no transform is animated in the design system', async ({ p
 });
 
 test('reduced motion: no transform is animated on the public pages', async ({ page }) => {
-  // Home page: search results falling into place.
-  await page.goto('/?q=patrimoine');
+  // Home page: the suggestions of the guided search, then the city picker.
+  await page.goto('/');
   await waitForHydration(page);
-  await expect(
-    page.getByRole('region', { name: 'Résultats de recherche' }).getByRole('link').first(),
-  ).toBeVisible();
+  await page.getByRole('combobox', { name: 'Quoi ?' }).fill('patrimoine');
+  await expect(page.getByRole('listbox', { name: 'Suggestions' })).toBeVisible();
+  expect(await movingAnimations(page)).toEqual([]);
+  await page.getByRole('button', { name: /^Où \?/ }).click();
+  await expect(page.getByRole('dialog', { name: 'Choisir une ville' })).toBeVisible();
   expect(await movingAnimations(page)).toEqual([]);
 
   // A fiche: ⌘K palette and « Utile ».

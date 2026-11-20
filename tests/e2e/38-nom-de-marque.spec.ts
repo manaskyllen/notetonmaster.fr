@@ -10,8 +10,8 @@ import { waitForHydration } from './helpers';
  */
 const PAGES = [
   '/',
-  '/?q=Paris',
   '/explorer',
+  '/explorer?q=Paris',
   '/explorer?q=Lyon',
   '/comparer',
   '/a-propos',
@@ -51,7 +51,7 @@ test('visible text: the name is always the BrandName component', async ({ page }
     expect(await plainNames(page), url).toEqual([]);
   }
   // and it is there: footer (small) and the « pas encore » title (large)
-  await page.goto('/?q=Paris');
+  await page.goto('/explorer?q=Paris');
   await expect(page.locator('footer .brand-s')).toHaveCount(1);
   await expect(page.getByRole('heading', { level: 2 }).locator('.brand')).toHaveCount(1);
   // the exceptions keep the plain word
@@ -62,7 +62,7 @@ test('visible text: the name is always the BrandName component', async ({ page }
 test('one word, never broken: read « notetonmaster » by Chrome, no wrap, no real space', async ({
   page,
 }) => {
-  await page.goto('/?q=Paris');
+  await page.goto('/explorer?q=Paris');
   const cdp = await page.context().newCDPSession(page);
   const { nodes } = (await cdp.send('Accessibility.getFullAXTree')) as {
     nodes: { role?: { value: string }; name?: { value: string } }[];

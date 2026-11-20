@@ -6,6 +6,7 @@ import { centre, resolveCommune } from '../data/geo';
 import { communeIndex, forgetCommuneIndex } from '../data/commune-index';
 import { refreshProgramAvailability } from '../launch/zones';
 import { normCity } from '../data/normalize';
+import { disciplineDomainSql } from '../domain/discipline-domain';
 
 /**
  * ProgramSearchIndex: one row per listed program, rebuilt after each publication and
@@ -17,15 +18,12 @@ import { normCity } from '../data/normalize';
  * and flags the parcours taught abroad (Phnom Penh, Hô Chi Minh-Ville…).
  */
 
-/** Mon Master `disci_master` → the four domains of the site (MEEF goes with the humanities). */
-const DOMAIN_SQL = `
-  CASE
-    WHEN agg.disci ~* '^(droit|econ)' THEN 'droit-economie-gestion'
-    WHEN agg.disci ~* '^lettres' THEN 'arts-lettres-langues'
-    WHEN agg.disci ~* '^(s\\.?h\\.?s|m\\.?e\\.?e\\.?f)' THEN 'sciences-humaines-et-sociales'
-    WHEN agg.disci ~* '^sc\\. fondamentales' THEN 'sciences-technologies-sante'
-    ELSE d.slug
-  END`;
+/**
+ * Mon Master `disci_master` → the four domains of the site (MEEF goes with the humanities), the
+ * mention's domain when the discipline is unknown. Rule shared with the importer:
+ * lib/domain/discipline-domain.ts.
+ */
+const DOMAIN_SQL = `coalesce(${disciplineDomainSql('agg.disci')}, d.slug)`;
 
 export const SELECT_SQL = `
 WITH listed AS (

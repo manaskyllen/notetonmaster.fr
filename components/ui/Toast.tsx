@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
-import { Icon } from './Icon';
+import { Glyph } from './Glyph';
+import { ALERT, CHECK } from './glyphs';
 
 /**
  * Confirmation toast (admin actions, « Lien envoyé »…): slides in by 8px with a fade, leaves on
@@ -35,7 +36,7 @@ export function Toast({
         leaving ? 'nm-toast-out' : 'nm-toast-in',
       )}
     >
-      <Icon name={tone === 'success' ? 'check' : 'alert'} size={18} />
+      <Glyph parts={tone === 'success' ? CHECK : ALERT} size={18} />
       {message}
     </div>
   );

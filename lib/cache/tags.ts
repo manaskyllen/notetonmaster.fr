@@ -10,6 +10,8 @@ export const TAGS = {
   footer: 'footer-stats',
   /** Catalogue lists: Explorer, search, facets, mention / university pages, indexes. */
   catalog: 'catalog',
+  /** Published reviews across the site (latest reviews of the home). */
+  reviews: 'reviews',
   /** One program page (reviews, ratings). */
   program: (id: string) => `program:${id}`,
   /** Open cities of the launch (LaunchZone): pills, sentences, titles. */

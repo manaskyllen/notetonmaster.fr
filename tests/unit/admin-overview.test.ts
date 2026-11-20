@@ -33,6 +33,7 @@ function counts(over: Partial<AdminCounts> = {}): AdminCounts {
     legalDeadlineDays: 2,
     conflictGroups: { groups: 3, fields: ['places', 'composante', 'frais'], isolated: 1 },
     noProfile: { n: 3, names: ['ENGEES', 'Oniris VetAgroBio', 'IMT Atlantique'] },
+    mentionDomains: { n: 0, names: [] },
     computedAt: new Date().toISOString(),
     ...over,
   };
@@ -78,6 +79,33 @@ describe('overview subjects', () => {
         'ADMIN',
       ),
     ).toEqual([]);
+  });
+
+  it('published mentions without a domain: an important data subject, leading to the mentions', () => {
+    const s = buildSubjects(
+      counts({ mentionDomains: { n: 44, names: ['Anthropologie', 'Histoire', 'Psychologie'] } }),
+      'ADMIN',
+    );
+    const m = s.find((x) => x.key === 'mention-domain')!;
+    expect(m.urgency).toBe('high');
+    expect(m.role).toBe('Données');
+    expect(m.title).toBe('mentions publiées sans domaine ou au domaine incohérent');
+    expect(m.detail).toBe(
+      'Anthropologie, Histoire, Psychologie et 41 autres · domaine à choisir d’après les parcours',
+    );
+    expect(m.href).toBe('/admin/fiches?vue=publiees&type=mention');
+    // high urgency, sorted by number with the others: 44 before the conflicts (12).
+    expect(s.map((x) => x.key).slice(0, 5)).toEqual([
+      'collect',
+      'legal',
+      'mention-domain',
+      'conflicts',
+      'moderation',
+    ]);
+    expect(buildSubjects(counts(), 'ADMIN').map((x) => x.key)).not.toContain('mention-domain');
+    expect(
+      buildSubjects(counts({ mentionDomains: { n: 1, names: ['Histoire'] } }), 'MODERATOR'),
+    ).toHaveLength(1); // moderation only
   });
 
   it('each role sees its subjects: Modération does not see the data ones', () => {
