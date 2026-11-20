@@ -48,14 +48,16 @@ test('keyboard: ↓ ↑ loop, Enter opens, Escape closes', async ({ page }) => {
   await expect(frequent.first()).toBeVisible();
   const n = await frequent.count();
   expect(n).toBeGreaterThan(1);
-  const active = () => q.getAttribute('aria-activedescendant');
-  const first = await active();
+  // the field points at the highlighted row once the panel has rendered it
+  const id = (i: number | 'last') =>
+    (i === 'last' ? frequent.last() : frequent.nth(i)).getAttribute('id') as Promise<string>;
+  await expect(q).toHaveAttribute('aria-activedescendant', await id(0));
   await page.keyboard.press('ArrowDown');
-  expect(await active()).not.toBe(first);
+  await expect(q).toHaveAttribute('aria-activedescendant', await id(1));
   await page.keyboard.press('ArrowUp');
-  expect(await active()).toBe(first);
+  await expect(q).toHaveAttribute('aria-activedescendant', await id(0));
   await page.keyboard.press('ArrowUp'); // loops to the last one
-  expect(await active()).toBe(await frequent.last().getAttribute('id'));
+  await expect(q).toHaveAttribute('aria-activedescendant', await id('last'));
   // Enter on a frequent search fills the field with it
   const label = (await frequent.last().textContent())!;
   await page.keyboard.press('Enter');
@@ -119,8 +121,10 @@ test('« Où ? »: the city picker of /mentions, the line of the open cities', a
   await expect(ou(page)).toHaveAccessibleName('Où ? Mulhouse');
   // the domains follow the city
   await expect(page.getByText('Mentions ouvertes à Mulhouse')).toBeVisible();
-  // opening « Où ? » closes the suggestions, and the other way round
-  await quoi(page).fill('droit');
+  // opening « Où ? » closes the suggestions, and the other way round (a search found in every
+  // city of the fixtures: the city filter is removed first)
+  await page.getByRole('button', { name: 'Retirer le filtre de ville' }).click();
+  await quoi(page).fill('patrimoine');
   await expect(page.getByRole('listbox', { name: 'Suggestions' })).toBeVisible();
   await ou(page).click();
   await expect(page.getByRole('listbox', { name: 'Suggestions' })).toHaveCount(0);
@@ -195,11 +199,17 @@ test.describe('latest reviews', () => {
   }
   const section = (page: Page) =>
     page.getByRole('region', { name: 'Ce qu’en disent les étudiant·es' });
+  /** Reloads the home until it reflects the reviews just changed (expired tag, cache refilled). */
+  const onHome = (page: Page, check: () => Promise<void>) =>
+    expect(async () => {
+      await page.goto('/');
+      await check();
+    }).toPass({ timeout: 30_000 });
+  const SHORT = { timeout: 2_000 };
 
   test('3 published: the section, three cards to the fiches', async ({ page }) => {
     await withPublished(page, 3, async () => {
-      await page.goto('/');
-      await expect(section(page).getByRole('article')).toHaveCount(3);
+      await onHome(page, () => expect(section(page).getByRole('article')).toHaveCount(3, SHORT));
       await expect(section(page).getByRole('link').first()).toHaveAttribute(
         'href',
         /^\/parcours\/[^#]+#avis$/,
@@ -209,26 +219,23 @@ test.describe('latest reviews', () => {
     });
   });
 
-  test('2 published: no section, the usual call', async ({ page }) => {
-    await withPublished(page, 2, async () => {
-      await page.goto('/');
-      await expect(section(page)).toHaveCount(0);
-      await expect(page.getByText('Les premiers avis arrivent')).toHaveCount(0);
+  // Under 3 reviews, one dark block instead of the section and of the usual call (brief: « Sinon,
+  // un seul bloc sombre à la place »).
+  for (const n of [2, 0])
+    test(`${n} published: no section, « Les premiers avis arrivent » naming the open cities`, async ({
+      page,
+    }) => {
+      await withPublished(page, n, async () => {
+        await onHome(page, () => expect(section(page)).toHaveCount(0, SHORT));
+        await expect(page.getByText('Les premiers avis arrivent')).toBeVisible();
+        await expect(page.getByRole('heading', { name: /Aide la promo d’après/ })).toHaveCount(0);
+        await expect(page.getByText(/Tu as fait ton master à .+ ou .+ \?/)).toBeVisible();
+        await expect(page.getByRole('link', { name: /Donner le premier avis/ })).toHaveAttribute(
+          'href',
+          '/avis/nouveau',
+        );
+      });
     });
-  });
-
-  test('none: « Les premiers avis arrivent », naming the open cities', async ({ page }) => {
-    await withPublished(page, 0, async () => {
-      await page.goto('/');
-      await expect(section(page)).toHaveCount(0);
-      await expect(page.getByText('Les premiers avis arrivent')).toBeVisible();
-      await expect(page.getByText(/Tu as fait ton master à .+ ou .+ \?/)).toBeVisible();
-      await expect(page.getByRole('link', { name: /Donner le premier avis/ })).toHaveAttribute(
-        'href',
-        '/avis/nouveau',
-      );
-    });
-  });
 });
 
 test('a domain without any mention: « Bientôt », not a link', async ({ page }) => {
@@ -249,7 +256,7 @@ test('a domain without any mention: « Bientôt », not a link', async ({ page }
     await expect(tiles.getByRole('link', { name: /^Arts, lettres, langues/ })).toHaveCount(0);
     await expect(tiles.getByText(/Arts, lettres, langues : bientôt/)).toBeAttached();
     await expect(
-      tiles.getByRole('link', { name: /^Droit, économie, gestion : \d+ mentions?/ }),
+      tiles.getByRole('link', { name: /^Droit, économie, gestion\s*\d+ mentions?$/ }),
     ).toHaveAttribute('href', '/mentions?domaine=droit-economie-gestion');
   } finally {
     await sql(`UPDATE "ProgramSearchIndex" SET "domainSlug" = $1 WHERE "programId" = ANY($2)`, [
@@ -294,7 +301,11 @@ test('SEO: one h1, indexable bare, noindex with parameters, canonical without th
   await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   await page.goto('/?q=droit&ville=nantes');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/$/);
+  // the bare address of the site, never a parameter (absoluteUrl('/') has no trailing slash)
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    /^https?:\/\/[^/?#]+\/?$/,
+  );
   await expect(quoi(page)).toHaveValue('droit');
   await expect(ou(page)).toHaveAccessibleName('Où ? Nantes');
 });

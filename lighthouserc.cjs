@@ -76,15 +76,17 @@ module.exports = {
           assertions: { 'largest-contentful-paint': ['warn', { maxNumericValue: 2500 }] },
         },
         // The home, the most visited page and the door from search engines: stricter than the
-        // others. Performance and TBT follow the machine rule above (indicative on shared CI
-        // runners); LCP, CLS and SEO block everywhere.
+        // others. Its timings (performance, LCP < 2 s, TBT) follow the machine rule above:
+        // blocking on a measuring machine (make lhci, by hand), indicative on shared CI runners,
+        // where the simulated LCP of the home is ≈ 3 s; the LCP ≤ 3.5 s guard of every page
+        // still blocks there. CLS and SEO block everywhere.
         {
           matchingUrlPattern: '^https?://[^/]+/$',
           aggregationMethod: 'median-run',
           assertions: {
             'categories:performance': [timing, { minScore: 0.95 }],
             'categories:seo': ['error', { minScore: 1 }],
-            'largest-contentful-paint': ['error', { maxNumericValue: 2000 }],
+            'largest-contentful-paint': [timing, { maxNumericValue: 2000 }],
             'cumulative-layout-shift': ['error', { maxNumericValue: 0.05 }],
             'total-blocking-time': [timing, { maxNumericValue: 150 }],
           },

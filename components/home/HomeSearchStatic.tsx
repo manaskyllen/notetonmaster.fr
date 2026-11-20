@@ -107,7 +107,7 @@ export function CityLine({ zones }: { zones: HomeZone[] }) {
           </span>
         ))}
         {line.rest}
-      </span>
+      </span>{' '}
       <HoverLink href={line.href} className="text-[14px] font-bold whitespace-nowrap">
         {line.link} →
       </HoverLink>

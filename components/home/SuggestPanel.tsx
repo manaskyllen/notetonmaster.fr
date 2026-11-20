@@ -295,6 +295,11 @@ export function SuggestPanel(p: SuggestPanelProps) {
     !!query && fresh && !typed.length && !flat.length && !answer!.notYet ? true : false;
   const notYet = query && fresh && !typed.length && !flat.length ? answer!.notYet : null;
   const active = flat.length ? Math.min(hi, flat.length - 1) : -1;
+  // What the key handler reads, always the latest render's.
+  const current = useRef({ flat, active });
+  useEffect(() => {
+    current.current = { flat, active };
+  });
   const optionId = (i: number) => `${p.id}-o${i}`;
   const flatKeys = flat.map((i) => i.key).join('|');
 
@@ -327,23 +332,26 @@ export function SuggestPanel(p: SuggestPanelProps) {
   useEffect(() => {
     registerKeys({
       onKey: (e) => {
-        if (!flat.length) return false;
+        const rows = current.current.flat;
+        if (!rows.length) return false;
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
-          const step = e.key === 'ArrowDown' ? 1 : flat.length - 1;
-          setHi((Math.max(0, active) + step) % flat.length);
+          const step = e.key === 'ArrowDown' ? 1 : rows.length - 1;
+          // from the latest index, not the one of the last render: keys can come faster
+          setHi((h) => (Math.min(Math.max(0, h), rows.length - 1) + step) % rows.length);
           return true;
         }
-        if (e.key === 'Enter' && active >= 0) {
+        const row = rows[current.current.active];
+        if (e.key === 'Enter' && row) {
           e.preventDefault();
-          flat[active]!.act();
+          row.act();
           return true;
         }
         return false;
       },
     });
     return () => registerKeys(null);
-  });
+  }, [registerKeys]);
 
   // The highlighted row stays in view.
   const list = useRef<HTMLUListElement>(null);

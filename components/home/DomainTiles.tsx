@@ -61,12 +61,13 @@ export function DomainTiles({
             <li key={d.slug} className="flex">
               <HoverLink
                 href={`/mentions?domaine=${d.slug}${cityName ? `&ville=${city}` : ''}`}
-                aria-label={`${d.name} : ${plural(n, 'mention', 'mentions')}${at}`}
                 className="dt nm-lift"
                 data-tone={d.tone}
               >
+                {/* Named by its visible text (WCAG 2.5.3), the city added for screen readers. */}
                 {icons[d.slug]?.tile}
                 {body}
+                {at && <span className="sr-only">{at}</span>}
               </HoverLink>
             </li>
           );
