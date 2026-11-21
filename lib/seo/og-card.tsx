@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { BRAND } from '@/lib/brand/app-icon';
-import { SLOGAN_HIGHLIGHT } from '@/lib/brand/copy';
+import { HOME_HEADLINE } from '@/lib/brand/copy';
 import { ogFonts } from '@/lib/brand/og-fonts';
 import { gradeColor } from '@/lib/domain/rating';
 import { cutWords, ratingText } from './titles';
@@ -151,9 +151,14 @@ export async function ogCard(c: OgCard): Promise<ImageResponse> {
   );
 }
 
-/** Default share image (other pages): logo and slogan, « racontent. » highlighted in lime. */
+/**
+ * Default share image (home and pages without their own): logo and the home headline, set like
+ * its h1: two lines, « combien ? » on a lime label tilted by −2°, the comma given its own room.
+ */
 export async function ogSite(): Promise<ImageResponse> {
   const px = 96;
+  const fs = 104;
+  const [before, ...after] = HOME_HEADLINE.line1.split(',');
   return new ImageResponse(
     <div
       style={{
@@ -175,23 +180,27 @@ export async function ogSite(): Promise<ImageResponse> {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          fontSize: 64,
-          lineHeight: 1.08,
-          letterSpacing: '-0.035em',
+          fontSize: fs,
+          lineHeight: 0.94,
+          letterSpacing: '-0.045em',
         }}
       >
-        <span>La brochure promet,</span>
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: 8 }}>
-          <span>les étudiant·es</span>
+        <div style={{ display: 'flex', whiteSpace: 'pre' }}>
+          <span>{before}</span>
+          {after.length > 0 && <span style={{ letterSpacing: 0, marginLeft: fs * 0.03 }}>,</span>}
+          <span>{after.join(',')}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', whiteSpace: 'pre' }}>
+          <span>{`${HOME_HEADLINE.line2} `}</span>
           <span
             style={{
-              marginLeft: 16,
-              padding: '0 12px 4px',
-              borderRadius: 16,
+              padding: `0 ${fs * 0.12}px ${fs * 0.06}px`,
+              borderRadius: fs * 0.14,
               background: BRAND.lime,
+              transform: 'rotate(-2deg)',
             }}
           >
-            {SLOGAN_HIGHLIGHT}
+            {HOME_HEADLINE.highlight}
           </span>
         </div>
       </div>
