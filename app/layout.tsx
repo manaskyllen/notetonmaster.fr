@@ -7,6 +7,7 @@ import { SITE_DESCRIPTION } from '@/lib/brand/copy';
 import { getBanner } from '@/lib/banner';
 import { bannerHeadScript, bannerKey } from '@/lib/domain/banner';
 import { siteOrigin } from '@/lib/seo/site';
+import { SITE_OG_IMAGE } from '@/lib/seo/meta';
 import { fontDisplay, fontMono, fontSans } from './fonts';
 import './globals.css';
 
@@ -25,9 +26,9 @@ export function generateMetadata(): Metadata {
       type: 'website',
       siteName: 'notetonmaster',
       locale: 'fr_FR',
-      images: [{ url: '/og/site.png', width: 1200, height: 630 }],
+      images: [{ url: SITE_OG_IMAGE.path, width: 1200, height: 630, alt: SITE_OG_IMAGE.alt }],
     },
-    twitter: { card: 'summary_large_image', images: ['/og/site.png'] },
+    twitter: { card: 'summary_large_image', images: [SITE_OG_IMAGE.path] },
   };
 }
 

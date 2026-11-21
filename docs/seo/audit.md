@@ -98,7 +98,7 @@ Voir `donnees-structurees.md` : `Organization` + `WebSite` partout, `BreadcrumbL
 
 ### 8. Open Graph
 
-`og:title`, `og:description`, `og:url`, `og:type`, `og:locale` `fr_FR`, `twitter:card` `summary_large_image` sur chaque page. Images générées (`app/og/[kind]/[file]`) pour fiches, mentions, universités, villes et villes × mention : fond violet ou night, logo, titre en Bricolage, établissement et ville, note dans sa pastille inclinée et nombre d’avis. L’adresse porte une version calculée sur la note et le nombre d’avis (`?v=…`) : mise en cache un an, nouvelle image dès que la note change. Image par défaut : `/og/site.png`. Captures : `captures/og-fiche-parcours.png`, `captures/og-ville.png`.
+`og:title`, `og:description`, `og:url`, `og:type`, `og:locale` `fr_FR`, `twitter:card` `summary_large_image` sur chaque page. Images générées (`app/og/[kind]/[file]`) pour fiches, mentions, universités, villes et villes × mention : fond violet ou night, logo, titre en Bricolage, établissement et ville, note dans sa pastille inclinée et nombre d’avis. L’adresse porte une version calculée sur la note et le nombre d’avis (`?v=…`) : mise en cache un an, nouvelle image dès que la note change. Image par défaut : `/og/site-v2.png` (accroche de l’accueil, `HOME_HEADLINE` ; nouveau nom à chaque changement de contenu, pour les caches des réseaux). Captures : `captures/og-fiche-parcours.png`, `captures/og-ville.png`.
 
 ### 9. Performance
 

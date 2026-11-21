@@ -1,6 +1,16 @@
 import type { Metadata } from 'next';
+import { HOME_HEADLINE_TEXT } from '@/lib/brand/copy';
 import { pageHref, type Params } from '@/lib/pagination';
 import { absoluteUrl } from './site';
+
+/**
+ * Default share image (app/og/site-v2.png). A new name when its content changes: Discord, LinkedIn…
+ * keep an image by its address.
+ */
+export const SITE_OG_IMAGE = {
+  path: '/og/site-v2.png',
+  alt: `notetonmaster · ${HOME_HEADLINE_TEXT}`,
+};
 
 /**
  * Metadata of a public page, built the same way everywhere: absolute title (already ending in
@@ -19,10 +29,7 @@ export function seoMetadata(o: {
   type?: 'website' | 'article';
 }): Metadata {
   const url = absoluteUrl(o.canonical);
-  const image = o.image ?? {
-    path: '/og/site.png',
-    alt: 'notetonmaster · La brochure promet, les étudiant·es racontent.',
-  };
+  const image = o.image ?? SITE_OG_IMAGE;
   const images = [{ url: absoluteUrl(image.path), width: 1200, height: 630, alt: image.alt }];
   return {
     title: { absolute: o.title },
