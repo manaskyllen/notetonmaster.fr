@@ -81,6 +81,7 @@ describe('PUBLIC_INDEXING=true', () => {
     expect(rule.allow).toEqual(['/', '/avis/nouveau']);
     expect(rule.disallow).toContain('/espace');
     expect(rule.disallow).toContain('/avis');
+    expect(rule.disallow).toContain('/q/');
   });
 
   it('the review form stays noindex although link previews may read it', async () => {

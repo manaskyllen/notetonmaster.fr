@@ -44,6 +44,7 @@ Les actions marquées 🔐 demandent en plus le code de double authentification 
 | Inviter, changer de rôle, retirer un membre 🔐                 |  ✅   |     ❌     |   ❌    |  ❌   |
 | Paramètres et bandeau d'information                            |  ✅   |     ❌     |   ❌    |  ❌   |
 | Ouvrir ou fermer une ville 🔐                                  |  ✅   |     ❌     |   ❌    |  ❌   |
+| QR codes : créer, modifier, archiver, télécharger              |  ✅   |     ❌     |   ❌    |  ❌   |
 
 Une session admin dure 8 heures au plus et se ferme après 30 minutes d'inactivité. Un changement
 de rôle ou un retrait ferme toutes les sessions du membre.

@@ -25,7 +25,8 @@ export default function robots(): MetadataRoute.Robots {
         // Prefixes: « /avis » covers /avis/confirmer/… (and /avis/nouveau, allowed above by the
         // longer rule), « /reponse » covers /reponse-formation. No public address starts with one
         // of them.
-        disallow: [...PRIVATE_PREFIXES],
+        // /q/: short links of the QR codes (redirects, counted at each scan).
+        disallow: [...PRIVATE_PREFIXES, '/q/'],
       },
     ],
     sitemap: `${origin}/sitemap.xml`,

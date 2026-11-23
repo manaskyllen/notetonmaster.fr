@@ -30,6 +30,15 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
   sans paramètre de suivi. Aperçu de lien (titre et image du parcours) pour le formulaire d'avis,
   qui reste non indexé ; `robots.txt` autorise `/avis/nouveau` pour les aperçus.
 
+### Administration
+
+- QR codes : liens courts `/q/{code}` gérés dans l'administration (Admin seulement), pour les
+  supports imprimés. Chaque scan ajoute 1 au compteur du jour du lien, puis redirige (302) vers
+  sa cible, sans paramètre ajouté ; la cible se change sans réimprimer. Aucune donnée sur la
+  personne (ni IP, ni navigateur, ni provenance) ; robots, aperçus de liens, préchargements et
+  `HEAD` ne sont pas comptés. Téléchargement en SVG (et PNG), détail des 90 derniers jours.
+  Phrase ajoutée à la page Confidentialité.
+
 ### Sécurité
 
 - Anonymat renforcé au dépôt d'un avis ; un avis « avec mon espace » est rattaché après
@@ -61,3 +70,5 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
   statut).
 - `20261125100000_review_title_length` : titre des avis limité à 80 caractères (`VARCHAR(80)`,
   échoue plutôt que de couper ; retour en arrière : `down.sql` du dossier).
+- `20261125110000_qr_links` : tables `qr_links` et `qr_scans_daily` (ajouts seulement ; retour
+  en arrière : `down.sql` du dossier, qui supprime aussi les compteurs).

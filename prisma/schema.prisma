@@ -1883,3 +1883,34 @@ model LaunchZone {
 
   @@index([open, order])
 }
+
+// ──────────────────────────── QR codes (supports imprimés) ────────────────────────────
+
+/// Short link of a printed QR code (issue #17): notetonmaster.fr/q/{slug}. Its target changes in
+/// the admin, so a printed code never becomes a dead link. Never deleted (archived), and a slug is
+/// never reused (unique, archived ones included).
+model QrLink {
+  id         String        @id @default(cuid())
+  slug       String        @unique @db.VarChar(32)
+  label      String        @db.VarChar(120)
+  /// Internal path only (lib/domain/qr.ts), checked when saved and again at each redirect.
+  targetPath String        @map("target_path") @db.VarChar(300)
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+  archivedAt DateTime?     @map("archived_at")
+  scans      QrScanDaily[]
+
+  @@map("qr_links")
+}
+
+/// Scans of a short link, per day (Europe/Paris): an aggregated counter, nothing about the
+/// visitor (no IP, user agent, referrer, cookie or identifier).
+model QrScanDaily {
+  linkId String   @map("link_id")
+  link   QrLink   @relation(fields: [linkId], references: [id], onDelete: Restrict)
+  day    DateTime @db.Date
+  count  Int      @default(0)
+
+  @@id([linkId, day])
+  @@map("qr_scans_daily")
+}
