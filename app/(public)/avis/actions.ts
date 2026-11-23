@@ -59,7 +59,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
     };
 
   if (settings['moderation.nameDetection']) {
-    const hit = detectNamedPerson(d.title, d.pros, d.cons, leaveReason);
+    const hit = detectNamedPerson(d.pros, d.cons, leaveReason);
     if (hit.found)
       return {
         ok: false,
@@ -136,14 +136,11 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
   const student = proven ? current : null;
   const watched = (settings['moderation.watchTerms'] as string[])
     .map(normalize)
-    .some(
-      (w) =>
-        w && normalize(`${d.title ?? ''} ${d.pros} ${d.cons} ${leaveReason ?? ''}`).includes(w),
-    );
+    .some((w) => w && normalize(`${d.pros} ${d.cons} ${leaveReason ?? ''}`).includes(w));
   const autoPublish =
     settings['moderation.autoPublish'] &&
     !watched &&
-    !containsContacts(`${d.title} ${d.pros} ${d.cons} ${leaveReason ?? ''}`);
+    !containsContacts(`${d.pros} ${d.cons} ${leaveReason ?? ''}`);
   const status = !student ? 'PENDING_CONFIRMATION' : autoPublish ? 'PUBLISHED' : 'PENDING';
   const scores = Object.entries(d.scores).filter(
     (e): e is [string, number] => typeof e[1] === 'number',
@@ -160,7 +157,6 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
       ...normalizeSituation(d),
       cohortYear: d.cohortYear,
       overallRating: d.overallRating,
-      title: d.title || null,
       pros: d.pros,
       cons: d.cons,
       leaveReason,

@@ -304,7 +304,6 @@ export default async function ParcoursPage({
     who: authorWho(r.level, r.cohortYear),
     date: monthYear.format(r.publishedAt),
     rating: r.rating,
-    title: r.title,
     pros: r.pros,
     cons: r.cons,
     leaveReason: r.leaveReason,

@@ -21,7 +21,6 @@ export interface ReviewItem {
   who: string;
   date: string;
   rating: number;
-  title: string | null;
   pros: string;
   cons: string;
   leaveReason: string | null;
@@ -209,7 +208,6 @@ export function ReviewList({
                 who={r.who}
                 date={r.date}
                 rating={r.rating}
-                title={r.title}
                 plus={r.pros}
                 minus={r.cons}
                 verified={r.isVerified}

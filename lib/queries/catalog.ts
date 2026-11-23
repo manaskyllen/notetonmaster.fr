@@ -237,7 +237,6 @@ export interface PublicReview {
   /** Never sent for LEFT (anonymity: lib/domain/rating.ts authorWho). */
   cohortYear: number | null;
   rating: number;
-  title: string | null;
   pros: string;
   cons: string;
   /** « Pourquoi je suis parti·e » (LEFT only). */
@@ -322,7 +321,7 @@ export async function getReviewPage(
     requestedPage: opts.page,
     count,
     total: byLevel.reduce((a, l) => a + l._count._all, 0),
-    /** Published reviews per level (the « Parti·es en cours » filter needs one at least). */
+    /** Published reviews per level (the « Parti·es avant la fin » filter needs one at least). */
     byLevel: Object.fromEntries(byLevel.map((l) => [l.level, l._count._all])) as Partial<
       Record<ReviewLevelKey, number>
     >,
@@ -385,7 +384,6 @@ export async function getPublishedReviews(
       jobTitle: true,
       cohortYear: true,
       overallRating: true,
-      title: true,
       pros: true,
       cons: true,
       leaveReason: true,
@@ -416,7 +414,6 @@ export async function getPublishedReviews(
     jobTitle: r.level === 'GRADUATE' && r.employmentStatus === 'EMPLOYED' ? r.jobTitle : null,
     cohortYear: r.level === 'LEFT' ? null : r.cohortYear,
     rating: r.overallRating,
-    title: r.title,
     pros: r.pros,
     cons: r.cons,
     leaveReason: r.level === 'LEFT' ? r.leaveReason?.trim() || null : null,

@@ -19,7 +19,6 @@ export interface ReviewCardProps {
   who: string;
   date?: string;
   rating: number;
-  title?: string | null;
   plus: string;
   minus: string;
   verified?: boolean;
@@ -37,7 +36,6 @@ export interface ReviewCardProps {
   reply?: React.ReactNode;
   reportHref?: string;
   className?: string;
-  headingLevel?: 'h2' | 'h3';
 }
 
 export function VerifiedBadge({ verified }: { verified: boolean }) {
@@ -58,7 +56,6 @@ export function ReviewCard({
   who,
   date,
   rating,
-  title,
   plus,
   minus,
   verified = true,
@@ -70,9 +67,7 @@ export function ReviewCard({
   reply,
   reportHref = '/signaler',
   className,
-  headingLevel = 'h3',
 }: ReviewCardProps) {
-  const H = headingLevel;
   return (
     <article
       className={cn(
@@ -106,10 +101,6 @@ export function ReviewCard({
         </div>
         <Grade value={rating} />
       </div>
-      {/* « … » added here: the quotes typed in the form are removed (lib/domain/review-title.ts). */}
-      {title ? (
-        <H className="m-0 font-display text-h3 font-bold [overflow-wrap:anywhere]">« {title} »</H>
-      ) : null}
       {today ? (
         <span className="inline-flex items-center gap-2 self-start rounded-[12px] bg-surface-50 px-3.5 py-2 text-[14px] text-ink">
           <svg

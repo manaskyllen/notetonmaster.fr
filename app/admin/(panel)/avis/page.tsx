@@ -49,7 +49,7 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
   const search: Prisma.ReviewWhereInput = q
     ? {
         OR: [
-          { title: { contains: q, mode: 'insensitive' } },
+          { pros: { contains: q, mode: 'insensitive' } },
           { ref: { contains: q, mode: 'insensitive' } },
           { program: { title: { contains: q, mode: 'insensitive' } } },
           ...(coded.length ? [{ programId: { in: coded } }] : []),
@@ -70,7 +70,7 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
         id: true,
         ref: true,
         submittedAt: true,
-        title: true,
+        pros: true,
         level: true,
         cohortYear: true,
         overallRating: true,
@@ -138,7 +138,7 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
           id: r.id,
           ref: r.ref,
           date: d.format(r.submittedAt),
-          title: r.title,
+          excerpt: r.pros,
           program: r.program.title,
           // Never the year for someone who left during the year (anonymity, issue #18).
           author: `Anonyme · ${LEVEL_SHORT[r.level]}${r.level === 'LEFT' ? '' : ` · ${r.cohortYear}`}`,

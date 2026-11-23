@@ -10,7 +10,7 @@ import { formCardClass, FormNav } from '@/components/ui/form/FormCard';
 import { GradePicker } from '@/components/ui/GradePicker';
 import { Input, NativeSelect, Textarea } from '@/components/ui/form/Controls';
 import { Notice } from '@/components/ui/Notice';
-import { CURRENT_YEAR, LEAVE_REASON_MAX, REVIEW_MIN_CHARS } from '@/lib/validation';
+import { CURRENT_YEAR, LEAVE_REASON_MAX, reviewTextHint } from '@/lib/validation';
 import {
   CRITERIA,
   CRITERION_LABEL,
@@ -20,7 +20,6 @@ import {
   type ReviewLevelKey,
 } from '@/lib/domain/rating';
 import { detectNamedPerson } from '@/lib/domain/names';
-import { TITLE_LABEL, TITLE_MAX, TITLE_PLACEHOLDER, titleHint } from '@/lib/domain/review-title';
 import {
   EMPLOYMENT_LABEL,
   EMPLOYMENT_STATUSES,
@@ -39,7 +38,6 @@ type Values = {
   jobTitle: string;
   cohortYear: number;
   overallRating: number;
-  title: string;
   pros: string;
   cons: string;
   leaveReason: string;
@@ -65,7 +63,7 @@ export function EditReviewForm({
   const [pending, start] = useTransition();
   const router = useRouter();
   const left = v.level === 'LEFT';
-  const hit = detectNamedPerson(v.title, v.pros, v.cons, left ? v.leaveReason : null);
+  const hit = detectNamedPerson(v.pros, v.cons, left ? v.leaveReason : null);
   const set = <K extends keyof Values>(k: K, val: Values[K]) => setV((x) => ({ ...x, [k]: val }));
   if (!editable) return <Notice tone="info">Cet avis ne peut plus être modifié.</Notice>;
   return (
@@ -170,19 +168,9 @@ export function EditReviewForm({
           ['cons', 'Ce que tu n’as pas aimé'],
         ] as const
       ).map(([k, l]) => {
-        const n = v[k].trim().length;
+        const hint = reviewTextHint(v[k]);
         return (
-          <Field
-            key={k}
-            label={l}
-            error={errors[k]}
-            hint={
-              n >= REVIEW_MIN_CHARS
-                ? 'C’est bon ✓'
-                : `Encore ${REVIEW_MIN_CHARS - n} caractères au moins`
-            }
-            hintTone={n >= REVIEW_MIN_CHARS ? 'ok' : 'muted'}
-          >
+          <Field key={k} label={l} error={errors[k]} hint={hint.text} hintTone={hint.tone}>
             {(a) => <Textarea {...a} value={v[k]} onChange={(e) => set(k, e.target.value)} />}
           </Field>
         );
@@ -205,24 +193,6 @@ export function EditReviewForm({
           )}
         </Field>
       )}
-      {/* Optional only for a review written before the title existed (none yet). */}
-      <Field
-        label={TITLE_LABEL}
-        optional={!initial.title}
-        hint={titleHint(v.title).text}
-        hintTone={titleHint(v.title).tone}
-        error={errors.title}
-      >
-        {(a) => (
-          <Input
-            {...a}
-            maxLength={TITLE_MAX}
-            value={v.title}
-            onChange={(e) => set('title', e.target.value)}
-            placeholder={TITLE_PLACEHOLDER}
-          />
-        )}
-      </Field>
       {hit.found && (
         <div
           role="alert"

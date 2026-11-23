@@ -38,7 +38,7 @@ export default async function MyReviewsPage({ searchParams }: { searchParams: Pr
       programTitle: r.program.title,
       programSlug: r.program.slug,
       city: r.program.city,
-      title: r.title,
+      excerpt: r.pros,
       rating: r.overallRating,
       status: r.status,
       statusLabel: s.label + (r.status === 'PUBLISHED' && r.isVerified ? ' · vérifié' : ''),

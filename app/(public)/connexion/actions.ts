@@ -157,9 +157,9 @@ async function attachPendingReview(reviewId: string, student: { id: string; emai
   }
 }
 
-async function watched(r: { title: string | null; pros: string; cons: string }) {
+async function watched(r: { pros: string; cons: string }) {
   const terms = (await getSettings())['moderation.watchTerms'] as string[];
-  const text = normalize(`${r.title ?? ''} ${r.pros} ${r.cons}`);
+  const text = normalize(`${r.pros} ${r.cons}`);
   return terms.map(normalize).some((w) => w && text.includes(w));
 }
 

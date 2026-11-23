@@ -32,7 +32,7 @@ test('the review form, step by step, at 320 px', async ({ page }) => {
     const { over, culprits } = await horizontalOverflow(page);
     expect(over, `${step}: ${culprits.join(', ')}`).toBeLessThanOrEqual(0);
   };
-  await page.getByRole('radio', { name: 'J’ai arrêté en cours' }).click();
+  await page.getByRole('radio', { name: 'Parti·e avant la fin' }).click();
   await page.getByLabel('Entré·e en').selectOption(String(new Date().getFullYear() - 1));
   await check('étape 1');
   await page.getByRole('button', { name: 'Continuer' }).click();
@@ -44,7 +44,6 @@ test('the review form, step by step, at 320 px', async ({ page }) => {
   await check('étape 2');
   await page.getByLabel('Ce que tu as aimé').fill('Des cours solides et une équipe disponible.');
   await page.getByLabel('Ce que tu n’as pas aimé').fill('Peu de numérique malgré la brochure.');
-  await page.getByLabel('Ton master en une phrase').fill('Solide, mais pas pour moi');
   await page.getByRole('button', { name: 'Continuer' }).click();
   await check('étape 3');
 });

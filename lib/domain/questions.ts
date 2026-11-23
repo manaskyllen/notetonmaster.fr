@@ -35,7 +35,7 @@ export function bestAnswer<A extends AnswerLike>(answers: A[]): { best: A | null
 }
 
 /**
- * « Diplômé·e · promo 2025 » / « M2 · promo 2026 » / « A quitté le master en cours » (never a
+ * « Diplômé·e · promo 2025 » / « M2 · promo 2026 » / « Parti·e avant la fin » (never a
  * year) / « Ancien·ne du parcours ».
  */
 export function alumniWho(level: ReviewLevelKey | null, cohort: number | null): string {

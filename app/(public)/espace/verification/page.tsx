@@ -32,7 +32,6 @@ export default async function VerificationPage({
       title: r.program.title,
       university: uni.name,
       domains: uni.emailDomains,
-      review: r.title ?? r.program.title,
       state: masterVerificationState(r.programId, e.verifications),
       approvedHow: approved
         ? `${approved.method === 'UNIVERSITY_EMAIL' ? 'avec ton mail universitaire' : 'avec un justificatif'} le ${formatDate(approved.decidedAt ?? approved.createdAt)}`

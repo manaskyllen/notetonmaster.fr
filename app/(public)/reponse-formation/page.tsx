@@ -79,7 +79,6 @@ export default async function ReponseFormationPage({
           level: true,
           cohortYear: true,
           overallRating: true,
-          title: true,
           pros: true,
           cons: true,
           leaveReason: true,
@@ -135,7 +134,6 @@ export default async function ReponseFormationPage({
                 who={authorWho(r.level, r.cohortYear)}
                 date={r.publishedAt ? monthYear.format(r.publishedAt) : ''}
                 rating={r.overallRating}
-                title={r.title}
                 plus={r.pros}
                 minus={r.cons}
                 leaveReason={r.level === 'LEFT' ? r.leaveReason : null}

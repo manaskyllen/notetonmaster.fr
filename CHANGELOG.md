@@ -16,15 +16,14 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
 
 ### Avis
 
-- Formulaire d'avis : nouveau statut « J'ai arrêté en cours », avec « Et aujourd'hui ? »
+- Formulaire d'avis : nouveau statut « Parti·e avant la fin », avec « Et aujourd'hui ? »
   facultatif et « Qu'est-ce qui t'a fait partir ? » facultatif. Sur la fiche : pastille « Ex »,
-  « A quitté le master en cours » sans année, bloc « Pourquoi je suis parti·e » et filtre
-  « Parti·es en cours » (s'il y a au moins un avis de ce type). Modération : statut et motif
+  « Parti·e avant la fin » sans année, bloc « Pourquoi je suis parti·e » et filtre
+  « Parti·es avant la fin » (s'il y a au moins un avis de ce type). Modération : statut et motif
   visibles, filtre par statut de l'auteur·rice dans « Tous les avis ».
-- « Ton master en une phrase » : titre de l'avis écrit par l'étudiant·e, obligatoire pour les
-  nouveaux avis (5 à 80 caractères, sans lien), affiché entre « » en tête de l'avis ; modifiable
-  depuis Mon espace. Les avis existants sans titre ne changent pas. Le champ des points faibles
-  s'appelle désormais « Ce que tu n'as pas aimé ».
+- Le titre des avis disparaît : plus de champ dans le formulaire ni dans Mon espace, plus de
+  titre en tête des avis sur la fiche, dans la modération, les mails et la messagerie. Le champ
+  des points faibles s'appelle désormais « Ce que tu n'as pas aimé ».
 - Fiche parcours : bouton « Partager » (fiche, ou formulaire d'avis déjà réglé sur le parcours
   pour inviter sa promo), partage natif sur téléphone, « Copier le lien » sur ordinateur ; liens
   sans paramètre de suivi. Aperçu de lien (titre et image du parcours) pour le formulaire d'avis,
@@ -80,7 +79,7 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
 - `20261125090000_review_level_left` : statut `LEFT` et colonne facultative `leaveReason` des avis
   (ajouts seulement ; retour en arrière : `down.sql` du dossier, refusé tant qu'un avis utilise ce
   statut).
-- `20261125100000_review_title_length` : titre des avis limité à 80 caractères (`VARCHAR(80)`,
-  échoue plutôt que de couper ; retour en arrière : `down.sql` du dossier).
 - `20261125110000_qr_links` : tables `qr_links` et `qr_scans_daily` (ajouts seulement ; retour
   en arrière : `down.sql` du dossier, qui supprime aussi les compteurs).
+- `20261125120000_drop_review_title` : suppression de la colonne `title` des avis (les titres déjà
+  écrits sont perdus ; retour en arrière : `down.sql` du dossier, qui recrée la colonne vide).

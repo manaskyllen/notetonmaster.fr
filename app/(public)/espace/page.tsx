@@ -58,7 +58,7 @@ export default async function EspaceHome({
   if (waiting.count && waiting.first)
     todos.push({
       title: `${waiting.count} question${waiting.count > 1 ? 's' : ''} sans réponse`,
-      text: `Un·e étudiant·e attend ton retour sur « ${waiting.first.review.title ?? waiting.first.review.program.title} ».`,
+      text: `Un·e étudiant·e attend ton retour sur ton avis sur ${waiting.first.review.program.title}.`,
       cta: 'Répondre',
       href: `/espace/messages/${waiting.first.id}`,
       icon: 'message',
@@ -212,10 +212,10 @@ export default async function EspaceHome({
               <div key={r.id} className="flex items-center gap-3">
                 <Grade value={r.overallRating} size="s" />
                 <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                  <span className="truncate text-[14px] font-bold">
-                    « {r.title ?? r.program.title} »
+                  <span className="truncate text-[14px] font-bold">{r.program.title}</span>
+                  <span className="truncate text-[13px] text-ink-muted">
+                    {r.program.university.shortName ?? r.program.university.name}
                   </span>
-                  <span className="truncate text-[13px] text-ink-muted">{r.program.title}</span>
                 </span>
                 <span
                   className={cn('flex-none rounded-pill px-2.5 py-1 text-[12px] font-bold', s.cls)}

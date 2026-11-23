@@ -15,7 +15,8 @@ export interface AdminReviewRow {
   id: string;
   ref: string;
   date: string;
-  title: string | null;
+  /** Beginning of « Ce que tu as aimé », to recognise the review. */
+  excerpt: string;
   program: string;
   author: string;
   rating: number;
@@ -47,7 +48,7 @@ const LEVELS = [
   ['M1', 'M1'],
   ['M2', 'M2'],
   ['GRADUATE', 'Diplômé·es'],
-  ['LEFT', 'Parti·es en cours'],
+  ['LEFT', 'Parti·es avant la fin'],
 ] as const;
 
 /**
@@ -201,7 +202,7 @@ export function ReviewsTable({
                       onChange={() =>
                         setSel((x) => (on ? x.filter((i) => i !== r.id) : [...x, r.id]))
                       }
-                      aria-label={`Sélectionner ${r.title ?? r.ref}`}
+                      aria-label={`Sélectionner l’avis ${r.ref}`}
                       className="size-5 accent-violet-500"
                     />
                   </td>
@@ -209,10 +210,8 @@ export function ReviewsTable({
                     {r.date}
                   </td>
                   <td className="border-b border-border px-3 py-2.5">
-                    <span className="flex flex-col">
-                      <span className="font-semibold">
-                        {r.title ? `« ${r.title} »` : 'Sans titre'}
-                      </span>
+                    <span className="flex max-w-[360px] flex-col">
+                      <span className="line-clamp-2 font-semibold">{r.excerpt}</span>
                       <span className="font-mono text-[12px] text-ink-muted">
                         {r.ref}
                         {r.demo ? ' · exemple' : ''}

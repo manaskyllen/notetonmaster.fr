@@ -1126,7 +1126,7 @@ enum VerificationStatus {
   MORE_INFO
 }
 
-/// LEFT: « J'ai arrêté en cours » (left the master before the end). Its cohort year is asked
+/// LEFT: « Parti·e avant la fin » (left the master before the end). Its cohort year is asked
 /// but never shown: few people leave, a year and a master can be enough to recognise someone.
 enum ReviewLevel {
   M1
@@ -1209,7 +1209,6 @@ model Review {
   jobTitle         String?           @db.VarChar(80) // required for EMPLOYED: "type of job, type of employer"
   cohortYear       Int // never shown for LEFT
   overallRating    Int
-  title            String?           @db.VarChar(80) // « Ton master en une phrase », required for new reviews
   pros             String
   cons             String
   leaveReason      String? // « Qu'est-ce qui t'a fait partir ? » (LEFT only, optional)

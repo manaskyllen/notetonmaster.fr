@@ -151,7 +151,6 @@ test('after a review is sent, the form opens empty (and Back does not restore it
   await page
     .getByLabel('Ce que tu n’as pas aimé')
     .fill('Les emplois du temps arrivent souvent trop tard.');
-  await page.getByLabel('Ton master en une phrase').fill('Du terrain, peu d’anticipation');
   await page.getByRole('button', { name: 'Continuer' }).click();
   await page.getByLabel(/je respecte la/).check();
   await page.getByRole('button', { name: 'Envoyer mon avis' }).click();

@@ -73,7 +73,6 @@ test('search, fiche, share, then a review, on a phone', async ({ page, baseURL }
   await page
     .getByLabel('Ce que tu n’as pas aimé')
     .fill('Les salles sont loin et l’emploi du temps arrive tard.');
-  await page.getByLabel('Ton master en une phrase').fill('Le terrain avant tout');
   await noSideScroll(page, 'avis, étape 2');
   await page.getByRole('button', { name: 'Continuer' }).tap();
   await page.getByRole('radio', { name: /Sans compte/ }).tap();

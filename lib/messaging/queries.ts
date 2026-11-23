@@ -6,7 +6,6 @@ export interface ConversationView {
   role: 'AUTHOR' | 'ASKER';
   /** Name shown for the other party. */
   otherAlias: string;
-  reviewTitle: string | null;
   programTitle: string;
   status: 'OPEN' | 'BLOCKED' | 'CLOSED';
   lastMessageAt: string;
@@ -39,7 +38,7 @@ function view(
     status: 'OPEN' | 'BLOCKED' | 'CLOSED';
     lastMessageAt: Date;
     isDemo: boolean;
-    review: { studentId: string | null; title: string | null; program: { title: string } };
+    review: { studentId: string | null; program: { title: string } };
   },
   messages: MessageRow[],
   unread: number,
@@ -49,7 +48,6 @@ function view(
     id: c.id,
     role,
     otherAlias: role === 'AUTHOR' ? c.alias : 'Auteur·rice de l’avis',
-    reviewTitle: c.review.title,
     programTitle: c.review.program.title,
     status: c.status,
     lastMessageAt: c.lastMessageAt.toISOString(),
@@ -88,7 +86,7 @@ export async function getStudentConversations(
     skip: page.skip ?? 0,
     take: page.take ?? CONVERSATIONS_PER_PAGE,
     include: {
-      review: { select: { studentId: true, title: true, program: { select: { title: true } } } },
+      review: { select: { studentId: true, program: { select: { title: true } } } },
       messages: { orderBy: { createdAt: 'desc' }, take: 1, select: MESSAGE_SELECT },
       _count: {
         select: {
@@ -128,7 +126,7 @@ export async function getConversationThread(
   const c = await prisma.conversation.findFirst({
     where: { id, ...studentWhere(studentId) },
     include: {
-      review: { select: { studentId: true, title: true, program: { select: { title: true } } } },
+      review: { select: { studentId: true, program: { select: { title: true } } } },
     },
   });
   if (!c) return null;
@@ -175,7 +173,7 @@ export async function waitingQuestions(studentId: string) {
       orderBy: { lastMessageAt: 'desc' },
       select: {
         id: true,
-        review: { select: { title: true, program: { select: { title: true } } } },
+        review: { select: { program: { select: { title: true } } } },
       },
     }),
   ]);

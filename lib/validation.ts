@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { REVIEW_LEVEL_IDS } from '@/lib/domain/rating';
-import { cleanTitle, TITLE_MAX, TITLE_MIN, titleHasLink } from '@/lib/domain/review-title';
 import {
   EMPLOYMENT_STATUSES,
   graduateSituationErrors,
@@ -44,7 +43,19 @@ export const CONTACT_SUBJECTS = {
 
 // ───────────── reviews ─────────────
 
-export const REVIEW_MIN_CHARS = 30;
+/**
+ * Minimum of « Ce que tu as aimé » and « Ce que tu n'as pas aimé », spaces at both ends not
+ * counted: the schemas below (server) and the counters of the forms (client) all read it.
+ */
+export const REVIEW_MIN_CHARS = 15;
+
+/** Counter under these two fields: « Encore 3 caractères au moins », then « C'est bon ✓ ». */
+export function reviewTextHint(value: string): { text: string; tone: 'ok' | 'muted' } {
+  const left = REVIEW_MIN_CHARS - value.trim().length;
+  return left <= 0
+    ? { text: 'C’est bon ✓', tone: 'ok' }
+    : { text: `Encore ${left} caractère${left > 1 ? 's' : ''} au moins`, tone: 'muted' };
+}
 /** « Qu'est-ce qui t'a fait partir ? » (LEFT only, optional). */
 export const LEAVE_REASON_MAX = 1500;
 export const CURRENT_YEAR = new Date().getFullYear();
@@ -69,25 +80,12 @@ function checkSituation(v: GraduateSituation, ctx: z.RefinementCtx) {
 
 const criterionScore = z.coerce.number().int().min(1).max(5).optional();
 
-/** « Ton master en une phrase », cleaned (lib/domain/review-title.ts) then checked. */
-const titleRules = z
-  .string()
-  .min(TITLE_MIN, `${TITLE_MIN} caractères minimum.`)
-  .max(TITLE_MAX, `${TITLE_MAX} caractères maximum.`)
-  .refine((s) => !titleHasLink(s), 'Pas de lien dans le titre.');
-export const reviewTitle = z
-  .string({ error: 'Résume ton master en une phrase.' })
-  .transform(cleanTitle)
-  .pipe(titleRules);
-
 export const reviewStep2 = z.object({
   overallRating: z.coerce
     .number({ error: 'Donne une note globale.' })
     .int()
     .min(1, 'Donne une note globale.')
     .max(5),
-  // Required for a new review; reviews written before it may have none (edit schema below).
-  title: reviewTitle,
   pros: z
     .string()
     .trim()
@@ -134,13 +132,6 @@ export type ReviewInput = z.infer<typeof reviewSchema>;
 /** Editing an existing review (from the student space). */
 export const reviewEditSchema = reviewStep2
   .extend({
-    // Optional here: a review written before the title existed can be edited without one
-    // (espace/actions.ts keeps it required once the review has one).
-    title: z
-      .string()
-      .nullish()
-      .transform(cleanTitle)
-      .pipe(z.union([z.literal(''), titleRules])),
     level: reviewStep1.shape.level,
     cohortYear: reviewStep1.shape.cohortYear,
     employmentStatus: reviewStep1.shape.employmentStatus,

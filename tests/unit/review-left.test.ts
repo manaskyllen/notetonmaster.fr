@@ -5,13 +5,12 @@ import { authorWho, LEVEL_LABEL, LEVEL_SHORT } from '@/lib/domain/rating';
 import { LEVEL_SUFFIX, visibleReviewFilters } from '@/lib/domain/review-filters';
 import { LEAVE_REASON_MAX, reviewEditSchema, reviewSchema } from '@/lib/validation';
 
-/** « J'ai arrêté en cours » (issue #18). */
+/** « Parti·e avant la fin » (issue #18). */
 const base = {
   programSlug: 'valorisation-des-nouveaux-patrimoines',
   level: 'LEFT',
   cohortYear: 2025,
   overallRating: 2,
-  title: 'Le terrain avant tout',
   pros: 'Les cours d’histoire du patrimoine sont solides et l’équipe disponible.',
   cons: 'Très peu de numérique alors que la brochure le met en avant partout.',
   mode: 'none',
@@ -21,7 +20,7 @@ const base = {
   charter: true,
 };
 
-describe('status « J’ai arrêté en cours »', () => {
+describe('status « Parti·e avant la fin »', () => {
   it('is a valid status, without « Et aujourd’hui ? » nor reason', () => {
     expect(reviewSchema.safeParse(base).success).toBe(true);
     expect(reviewSchema.safeParse({ ...base, employmentStatus: '' }).success).toBe(true);
@@ -55,16 +54,15 @@ describe('status « J’ai arrêté en cours »', () => {
       reviewSchema.safeParse({ ...base, leaveReason: 'x'.repeat(LEAVE_REASON_MAX + 1) }).success,
     ).toBe(false);
     expect(
-      reviewEditSchema.safeParse({ ...base, title: '', scores: {}, leaveReason: 'Réorientation.' })
-        .success,
+      reviewEditSchema.safeParse({ ...base, scores: {}, leaveReason: 'Réorientation.' }).success,
     ).toBe(true);
   });
 
   it('never shows a year', () => {
-    expect(authorWho('LEFT', 2025)).toBe('A quitté le master en cours');
+    expect(authorWho('LEFT', 2025)).toBe('Parti·e avant la fin');
     expect(authorWho('M2', 2025)).toBe('M2 · promo 2025');
     expect(authorWho('GRADUATE', 2023)).toBe('Diplômé·e · promo 2023');
-    expect(alumniWho('LEFT', 2025)).toBe('A quitté le master en cours');
+    expect(alumniWho('LEFT', 2025)).toBe('Parti·e avant la fin');
     expect(alumniWho(null, null)).toBe('Ancien·ne du parcours');
     expect(LEVEL_SHORT.LEFT).toBe('Ex');
     expect(LEVEL_LABEL.LEFT).not.toMatch(/\d/);
@@ -79,13 +77,13 @@ describe('status « J’ai arrêté en cours »', () => {
     );
   });
 
-  it('shows the « Parti·es en cours » filter only with one review of that kind', () => {
+  it('shows the « Parti·es avant la fin » filter only with one review of that kind', () => {
     const ids = (byLevel: Record<string, number>, current = 'all') =>
       visibleReviewFilters(byLevel, current).map((f) => f.id);
     expect(ids({ M1: 2, GRADUATE: 1 })).toEqual(['all', 'M1', 'M2', 'GRADUATE']);
     expect(ids({ M1: 2, LEFT: 1 })).toEqual(['all', 'M1', 'M2', 'GRADUATE', 'LEFT']);
     // Still listed when it is the filter in the address (no dead end).
     expect(ids({}, 'LEFT')).toContain('LEFT');
-    expect(LEVEL_SUFFIX.LEFT).toBe(' · parti·es en cours');
+    expect(LEVEL_SUFFIX.LEFT).toBe(' · parti·es avant la fin');
   });
 });

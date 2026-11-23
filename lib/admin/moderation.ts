@@ -159,11 +159,11 @@ export async function buildQueues(
             },
           });
     for (const r of reviews) {
-      const names = detectNamedPerson(r.title, r.pros, r.cons, r.leaveReason, r.jobTitle);
+      const names = detectNamedPerson(r.pros, r.cons, r.leaveReason, r.jobTitle);
       const today = hasSituation(r.level)
         ? todayLine(r.employmentStatus, r.jobTitle, r.level)
         : null;
-      const text = normalize(`${r.title ?? ''} ${r.pros} ${r.cons} ${r.leaveReason ?? ''}`);
+      const text = normalize(`${r.pros} ${r.cons} ${r.leaveReason ?? ''}`);
       const hits = watch.filter((w) => w && text.includes(w));
       const checks: QueueItem['checks'] = [
         r.studentId
@@ -224,7 +224,7 @@ export async function buildQueues(
               : 'Prêt à publier',
         tone,
         when: formatRelative(r.submittedAt),
-        title: r.title ? `« ${r.title} »` : `Avis ${r.ref}`,
+        title: r.ref,
         target: `${r.program.title} · ${r.program.university.shortName ?? r.program.university.name}`,
         meta: `${r.ref} · Anonyme · ${authorWho(r.level, r.cohortYear)} · note ${r.overallRating}/5${r.isDemo ? ' · exemple' : ''}`,
         body: `${today ? `Aujourd’hui : ${today}\n` : ''}On a aimé : ${r.pros}\nMoins bien : ${r.cons}${leaveLine(r)}`,
@@ -362,7 +362,7 @@ export async function buildQueues(
         include: {
           conversation: {
             include: {
-              review: { select: { title: true } },
+              review: { select: { ref: true } },
               _count: { select: { messages: true } },
             },
           },
@@ -392,7 +392,7 @@ export async function buildQueues(
         flag: 'Message signalé',
         tone: 'bad',
         when: formatRelative(reps[0]!.createdAt),
-        title: `Conversation sur « ${m.conversation.review.title ?? 'un avis'} »`,
+        title: `Conversation sur l’avis ${m.conversation.review.ref}`,
         target: `Messagerie anonyme · ${reps[0]!.reference}`,
         meta: `Expéditeur : ${m.fromRole === 'ASKER' ? m.conversation.alias : 'auteur·rice de l’avis'} · ${m.conversation._count.messages} message(s)`,
         body: `Message signalé : « ${m.body} »`,
@@ -426,14 +426,14 @@ export async function buildQueues(
       const keys = new Set(reps.map((x) => x.reporterKey));
       const reasons = Map.groupBy(reps, (x) => x.reason);
       const top = [...reasons.entries()].sort((a, b) => b[1].length - a[1].length)[0]?.[0] ?? '';
-      const names = detectNamedPerson(r.title, r.pros, r.cons, r.leaveReason);
+      const names = detectNamedPerson(r.pros, r.cons, r.leaveReason);
       items.push({
         kind: 'signal',
         id: reviewId,
         flag: `Signalé ${reps.length} fois`,
         tone: reps.length >= 2 ? 'bad' : 'warn',
         when: formatRelative(reps[reps.length - 1]!.createdAt),
-        title: r.title ? `« ${r.title} »` : `Avis ${r.ref}`,
+        title: r.ref,
         target: `Avis ${REVIEW_STATUS_LABEL[r.status].toLowerCase()} · ${r.program.title} · ${r.program.university.shortName ?? r.program.university.name}`,
         meta: `Motif le plus cité : ${top.toLowerCase()} · références ${reps.map((x) => x.reference).join(', ')}`,
         body: `On a aimé : ${r.pros}\nMoins bien : ${r.cons}${leaveLine(r)}${
@@ -487,7 +487,6 @@ export async function buildQueues(
         review: {
           select: {
             ref: true,
-            title: true,
             pros: true,
             cons: true,
             overallRating: true,
@@ -541,7 +540,7 @@ export async function buildQueues(
         flag: r.editedAt ? 'Réponse modifiée' : 'Nouvelle réponse',
         tone: worst(checks),
         when: formatRelative(r.updatedAt),
-        title: `Réponse à ${r.review.title ? `« ${r.review.title} »` : `l’avis ${r.review.ref}`}`,
+        title: `Réponse à l’avis ${r.review.ref}`,
         target: `${r.review.program.title} · ${r.review.program.university.shortName ?? r.review.program.university.name}`,
         meta: `Équipe pédagogique · @${r.responder.domain} · avis noté ${r.review.overallRating}/5`,
         body: `Réponse : ${r.body}\n\nAvis — On a aimé : ${r.review.pros}\nMoins bien : ${r.review.cons}`,

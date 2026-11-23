@@ -35,13 +35,6 @@ import {
 } from '@/lib/domain/graduate';
 import { detectNamedPerson } from '@/lib/domain/names';
 import {
-  cleanTitle,
-  TITLE_LABEL,
-  TITLE_MAX,
-  TITLE_PLACEHOLDER,
-  titleHint,
-} from '@/lib/domain/review-title';
-import {
   authorWho,
   CRITERIA,
   CRITERION_LABEL,
@@ -53,7 +46,7 @@ import {
 import {
   CURRENT_YEAR,
   LEAVE_REASON_MAX,
-  REVIEW_MIN_CHARS,
+  reviewTextHint,
   reviewStep1Checked,
   reviewStep2,
   reviewStep3,
@@ -85,8 +78,6 @@ type Draft = {
   cons: string;
   /** « Qu'est-ce qui t'a fait partir ? » (LEFT only). */
   leaveReason: string;
-  /** « Ton master en une phrase ». */
-  title: string;
   scores: Partial<Record<CriterionKey, number>>;
   mode: Mode;
   email: string;
@@ -105,7 +96,6 @@ const EMPTY: Draft = {
   pros: '',
   cons: '',
   leaveReason: '',
-  title: '',
   scores: {},
   mode: 'none',
   email: '',
@@ -130,13 +120,6 @@ const YEARS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
 /** #3B3648: halfway between ink and ink-muted, in both themes. */
 const INK_SOFT = 'text-[color-mix(in_srgb,var(--ink)_50%,var(--ink-muted))]';
 
-function lengthHint(value: string) {
-  const n = value.trim().length;
-  return n >= REVIEW_MIN_CHARS
-    ? { text: 'C’est bon ✓', tone: 'ok' as const }
-    : { text: `Encore ${REVIEW_MIN_CHARS - n} caractères au moins`, tone: 'muted' as const };
-}
-
 /** What a draft keeps: the fields typed, never the account address nor the charter tick. */
 type DraftFields = Omit<Draft, 'email' | 'charter'> & { email?: string };
 
@@ -153,7 +136,6 @@ const snapshot = (program: string, step: number, d: Draft) =>
     d.pros,
     d.cons,
     d.leaveReason,
-    d.title,
     d.scores,
     d.mode,
     d.acceptsQuestions,
@@ -170,7 +152,6 @@ function hasContent(d: Draft) {
     d.pros.trim() ||
     d.cons.trim() ||
     d.leaveReason.trim() ||
-    d.title.trim() ||
     Object.keys(d.scores).length
   );
 }
@@ -330,8 +311,8 @@ export function ReviewForm({
   };
   const left = d.level === 'LEFT';
   const nameHit = useMemo(
-    () => detectNamedPerson(d.title, d.pros, d.cons, left ? d.leaveReason : null),
-    [d.title, d.pros, d.cons, d.leaveReason, left],
+    () => detectNamedPerson(d.pros, d.cons, left ? d.leaveReason : null),
+    [d.pros, d.cons, d.leaveReason, left],
   );
   const graduate = d.level === 'GRADUATE';
   /** Another status: « Et aujourd'hui ? » (and the job) start again from nothing. */
@@ -393,7 +374,6 @@ export function ReviewForm({
           r.fieldErrors?.pros ||
           r.fieldErrors?.cons ||
           r.fieldErrors?.leaveReason ||
-          r.fieldErrors?.title ||
           r.fieldErrors?.overallRating
         )
           setStep(2);
@@ -486,9 +466,8 @@ export function ReviewForm({
     );
   }
 
-  const prosHint = lengthHint(d.pros);
-  const consHint = lengthHint(d.cons);
-  const tHint = titleHint(d.title);
+  const prosHint = reviewTextHint(d.pros);
+  const consHint = reviewTextHint(d.cons);
   const badgePending = withAccount && d.wantsBadge;
 
   if (other)
@@ -757,24 +736,6 @@ export function ReviewForm({
                   )}
                 </Field>
               )}
-              {/* Last: summing up is easier once everything is written. */}
-              <Field
-                label={TITLE_LABEL}
-                id="titre"
-                hint={tHint.text}
-                hintTone={tHint.tone}
-                error={errors.title}
-              >
-                {(a) => (
-                  <Input
-                    {...a}
-                    maxLength={TITLE_MAX}
-                    value={d.title}
-                    onChange={(e) => set('title', e.target.value)}
-                    placeholder={TITLE_PLACEHOLDER}
-                  />
-                )}
-              </Field>
               {nameHit.found && (
                 <div
                   role="alert"
@@ -947,9 +908,6 @@ export function ReviewForm({
                       Ouvert aux questions
                     </span>
                   )}
-                </span>
-                <span className="font-display text-[18px] font-bold break-words">
-                  « {cleanTitle(d.title)} »
                 </span>
                 <span className={cn('text-[14px]', INK_SOFT)}>
                   {program?.title} · {d.overallRating} / 5

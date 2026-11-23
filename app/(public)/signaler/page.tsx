@@ -58,9 +58,6 @@ export default async function SignalerPage({
                 <span className="text-[14px] font-bold">
                   Anonyme · {authorWho(review.level, review.cohortYear)}
                 </span>
-                {review.title && (
-                  <span className="font-display text-[18px] font-bold">« {review.title} »</span>
-                )}
                 <span className="line-clamp-3 text-[14px] text-ink-muted">{review.pros}</span>
                 <span className="font-mono text-code text-ink-muted">ID {review.ref}</span>
               </article>

@@ -69,7 +69,6 @@ export function InteractiveDemos() {
         who="M2 · promo 2025"
         date="mars 2026"
         rating={5}
-        title="Le terrain avant tout"
         plus="Beaucoup de projets concrets avec des collectivités, et un voyage d’étude qui ouvre des portes."
         minus="Le second semestre est très chargé : stage et mémoire en même temps."
         verified

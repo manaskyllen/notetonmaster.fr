@@ -20,9 +20,9 @@ async function noHorizontalScroll(page: Page) {
 }
 
 /**
- * « J'ai arrêté en cours » (issue #18): the fourth status of the form, its optional « Et
+ * « Parti·e avant la fin » (issue #18): the fourth status of the form, its optional « Et
  * aujourd'hui ? » and « Qu'est-ce qui t'a fait partir ? », moderation, then the fiche (pastille
- * « Ex », no year, « Pourquoi je suis parti·e », filter « Parti·es en cours »).
+ * « Ex », no year, « Pourquoi je suis parti·e », filter « Parti·es avant la fin »).
  */
 test('a review by someone who left during the year, from the form to the fiche', async ({
   page,
@@ -38,11 +38,11 @@ test('a review by someone who left during the year, from the form to the fiche',
   expect(program).toBeTruthy();
   const { slug } = program!;
 
-  // Before: no « Parti·es en cours » filter on the fiche.
+  // Before: no « Parti·es avant la fin » filter on the fiche.
   await page.goto(`/parcours/${slug}`);
   const filters = page.getByRole('navigation', { name: 'Filtrer les avis par niveau' });
   await expect(filters.getByRole('link', { name: 'Diplômé·es' })).toBeVisible();
-  await expect(filters.getByRole('link', { name: 'Parti·es en cours' })).toHaveCount(0);
+  await expect(filters.getByRole('link', { name: 'Parti·es avant la fin' })).toHaveCount(0);
 
   const email = uniqueEmail('parti');
   const since = new Date();
@@ -60,7 +60,7 @@ test('a review by someone who left during the year, from the form to the fiche',
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('ArrowRight');
-  const left = status.getByRole('radio', { name: 'J’ai arrêté en cours' });
+  const left = status.getByRole('radio', { name: 'Parti·e avant la fin' });
   await expect(left).toBeFocused();
   await expect(left).toHaveAttribute('aria-checked', 'true');
   await expect(page.getByRole('link', { name: 'Écris-nous' })).toHaveAttribute(
@@ -117,7 +117,6 @@ test('a review by someone who left during the year, from the form to the fiche',
   ).toBeVisible();
   await expect(next).toBeDisabled();
   await why.fill('Je voulais travailler dans la médiation numérique, ce master ne m’y menait pas.');
-  await page.getByLabel('Ton master en une phrase').fill('Pas ce que je venais chercher');
   await noHorizontalScroll(page);
 
   // The field goes with the status.
@@ -132,9 +131,9 @@ test('a review by someone who left during the year, from the form to the fiche',
   await expect(why).toHaveValue(/médiation numérique/);
   await next.click();
 
-  // Step 3: « Anonyme · A quitté le master en cours », never a year.
+  // Step 3: « Anonyme · Parti·e avant la fin », never a year.
   const preview = page.getByText('Ton avis apparaîtra ainsi').locator('..');
-  await expect(preview).toContainText('Anonyme · A quitté le master en cours');
+  await expect(preview).toContainText('Anonyme · Parti·e avant la fin');
   await expect(preview).toContainText('Dans une autre formation');
   await expect(preview).not.toContainText('promo');
   await page.getByRole('radio', { name: /Sans compte/ }).click();
@@ -164,12 +163,12 @@ test('a review by someone who left during the year, from the form to the fiche',
   await waitForHydration(page);
   await page
     .getByRole('region', { name: 'Avis à valider' })
-    .getByRole('button', { name: /« Pas ce que je venais chercher »/ })
+    .getByRole('button', { name: review!.ref })
     .first()
     .click();
   const detail = page.getByRole('region', { name: 'Détail' });
   await expect(detail).toContainText(review!.ref);
-  await expect(detail).toContainText('Anonyme · A quitté le master en cours');
+  await expect(detail).toContainText('Anonyme · Parti·e avant la fin');
   await expect(detail).not.toContainText(`promo ${review!.cohortYear}`);
   await expect(detail).toContainText('Pourquoi je suis parti·e : Je voulais travailler');
   await expect(detail).toContainText('Aujourd’hui : dans une autre formation');
@@ -182,14 +181,14 @@ test('a review by someone who left during the year, from the form to the fiche',
   await expect(row).toContainText('Anonyme · Ex');
   await expect(row).not.toContainText(String(review!.cohortYear));
 
-  // The fiche: filter « Parti·es en cours », pastille « Ex », no year, « Pourquoi je suis parti·e ».
+  // The fiche: filter « Parti·es avant la fin », pastille « Ex », no year, « Pourquoi je suis parti·e ».
   await expireTags(page, ['reviews']);
   await page.goto(`/parcours/${slug}`);
-  await filters.getByRole('link', { name: 'Parti·es en cours' }).click();
+  await filters.getByRole('link', { name: 'Parti·es avant la fin' }).click();
   await expect(page).toHaveURL(/niveau=LEFT/);
-  await expect(page.getByText(/sur 1 avis, dont 0 vérifié · parti·es en cours/)).toBeVisible();
+  await expect(page.getByText(/sur 1 avis, dont 0 vérifié · parti·es avant la fin/)).toBeVisible();
   const card = page.locator(`[id="${review!.ref}"]`);
-  await expect(card).toContainText('Anonyme · A quitté le master en cours');
+  await expect(card).toContainText('Anonyme · Parti·e avant la fin');
   await expect(card).not.toContainText('promo');
   await expect(card).not.toContainText(String(review!.cohortYear));
   await expect(card.getByText('Ex', { exact: true })).toBeVisible();

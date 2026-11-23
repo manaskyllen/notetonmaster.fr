@@ -34,7 +34,7 @@ export function ratingSummary(values: number[]): {
   return { average: avg, label: `${formatRating(avg)} · ${count} avis`, count };
 }
 
-/** Status of the author of a review (enum ReviewLevel). LEFT: « J'ai arrêté en cours ». */
+/** Status of the author of a review (enum ReviewLevel). LEFT: « Parti·e avant la fin ». */
 export const REVIEW_LEVEL_IDS = ['M1', 'M2', 'GRADUATE', 'LEFT'] as const;
 export type ReviewLevelKey = (typeof REVIEW_LEVEL_IDS)[number];
 
@@ -43,7 +43,7 @@ export const LEVEL_CHOICE: Record<ReviewLevelKey, string> = {
   M1: 'En M1',
   M2: 'En M2',
   GRADUATE: 'Diplômé·e',
-  LEFT: 'J’ai arrêté en cours',
+  LEFT: 'Parti·e avant la fin',
 };
 /** Tile of a review card. */
 export const LEVEL_SHORT = { M1: 'M1', M2: 'M2', GRADUATE: 'D', LEFT: 'Ex' } as const;
@@ -51,7 +51,7 @@ export const LEVEL_LABEL = {
   M1: 'M1',
   M2: 'M2',
   GRADUATE: 'Diplômé·e',
-  LEFT: 'A quitté le master en cours',
+  LEFT: 'Parti·e avant la fin',
 } as const;
 
 /**

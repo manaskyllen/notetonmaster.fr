@@ -48,7 +48,6 @@ async function exportData(studentId: string) {
       level: r.level,
       cohortYear: r.cohortYear,
       overallRating: r.overallRating,
-      title: r.title,
       pros: r.pros,
       cons: r.cons,
       scores: Object.fromEntries(r.scores.map((x) => [x.criterion, x.score])),

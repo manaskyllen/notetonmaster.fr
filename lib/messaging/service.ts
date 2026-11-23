@@ -39,7 +39,6 @@ export function loadConversation(id: string) {
       review: {
         select: {
           id: true,
-          title: true,
           studentId: true,
           contactEmailEnc: true,
           acceptsQuestions: true,
@@ -102,7 +101,6 @@ export async function notifyRecipient(
       ? questionReceivedMail({
           programTitle: c.review.program.title,
           universityName: c.review.program.university.name,
-          reviewTitle: c.review.title,
           question: body,
           replyUrl: url,
           hasAccount,
