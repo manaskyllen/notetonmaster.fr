@@ -78,6 +78,12 @@ const nextConfig: NextConfig = {
   },
   outputFileTracingIncludes: {
     '/**': ['./content/**/*'],
+    // Share images (lib/brand/og-fonts.ts reads the fonts at run time, which tracing cannot see):
+    // without them, every /og/… image of the standalone build answered 500.
+    '/og/**': [
+      './node_modules/@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-800-normal.woff',
+      './node_modules/@fontsource/inter/files/inter-latin-600-normal.woff',
+    ],
   },
 };
 

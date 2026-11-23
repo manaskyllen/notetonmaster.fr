@@ -1,43 +1,21 @@
 import 'server-only';
 import { crc32, deflateSync } from 'node:zlib';
-import qrcode from 'qrcode-generator';
+import { QR_MARGIN, qrMatrix, qrPath } from './matrix';
 
 /**
  * QR codes of the short links (issue #17), drawn on the server: error correction M, a quiet zone
- * of 4 modules (the minimum of the standard). SVG for the printer (vector), PNG as an option.
+ * of 4 modules (lib/qr/matrix.ts). SVG for the printer (vector), PNG as an option.
  */
-export const QR_MARGIN = 4;
+export { QR_MARGIN, qrMatrix } from './matrix';
 
-/** Dark modules of the code of `text` (rows of columns). */
-export function qrMatrix(text: string): boolean[][] {
-  const qr = qrcode(0, 'M');
-  qr.addData(text, 'Byte');
-  qr.make();
-  const n = qr.getModuleCount();
-  return Array.from({ length: n }, (_, r) => Array.from({ length: n }, (_, c) => qr.isDark(r, c)));
-}
-
-/** One path of horizontal runs, black on white, crisp at any size. */
+/** Black on white, crisp at any size. */
 export function qrSvg(text: string, opts: { title?: string } = {}): string {
   const m = qrMatrix(text);
   const size = m.length + 2 * QR_MARGIN;
-  let d = '';
-  m.forEach((row, r) => {
-    for (let c = 0; c < row.length;) {
-      if (!row[c]) {
-        c++;
-        continue;
-      }
-      let end = c;
-      while (end < row.length && row[end]) end++;
-      d += `M${c + QR_MARGIN} ${r + QR_MARGIN}h${end - c}v1h-${end - c}z`;
-      c = end;
-    }
-  });
   const title = opts.title ? `<title>${escapeXml(opts.title)}</title>` : '';
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size * 10}" height="${size * 10}" shape-rendering="crispEdges">` +
-    `${title}<rect width="${size}" height="${size}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`
+    `${title}<rect width="${size}" height="${size}" fill="#fff"/><path d="${qrPath(m)}" fill="#000"/></svg>`
   );
 }
 

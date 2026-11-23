@@ -24,10 +24,20 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
 - Le titre des avis disparaît : plus de champ dans le formulaire ni dans Mon espace, plus de
   titre en tête des avis sur la fiche, dans la modération, les mails et la messagerie. Le champ
   des points faibles s'appelle désormais « Ce que tu n'as pas aimé ».
-- Fiche parcours : bouton « Partager » (fiche, ou formulaire d'avis déjà réglé sur le parcours
-  pour inviter sa promo), partage natif sur téléphone, « Copier le lien » sur ordinateur ; liens
-  sans paramètre de suivi. Aperçu de lien (titre et image du parcours) pour le formulaire d'avis,
-  qui reste non indexé ; `robots.txt` autorise `/avis/nouveau` pour les aperçus.
+- Fiche parcours : bouton « Partager » entre « Suivre » et « Donner mon avis ». Un panneau
+  sous le bouton (une feuille du bas sur téléphone) avec deux onglets, « Le master » et
+  « Inviter ma promo » : un message prêt à envoyer suivi du lien, « Copier le message »,
+  « Copier le lien », WhatsApp et un QR code ; sur téléphone, « Partager… » ouvre le partage du
+  système. Liens sans paramètre de suivi, rien n'est envoyé au serveur pour partager.
+- Après l'envoi d'un avis : une seule phrase d'état, le nombre d'avis du master et un bouton
+  « Inviter ma promo » (le partage du téléphone sur mobile), puis deux liens texte.
+- Formulaire d'avis réglé sur un parcours : aperçu de lien « Donne ton avis sur {Parcours} »
+  avec sa propre image (fond lime), toujours non indexé ; `robots.txt` autorise `/avis/nouveau`
+  pour les aperçus.
+- Images de partage (`/og/…`) : les polices n'étaient pas embarquées dans le build de
+  production, chaque image répondait 500 ; corrigé.
+- Case « Je parle de ma propre expérience… » et autres cases à cocher : centrées sur la
+  première ligne de leur texte.
 
 ### Responsive
 

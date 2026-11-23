@@ -250,11 +250,15 @@
     background: transparent;
   }
   .nm-checkbox {
+    --nm-check: 22px;
     flex: none;
-    width: 22px;
-    height: 22px;
-    /* Native margins kept (left 4px, right and bottom 3px). */
-    margin: 2px 3px 3px 4px;
+    width: var(--nm-check);
+    height: var(--nm-check);
+    /* The size of the label's text (the box itself keeps --nm-check), so that `em` below is it. */
+    font-size: inherit;
+    /* Centred on the first line of the label (line-height 1.5): aligned with a one-line label,
+       still on the first line of a longer one. Native side margins kept (left 4px, right 3px). */
+    margin: calc((1.5em - var(--nm-check)) / 2) 3px 3px 4px;
     accent-color: var(--violet-500);
     cursor: pointer;
   }
@@ -324,8 +328,7 @@
     font-size: 14px;
   }
   [data-density='compact'] .nm-checkbox {
-    width: 20px;
-    height: 20px;
+    --nm-check: 20px;
   }
 }
 

@@ -1,24 +1,15 @@
 /**
  * Sharing a fiche parcours (issue #13): the fiche itself, or its review form already set on the
- * parcours. Plain addresses only: no `utm_*`, nothing about the person who shares.
+ * parcours. Plain addresses only: no `utm_*`, no `?source=`, nothing about the person who shares.
+ * The texts are in ./share-copy.ts.
  */
-export interface ShareTarget {
-  id: 'fiche' | 'avis';
-  label: string;
-  hint: string;
-  url: string;
-  /** For navigator.share. */
-  title: string;
-  text: string;
-}
+import type { ShareFacts, ShareTab } from './share-copy';
 
-export interface ShareInput {
-  origin: string;
-  slug: string;
-  /** Name of the parcours (without « Master »). */
-  parcours: string;
-  /** Establishment (short name when it has one). */
-  university: string;
+export { reviewFormTitle } from './share-copy';
+
+/** What the panel needs, computed by the server (the fiche, the confirmation of a review). */
+export interface ShareData extends ShareFacts {
+  links: Record<ShareTab, string>;
 }
 
 /** The canonical address of a fiche, and its review form set on the parcours. */
@@ -29,26 +20,12 @@ export function reviewFormUrl(origin: string, slug: string): string {
   return `${origin}/avis/nouveau?parcours=${encodeURIComponent(slug)}`;
 }
 
-/** Title of the review form set on a parcours (page title and link previews). */
-export const reviewFormTitle = (parcours: string) => `Donne ton avis sur ${parcours}`;
+/** The message, a space, then the link: what is copied and sent by WhatsApp. */
+export function shareText(message: string, url: string): string {
+  const m = message.trim();
+  return m ? `${m} ${url}` : url;
+}
 
-export function shareTargets(i: ShareInput): ShareTarget[] {
-  return [
-    {
-      id: 'fiche',
-      label: 'Partager ce master',
-      hint: 'Le lien de cette fiche',
-      url: ficheUrl(i.origin, i.slug),
-      title: `${i.parcours} — ${i.university}, sur notetonmaster`,
-      text: `${i.parcours} — ${i.university}, sur notetonmaster`,
-    },
-    {
-      id: 'avis',
-      label: 'Inviter ma promo à donner son avis',
-      hint: 'Le formulaire d’avis, déjà réglé sur ce parcours',
-      url: reviewFormUrl(i.origin, i.slug),
-      title: reviewFormTitle(i.parcours),
-      text: `Tu as fait le master ${i.parcours} ? Donne ton avis, c’est anonyme et ça aide les suivant·es.`,
-    },
-  ];
+export function whatsappUrl(message: string, url: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(shareText(message, url))}`;
 }

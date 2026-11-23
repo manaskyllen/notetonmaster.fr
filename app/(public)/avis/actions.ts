@@ -21,6 +21,9 @@ import { newReviewRef } from '@/lib/reviews/ref';
 import { getSettings } from '@/lib/settings';
 import { reviewSchema } from '@/lib/validation';
 import { afterReviewChange } from '@/lib/cache/next';
+import type { ShareData } from '@/lib/domain/share';
+import { getProgram } from '@/lib/queries/catalog';
+import { shareDataFor } from '@/lib/share-data';
 
 export type SubmitResult =
   | {
@@ -30,6 +33,8 @@ export type SubmitResult =
       loggedIn: boolean;
       wantsBadge: boolean;
       acceptsQuestions: boolean;
+      /** « Et ta promo, elle en pense quoi ? » (issue #13): the same for every review sent. */
+      share: ShareData | null;
     }
   | { ok: false; message?: string; fieldErrors?: Record<string, string> };
 
@@ -128,7 +133,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
       }),
     );
     await logConnection('REVIEW_SUBMIT', emailHash);
-    return neutralAnswer(d, email, !!current);
+    return neutralAnswer(d, email, !!current, await promoShare(d.programSlug));
   }
 
   // « Avec mon espace » without a session: the review waits for the code (or link) of the login
@@ -201,7 +206,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
     );
   }
 
-  return neutralAnswer(d, email, !!current);
+  return neutralAnswer(d, email, !!current, await promoShare(d.programSlug));
 }
 
 /** The answer of a review sent: the same whether it was recorded or was a duplicate. */
@@ -209,6 +214,7 @@ function neutralAnswer(
   d: { mode: 'none' | 'account'; wantsBadge: boolean; acceptsQuestions: boolean },
   email: string,
   loggedIn: boolean,
+  share: ShareData | null,
 ): SubmitResult {
   return {
     ok: true,
@@ -217,7 +223,14 @@ function neutralAnswer(
     loggedIn,
     wantsBadge: d.wantsBadge,
     acceptsQuestions: d.acceptsQuestions,
+    share,
   };
+}
+
+/** The parcours as « Partager » shows it: public data only, nothing about the review sent. */
+async function promoShare(slug: string): Promise<ShareData | null> {
+  const p = await getProgram(slug);
+  return p ? shareDataFor(p) : null;
 }
 
 async function sendReviewConfirmation(

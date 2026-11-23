@@ -46,12 +46,20 @@ test('search, fiche, share, then a review, on a phone', async ({ page, baseURL }
   await noSideScroll(page, 'fiche');
 
   // Share: the share sheet of the phone, with the link of the review form.
+  // A sheet from the bottom, open on « Inviter ma promo ».
   await page.getByRole('button', { name: 'Partager', exact: true }).tap();
-  await page.getByRole('button', { name: /Inviter ma promo à donner son avis/ }).tap();
+  const sheet = page.getByRole('dialog', { name: 'Partager' });
+  await expect(sheet.getByRole('tab', { name: /Inviter ma promo/ })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  await sheet.getByRole('button', { name: 'Partager…' }).tap();
   const shared = await page.evaluate(
     () => (window as unknown as { __shared: ShareData[] }).__shared,
   );
   expect(shared[0]?.url).toBe(`${baseURL}/avis/nouveau?parcours=${VNP}`);
+  await sheet.getByRole('button', { name: 'Fermer' }).tap();
+  await expect(sheet).toBeHidden();
 
   // The review, from the fiche, entirely on the phone.
   const email = uniqueEmail('mobile');

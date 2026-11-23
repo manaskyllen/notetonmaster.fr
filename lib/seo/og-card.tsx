@@ -8,7 +8,7 @@ import { cutWords, ratingText } from './titles';
 export const OG_SIZE = { width: 1200, height: 630 };
 
 /** The logo: « note ton » and « master » on a lime block tilted by −3°. */
-function Logo({ px, color }: { px: number; color: string }) {
+function Logo({ px, color, tag = BRAND.lime }: { px: number; color: string; tag?: string }) {
   return (
     <div
       style={{
@@ -27,8 +27,8 @@ function Logo({ px, color }: { px: number; color: string }) {
           marginLeft: px * 0.07,
           padding: `${px * 0.02}px ${px * 0.26}px ${px * 0.14}px`,
           borderRadius: px * 0.32,
-          background: BRAND.lime,
-          color: BRAND.night,
+          background: tag,
+          color: tag === BRAND.lime ? BRAND.night : BRAND.lime,
           transform: 'rotate(-3deg)',
         }}
       >
@@ -42,7 +42,8 @@ export interface OgCard {
   kicker: string;
   title: string;
   subtitle: string;
-  tone: 'violet' | 'night';
+  /** lime: the review form set on a parcours (night text, night « master » label). */
+  tone: 'violet' | 'night' | 'lime';
   rating?: { value: number; count: number } | null;
   /** Shown instead of a rating (« 213 parcours »). */
   figure?: string | null;
@@ -54,7 +55,8 @@ export interface OgCard {
  * reviews when there are some.
  */
 export async function ogCard(c: OgCard): Promise<ImageResponse> {
-  const bg = c.tone === 'violet' ? BRAND.violet : BRAND.night;
+  const bg = c.tone === 'violet' ? BRAND.violet : c.tone === 'lime' ? BRAND.lime : BRAND.night;
+  const fg = c.tone === 'lime' ? BRAND.night : BRAND.white;
   const title = cutWords(c.title, 90);
   const size = title.length > 60 ? 60 : title.length > 36 ? 70 : 84;
   return new ImageResponse(
@@ -67,7 +69,7 @@ export async function ogCard(c: OgCard): Promise<ImageResponse> {
         justifyContent: 'space-between',
         padding: '64px 80px',
         background: bg,
-        color: BRAND.white,
+        color: fg,
         fontFamily: 'Bricolage Grotesque',
         fontWeight: 800,
         position: 'relative',
@@ -81,11 +83,12 @@ export async function ogCard(c: OgCard): Promise<ImageResponse> {
           width: 300,
           height: 300,
           borderRadius: 300,
-          background: c.tone === 'violet' ? BRAND.lime : BRAND.violet,
+          background:
+            c.tone === 'night' ? BRAND.violet : c.tone === 'lime' ? BRAND.violet : BRAND.lime,
           opacity: 0.9,
         }}
       />
-      <Logo px={44} color={BRAND.white} />
+      <Logo px={44} color={fg} tag={c.tone === 'lime' ? BRAND.night : BRAND.lime} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 1000 }}>
         <span
           style={{

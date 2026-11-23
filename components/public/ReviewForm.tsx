@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { PromoInvite } from '@/components/public/PromoInvite';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
-import { Button, buttonClasses } from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { CheckboxCard } from '@/components/ui/form/CheckboxCard';
 import { ChoiceGroup } from '@/components/ui/form/Choice';
 import { Field, FieldError } from '@/components/ui/form/Field';
@@ -389,7 +390,7 @@ export function ReviewForm({
     return (
       <section
         role="status"
-        className="nm-thanks flex flex-col items-start gap-4 rounded-[32px] bg-lime-400 p-10 text-on-lime"
+        className="nm-thanks flex flex-col items-start gap-4 rounded-[32px] bg-lime-400 p-10 text-on-lime max-sm:p-6"
       >
         <span
           aria-hidden="true"
@@ -411,14 +412,15 @@ export function ReviewForm({
         <h1 className="m-0 font-display text-[42px] leading-[1.05] font-extrabold tracking-[-0.03em]">
           Merci, c’est envoyé !
         </h1>
-        <p className="m-0 text-[17px] leading-[1.5]">
+        <p className="m-0 text-[17px] leading-[1.5] [overflow-wrap:anywhere]">
           {confirmed
             ? confirmed === 'published'
               ? 'C’est confirmé : ton avis est publié.'
               : 'C’est confirmé : ton avis passe en relecture (48 h maximum). Tu recevras un mail quand il sera publié.'
             : account
-              ? `Ton avis est en relecture (48 h maximum).${done.loggedIn ? '' : ' Saisis le code reçu par mail pour ouvrir ton espace.'}${done.wantsBadge ? ' Depuis ton espace, tu pourras prouver ton parcours pour obtenir le badge.' : ''}`
-              : `Confirme ton avis avec le code envoyé à ${done.email}. Il passe ensuite en relecture (48 h maximum) et sera publié sans badge « Parcours vérifié ».${done.acceptsQuestions ? ' Les questions des étudiant·es t’arriveront par mail.' : ''}`}
+              ? 'Ton avis est en relecture (48 h maximum).'
+              : // The mail has a link and a code: the code is typed just below.
+                `Confirme ton avis avec le code ou le lien envoyé à ${done.email}. Il passera ensuite en relecture (48 h maximum).`}
         </p>
         {!confirmed && !(account && done.loggedIn) && (
           <div className="w-full max-w-[460px] rounded-[20px] bg-surface-0 p-5 text-ink">
@@ -445,23 +447,22 @@ export function ReviewForm({
             />
           </div>
         )}
-        <div className="flex flex-wrap gap-2.5">
-          {account && done.loggedIn && (
+        {done.share && <PromoInvite data={done.share} />}
+        {/* Two text links (styles/motion.css .nm-more); the verification needs an account. */}
+        {/* 12 px under the invitation: the 16 px gap of the card, minus 4. */}
+        <p className="m-0 -mt-1 flex flex-wrap gap-x-5.5 gap-y-1.5 text-[14px] font-semibold">
+          {account && (
             <Link
-              href={
-                done.wantsBadge
-                  ? `/espace/verification?parcours=${encodeURIComponent(d.programSlug)}`
-                  : '/espace'
-              }
-              className={buttonClasses('night', 'form')}
+              href={`/espace/verification?parcours=${encodeURIComponent(d.programSlug)}`}
+              className="nm-more"
             >
-              {done.wantsBadge ? 'Faire vérifier mon parcours' : 'Voir mon espace'}
+              Faire vérifier mon parcours <span aria-hidden="true">→</span>
             </Link>
           )}
-          <Link href="/explorer" className={buttonClasses('outline', 'form', 'text-on-lime')}>
-            Explorer d’autres masters
+          <Link href="/explorer" className="nm-more">
+            Explorer d’autres masters <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </p>
       </section>
     );
   }

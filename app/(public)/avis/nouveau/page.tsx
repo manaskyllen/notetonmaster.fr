@@ -8,7 +8,7 @@ import { splitParcoursTitle } from '@/lib/domain/titles';
 import { getProgram } from '@/lib/queries/catalog';
 import { draftOwnerOf } from '@/lib/review-draft-owner';
 import { PRIVATE_ROBOTS, seoMetadata } from '@/lib/seo/meta';
-import { ogImagePath } from '@/lib/seo/og-path';
+import { reviewFormOgPath } from '@/lib/share-data';
 import { siteOrigin } from '@/lib/seo/site';
 
 const DESCRIPTION =
@@ -33,8 +33,8 @@ export async function generateMetadata({
     description: `${p.university.shortName ?? p.university.name}, ${p.city}. ${DESCRIPTION}`,
     canonical: reviewFormUrl(siteOrigin(), p.slug),
     image: {
-      path: ogImagePath('parcours', p.slug, [title, p.avgRating, p.reviewCount]),
-      alt: `Master ${title} – ${p.university.name}, ${p.city}`,
+      path: reviewFormOgPath(p.slug, title),
+      alt: `${reviewFormTitle(title)} – ${p.university.name}, ${p.city}`,
     },
   });
   // No canonical for a page that is not indexed; the preview keeps the address of the form.
