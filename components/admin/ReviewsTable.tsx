@@ -15,7 +15,8 @@ export interface AdminReviewRow {
   id: string;
   ref: string;
   date: string;
-  title: string | null;
+  /** Beginning of « Ce que tu as aimé », to recognise the review. */
+  excerpt: string;
   program: string;
   author: string;
   rating: number;
@@ -41,6 +42,14 @@ const FILTERS = [
   ['REJECTED', 'Refusés'],
   ['PENDING_CONFIRMATION', 'Mail à confirmer'],
 ] as const;
+/** Status of the author (?niveau=…): M1, M2, graduates, left during the year. */
+const LEVELS = [
+  ['all', 'Tous'],
+  ['M1', 'M1'],
+  ['M2', 'M2'],
+  ['GRADUATE', 'Diplômé·es'],
+  ['LEFT', 'Parti·es avant la fin'],
+] as const;
 
 /**
  * « Tous les avis »: the page of reviews rendered by the server (?q, ?statut, ?page, 25 per page);
@@ -51,12 +60,15 @@ export function ReviewsTable({
   counts,
   q: initialQ,
   status: st,
+  level = 'all',
   pagination,
 }: {
   rows: AdminReviewRow[];
   counts: Record<string, number>;
   q: string;
   status: string;
+  /** Status of the author: all, M1, M2, GRADUATE, LEFT. */
+  level?: string;
   pagination?: React.ReactNode;
 }) {
   const url = useListUrl();
@@ -110,6 +122,19 @@ export function ReviewsTable({
             </Link>
           ))}
         </nav>
+        <nav aria-label="Statut de l’auteur·rice" className="flex flex-wrap gap-1.5">
+          {LEVELS.map(([k, l]) => (
+            <Link
+              key={k}
+              href={url.hrefWith({ niveau: k === 'all' ? null : k })}
+              scroll={false}
+              aria-current={level === k ? 'true' : undefined}
+              className={chipClasses(level === k, 'filter', 'min-h-10 px-3 text-[13px]')}
+            >
+              {l}
+            </Link>
+          ))}
+        </nav>
       </div>
       {msg && <Notice tone={msg.tone}>{msg.text}</Notice>}
       {sel.length > 0 && (
@@ -146,7 +171,7 @@ export function ReviewsTable({
           </Button>
         </div>
       )}
-      <div className="overflow-x-auto rounded-lg border border-border bg-surface-0">
+      <div className="relative overflow-x-auto rounded-lg border border-border bg-surface-0">
         <table className="w-full min-w-[860px] border-collapse text-[14px]">
           <caption className="sr-only">Tous les avis</caption>
           <thead>
@@ -177,7 +202,7 @@ export function ReviewsTable({
                       onChange={() =>
                         setSel((x) => (on ? x.filter((i) => i !== r.id) : [...x, r.id]))
                       }
-                      aria-label={`Sélectionner ${r.title ?? r.ref}`}
+                      aria-label={`Sélectionner l’avis ${r.ref}`}
                       className="size-5 accent-violet-500"
                     />
                   </td>
@@ -185,10 +210,8 @@ export function ReviewsTable({
                     {r.date}
                   </td>
                   <td className="border-b border-border px-3 py-2.5">
-                    <span className="flex flex-col">
-                      <span className="font-semibold">
-                        {r.title ? `« ${r.title} »` : 'Sans titre'}
-                      </span>
+                    <span className="flex max-w-[360px] flex-col">
+                      <span className="line-clamp-2 font-semibold">{r.excerpt}</span>
                       <span className="font-mono text-[12px] text-ink-muted">
                         {r.ref}
                         {r.demo ? ' · exemple' : ''}

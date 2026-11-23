@@ -1,5 +1,6 @@
 import { getCityMention, getCityOverview } from '@/lib/catalog/cities';
 import { prisma } from '@/lib/db';
+import { reviewFormTitle } from '@/lib/domain/share-copy';
 import { splitParcoursTitle } from '@/lib/domain/titles';
 import { getMention, getProgram, getUniversity } from '@/lib/queries/catalog';
 import { ogCard, type OgCard } from '@/lib/seo/og-card';
@@ -20,6 +21,18 @@ async function card(kind: string, slug: string): Promise<OgCard | null> {
       tone: 'violet',
       rating: rated(p.avgRating, p.reviewCount),
       figure: 'Programme, admission · donne le premier avis',
+    };
+  }
+  if (kind === 'avis') {
+    // The review form set on a parcours (« Inviter ma promo »): lime, the call to review.
+    const p = await getProgram(slug);
+    if (!p || !p.isPublished || !p.inOpenZone) return null;
+    return {
+      kicker: 'Ton avis compte',
+      title: reviewFormTitle(splitParcoursTitle(p.title).title),
+      subtitle: `${p.university.name} · ${p.city}`,
+      tone: 'lime',
+      figure: 'Anonyme · 5 minutes · relu avant publication',
     };
   }
   if (kind === 'mention') {

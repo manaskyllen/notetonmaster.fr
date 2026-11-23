@@ -187,8 +187,9 @@ export async function updateMyReview(reviewId: string, input: unknown): Promise<
       fieldErrors: fieldErrors(parsed.error),
     };
   const d = parsed.data;
+  const leaveReason = (d.level === 'LEFT' && d.leaveReason?.trim()) || null;
   if ((await getSettings())['moderation.nameDetection']) {
-    const hit = detectNamedPerson(d.title, d.pros, d.cons, d.jobTitle);
+    const hit = detectNamedPerson(d.pros, d.cons, leaveReason, d.jobTitle);
     if (hit.found)
       return {
         ok: false,
@@ -207,9 +208,9 @@ export async function updateMyReview(reviewId: string, input: unknown): Promise<
         ...normalizeSituation(d),
         cohortYear: d.cohortYear,
         overallRating: d.overallRating,
-        title: d.title || null,
         pros: d.pros,
         cons: d.cons,
+        leaveReason,
         acceptsQuestions: d.acceptsQuestions,
         status: 'PENDING',
         nameFlagged: false,

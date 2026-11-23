@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import {
   codeFrom,
   linkFrom,
+  sql,
   typeCode,
   uniqueEmail,
   waitForMail,
@@ -55,16 +56,22 @@ test('publishing a review without account: confirmation mail, then moderation', 
     .getByLabel('Ce que tu as aimé')
     .fill('Le cours de M. Dupont est passionnant et très concret.');
   await page
-    .getByLabel('Ce qui pourrait être mieux')
+    .getByLabel('Ce que tu n’as pas aimé')
     .fill('Peu de créneaux pour les projets tutorés en fin de semestre.');
   await expect(
     page.getByRole('alert').filter({ hasText: 'semble citer une personne' }),
   ).toBeVisible();
   await expect(page.getByRole('button', { name: 'Continuer' })).toBeDisabled();
   await expect(page.getByRole('heading', { name: 'Ton avis' })).toBeVisible();
-  await page
-    .getByLabel('Ce que tu as aimé')
-    .fill('Les cours d’histoire de l’art sont passionnants et très concrets.');
+  // 15 characters are enough in each field (issue: minimum lowered from 30), spaces at both
+  // ends not counted: 14 keep « Continuer » disabled.
+  const pros = page.getByLabel('Ce que tu as aimé');
+  await pros.fill('  Cours concrets ');
+  await expect(page.getByText('Encore 1 caractère au moins')).toBeVisible();
+  await page.getByLabel('Ce que tu n’as pas aimé').fill('Peu de stages !');
+  await expect(page.getByRole('button', { name: 'Continuer' })).toBeDisabled();
+  await pros.fill('  Cours concrets. ');
+  await expect(page.getByText('C’est bon ✓')).toHaveCount(2);
   await page.getByRole('button', { name: 'Continuer' }).click();
 
   // Step 3: without account
@@ -80,6 +87,12 @@ test('publishing a review without account: confirmation mail, then moderation', 
   expect(mail.Text).toContain('Histoire de l’art et culture matérielle');
   await typeCode(page, codeFrom(mail));
   await expect(page.getByText('C’est confirmé : ton avis passe en relecture')).toBeVisible();
+  const [saved] = await sql<{ pros: string; cons: string; status: string }>(
+    `SELECT pros, cons, status FROM "Review" WHERE "submittedAt" >= $1 AND cons = 'Peu de stages !'
+     ORDER BY "submittedAt" DESC LIMIT 1`,
+    [since],
+  );
+  expect(saved).toEqual({ pros: 'Cours concrets.', cons: 'Peu de stages !', status: 'PENDING' });
 
   // The link of the same mail no longer works (one of the two only, single use)
   await page.goto(linkFrom(mail.HTML, '/avis/confirmer/'));

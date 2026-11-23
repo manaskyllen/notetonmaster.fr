@@ -70,7 +70,7 @@ E2E_ENV := -e ALLOW_INSECURE_LOCAL_PROD=1 -e TURNSTILE_MODE=mock -e CONNECTORS_M
 e2e-full: env ## Complete end-to-end suite as in the CI (production build, 4 servers and databases): make e2e-full args="tests/e2e/03-review-without-account.spec.ts"
 	$(DC) run --rm --no-deps -v nm_e2e_next:/app/.next app sh -c "pnpm -s prisma generate >/dev/null && pnpm -s build"
 	$(DC) --profile e2e run --rm --no-deps -v nm_e2e_next:/app/.next $(E2E_ENV) e2e \
-		sh -c 'mkdir -p /tmp/nm/raw /tmp/nm/uploads && sh scripts/e2e-stack.sh run --project=e2e $(args)'
+		sh -c 'mkdir -p /tmp/nm/raw /tmp/nm/uploads && sh scripts/e2e-stack.sh run --project=e2e --project=mobile-iphone --project=mobile-android $(args)'
 
 prod-local: env ## Production build of the working tree against the dev database (national data), on :3002
 	-docker rm -f nm-prodlocal >/dev/null 2>&1

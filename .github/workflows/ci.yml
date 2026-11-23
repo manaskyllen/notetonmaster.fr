@@ -302,7 +302,7 @@ jobs:
           pnpm prisma generate
           sh scripts/e2e-stack.sh start
       - name: Playwright (bout en bout et accessibilité axe)
-        run: pnpm exec playwright test --project=e2e
+        run: pnpm exec playwright test --project=e2e --project=mobile-iphone --project=mobile-android
       - name: Contrôle de fumée du build (lecture seule)
         run: pnpm smoke --url=http://localhost:3100
       - if: failure()

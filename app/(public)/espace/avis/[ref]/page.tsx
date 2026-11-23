@@ -45,9 +45,9 @@ export default async function EditReviewPage({ params }: { params: Promise<{ ref
           jobTitle: r.jobTitle ?? '',
           cohortYear: r.cohortYear,
           overallRating: r.overallRating,
-          title: r.title ?? '',
           pros: r.pros,
           cons: r.cons,
+          leaveReason: r.leaveReason ?? '',
           acceptsQuestions: r.acceptsQuestions,
           scores: Object.fromEntries(r.scores.map((s) => [s.criterion, s.score])),
         }}

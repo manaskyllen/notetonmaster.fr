@@ -23,12 +23,17 @@ const TABS: { href: string; label: string; icon: IconName; count?: 'toFix' | 'un
 export function EspaceNav({ counts }: { counts: { toFix: number; unread: number } }) {
   const pathname = usePathname();
   const active = useRef<HTMLAnchorElement>(null);
+  const row = useRef<HTMLElement>(null);
   useEffect(() => {
-    if (window.matchMedia('(max-width: 899px)').matches)
-      active.current?.scrollIntoView({ block: 'nearest', inline: 'center' });
+    // The row scrolls, never the window: scrollIntoView would also move the page sideways.
+    const tab = active.current;
+    const nav = row.current;
+    if (!tab || !nav || !window.matchMedia('(max-width: 899px)').matches) return;
+    nav.scrollLeft = tab.offsetLeft - (nav.clientWidth - tab.offsetWidth) / 2;
   }, [pathname]);
   return (
     <nav
+      ref={row}
       role="tablist"
       aria-label="Sections de mon espace"
       aria-orientation="vertical"

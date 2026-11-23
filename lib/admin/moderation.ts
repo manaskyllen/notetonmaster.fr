@@ -2,14 +2,20 @@ import 'server-only';
 import { decrypt, maskEmail } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { containsContacts } from '@/lib/domain/masking';
-import { todayLine } from '@/lib/domain/graduate';
+import { hasSituation, todayLine } from '@/lib/domain/graduate';
 import { detectNamedPerson } from '@/lib/domain/names';
-import { LEVEL_LABEL } from '@/lib/domain/rating';
+import { authorWho, LEVEL_LABEL } from '@/lib/domain/rating';
 import { normalize } from '@/lib/domain/search';
 import { formatDate, formatRelative } from '@/lib/format';
 import { shortRef } from '@/lib/admin/notify';
 import { getSettings } from '@/lib/settings';
 import { REVIEW_STATUS_LABEL } from '@/lib/domain/review-status';
+
+/** « Pourquoi je suis parti·e » of a review by someone who left during the year. */
+const leaveLine = (r: { level: string; leaveReason: string | null }) =>
+  r.level === 'LEFT' && r.leaveReason?.trim()
+    ? `\nPourquoi je suis parti·e : ${r.leaveReason.trim()}`
+    : '';
 
 export type QueueKind =
   'avis' | 'justif' | 'msg' | 'signal' | 'reponses' | 'questions' | 'contact' | 'legal';
@@ -153,9 +159,11 @@ export async function buildQueues(
             },
           });
     for (const r of reviews) {
-      const names = detectNamedPerson(r.title, r.pros, r.cons, r.jobTitle);
-      const today = r.level === 'GRADUATE' ? todayLine(r.employmentStatus, r.jobTitle) : null;
-      const text = normalize(`${r.title ?? ''} ${r.pros} ${r.cons}`);
+      const names = detectNamedPerson(r.pros, r.cons, r.leaveReason, r.jobTitle);
+      const today = hasSituation(r.level)
+        ? todayLine(r.employmentStatus, r.jobTitle, r.level)
+        : null;
+      const text = normalize(`${r.pros} ${r.cons} ${r.leaveReason ?? ''}`);
       const hits = watch.filter((w) => w && text.includes(w));
       const checks: QueueItem['checks'] = [
         r.studentId
@@ -193,7 +201,7 @@ export async function buildQueues(
           : r.level === 'GRADUATE' && !r.employmentStatus
             ? [{ label: 'Situation', detail: 'non renseignée (avis antérieur)', k: 'warn' as Tone }]
             : []),
-        ...(containsContacts(`${r.pros} ${r.cons} ${r.jobTitle ?? ''}`)
+        ...(containsContacts(`${r.pros} ${r.cons} ${r.leaveReason ?? ''} ${r.jobTitle ?? ''}`)
           ? [
               {
                 label: 'Coordonnées',
@@ -216,10 +224,10 @@ export async function buildQueues(
               : 'Prêt à publier',
         tone,
         when: formatRelative(r.submittedAt),
-        title: r.title ? `« ${r.title} »` : `Avis ${r.ref}`,
+        title: r.ref,
         target: `${r.program.title} · ${r.program.university.shortName ?? r.program.university.name}`,
-        meta: `${r.ref} · Anonyme · ${LEVEL_LABEL[r.level]} · promo ${r.cohortYear} · note ${r.overallRating}/5${r.isDemo ? ' · exemple' : ''}`,
-        body: `${today ? `Aujourd’hui : ${today}\n` : ''}On a aimé : ${r.pros}\nMoins bien : ${r.cons}`,
+        meta: `${r.ref} · Anonyme · ${authorWho(r.level, r.cohortYear)} · note ${r.overallRating}/5${r.isDemo ? ' · exemple' : ''}`,
+        body: `${today ? `Aujourd’hui : ${today}\n` : ''}On a aimé : ${r.pros}\nMoins bien : ${r.cons}${leaveLine(r)}`,
         checks,
         reasons: names.found
           ? ['Nomme une personne', ...REVIEW_REASONS.filter((x) => x !== 'Nomme une personne')]
@@ -354,7 +362,7 @@ export async function buildQueues(
         include: {
           conversation: {
             include: {
-              review: { select: { title: true } },
+              review: { select: { ref: true } },
               _count: { select: { messages: true } },
             },
           },
@@ -384,7 +392,7 @@ export async function buildQueues(
         flag: 'Message signalé',
         tone: 'bad',
         when: formatRelative(reps[0]!.createdAt),
-        title: `Conversation sur « ${m.conversation.review.title ?? 'un avis'} »`,
+        title: `Conversation sur l’avis ${m.conversation.review.ref}`,
         target: `Messagerie anonyme · ${reps[0]!.reference}`,
         meta: `Expéditeur : ${m.fromRole === 'ASKER' ? m.conversation.alias : 'auteur·rice de l’avis'} · ${m.conversation._count.messages} message(s)`,
         body: `Message signalé : « ${m.body} »`,
@@ -418,17 +426,17 @@ export async function buildQueues(
       const keys = new Set(reps.map((x) => x.reporterKey));
       const reasons = Map.groupBy(reps, (x) => x.reason);
       const top = [...reasons.entries()].sort((a, b) => b[1].length - a[1].length)[0]?.[0] ?? '';
-      const names = detectNamedPerson(r.title, r.pros, r.cons);
+      const names = detectNamedPerson(r.pros, r.cons, r.leaveReason);
       items.push({
         kind: 'signal',
         id: reviewId,
         flag: `Signalé ${reps.length} fois`,
         tone: reps.length >= 2 ? 'bad' : 'warn',
         when: formatRelative(reps[reps.length - 1]!.createdAt),
-        title: r.title ? `« ${r.title} »` : `Avis ${r.ref}`,
+        title: r.ref,
         target: `Avis ${REVIEW_STATUS_LABEL[r.status].toLowerCase()} · ${r.program.title} · ${r.program.university.shortName ?? r.program.university.name}`,
         meta: `Motif le plus cité : ${top.toLowerCase()} · références ${reps.map((x) => x.reference).join(', ')}`,
-        body: `On a aimé : ${r.pros}\nMoins bien : ${r.cons}${
+        body: `On a aimé : ${r.pros}\nMoins bien : ${r.cons}${leaveLine(r)}${
           reps.some((x) => x.details)
             ? `\n\nPrécisions des signalements : ${reps
                 .map((x) => x.details)
@@ -479,7 +487,6 @@ export async function buildQueues(
         review: {
           select: {
             ref: true,
-            title: true,
             pros: true,
             cons: true,
             overallRating: true,
@@ -533,7 +540,7 @@ export async function buildQueues(
         flag: r.editedAt ? 'Réponse modifiée' : 'Nouvelle réponse',
         tone: worst(checks),
         when: formatRelative(r.updatedAt),
-        title: `Réponse à ${r.review.title ? `« ${r.review.title} »` : `l’avis ${r.review.ref}`}`,
+        title: `Réponse à l’avis ${r.review.ref}`,
         target: `${r.review.program.title} · ${r.review.program.university.shortName ?? r.review.program.university.name}`,
         meta: `Équipe pédagogique · @${r.responder.domain} · avis noté ${r.review.overallRating}/5`,
         body: `Réponse : ${r.body}\n\nAvis — On a aimé : ${r.review.pros}\nMoins bien : ${r.review.cons}`,

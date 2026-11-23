@@ -1,6 +1,7 @@
 /**
- * Situation of graduates: « Et aujourd'hui ? » is required for a graduate's review,
- * and « Ton poste » (3 to 80 characters) when they are employed. Pure rules, tested.
+ * « Et aujourd'hui ? »: required for a graduate's review, with « Ton poste » (3 to 80 characters)
+ * when they are employed; optional for someone who left the master during the year (LEFT), never
+ * with a job title. Pure rules, tested.
  */
 
 export const EMPLOYMENT_STATUSES = ['EMPLOYED', 'JOB_SEEKING', 'FURTHER_STUDY', 'OTHER'] as const;
@@ -13,6 +14,20 @@ export const EMPLOYMENT_LABEL: Record<EmploymentStatus, string> = {
   FURTHER_STUDY: 'En poursuite d’études',
   OTHER: 'Autre situation',
 };
+
+/** Choices for LEFT, in this order (same values, words of someone who did not finish). */
+export const LEFT_STATUSES = ['FURTHER_STUDY', 'EMPLOYED', 'JOB_SEEKING', 'OTHER'] as const;
+export const LEFT_LABEL: Record<EmploymentStatus, string> = {
+  FURTHER_STUDY: 'Dans une autre formation',
+  EMPLOYED: 'En emploi',
+  JOB_SEEKING: 'En recherche',
+  OTHER: 'Autre situation',
+};
+export const LEFT_HELP =
+  'Ton avis compte autant que celui des diplômé·es : savoir pourquoi on part aide les suivant·es à choisir.';
+
+/** Levels that answer « Et aujourd'hui ? ». */
+export const hasSituation = (level?: string | null) => level === 'GRADUATE' || level === 'LEFT';
 
 export const JOB_TITLE_MIN = 3;
 export const JOB_TITLE_MAX = 80;
@@ -27,6 +42,11 @@ export interface GraduateSituation {
 
 /** Field errors of the situation; empty when valid. Only graduates answer it. */
 export function graduateSituationErrors(s: GraduateSituation): Record<string, string> {
+  if (s.level === 'LEFT')
+    return s.employmentStatus &&
+      !(EMPLOYMENT_STATUSES as readonly string[]).includes(s.employmentStatus)
+      ? { employmentStatus: 'Choix inconnu.' }
+      : {};
   if (s.level !== 'GRADUATE') return {};
   if (
     !s.employmentStatus ||
@@ -41,22 +61,34 @@ export function graduateSituationErrors(s: GraduateSituation): Record<string, st
   return {};
 }
 
-/** What is stored: nothing for a non-graduate, no job title unless employed. */
+/** What is stored: nothing for M1 / M2, a job title only for an employed graduate. */
 export function normalizeSituation(s: GraduateSituation): {
   employmentStatus: EmploymentStatus | null;
   jobTitle: string | null;
 } {
-  if (s.level !== 'GRADUATE' || !s.employmentStatus)
+  if (!hasSituation(s.level) || !s.employmentStatus)
     return { employmentStatus: null, jobTitle: null };
   const status = s.employmentStatus as EmploymentStatus;
   return {
     employmentStatus: status,
-    jobTitle: status === 'EMPLOYED' ? (s.jobTitle ?? '').trim() || null : null,
+    jobTitle:
+      s.level === 'GRADUATE' && status === 'EMPLOYED' ? (s.jobTitle ?? '').trim() || null : null,
   };
 }
 
-/** « en poste · chargé de mission patrimoine » — after « Aujourd'hui : » on a review card. */
-export function todayLine(status?: string | null, jobTitle?: string | null): string | null {
+/**
+ * « en poste · chargé de mission patrimoine » — after « Aujourd'hui : » on a review card. For
+ * LEFT, the words of its choices (« dans une autre formation », « en emploi »…).
+ */
+export function todayLine(
+  status?: string | null,
+  jobTitle?: string | null,
+  level?: string | null,
+): string | null {
+  if (level === 'LEFT')
+    return status && (EMPLOYMENT_STATUSES as readonly string[]).includes(status)
+      ? LEFT_LABEL[status as EmploymentStatus].toLowerCase()
+      : null;
   switch (status) {
     case 'EMPLOYED':
       return jobTitle?.trim() ? `en poste · ${jobTitle.trim()}` : 'en poste';

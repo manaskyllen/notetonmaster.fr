@@ -7,7 +7,7 @@ test('anonymous question: author notified, replies from space, asker gets the an
   const asker = uniqueEmail('question');
   const question = `Est-ce que les visites de terrain ont lieu toutes les semaines ? (${Date.now()})`;
 
-  // Visitor asks a question on "Le terrain avant tout" (author: anna, open to questions).
+  // Visitor asks a question on review avis-7f3a21 (author: anna, open to questions).
   const visitor = await (await browser.newContext()).newPage();
   await visitor.goto('/parcours/valorisation-des-nouveaux-patrimoines');
   const card = visitor.locator('#avis-7f3a21');

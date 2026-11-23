@@ -1,6 +1,8 @@
 /**
  * Questions publiques (feature 6): best answer, sorts, labels. Pure functions.
  */
+import { authorWho, type ReviewLevelKey } from './rating';
+
 export const QUESTIONS_PER_PAGE = 10;
 export const QUESTION_MAX = 300;
 export const ANSWER_MAX = 1500;
@@ -32,10 +34,12 @@ export function bestAnswer<A extends AnswerLike>(answers: A[]): { best: A | null
   return { best, others: byVotes.filter((a) => a !== best) };
 }
 
-/** « Diplômée · promo 2025 » / « M2 · promo 2026 » / « Ancien·ne du parcours ». */
-export function alumniWho(level: 'M1' | 'M2' | 'GRADUATE' | null, cohort: number | null): string {
-  const l = level === 'GRADUATE' ? 'Diplômé·e' : (level ?? null);
-  return l && cohort ? `${l} · promo ${cohort}` : (l ?? 'Ancien·ne du parcours');
+/**
+ * « Diplômé·e · promo 2025 » / « M2 · promo 2026 » / « Parti·e avant la fin » (never a
+ * year) / « Ancien·ne du parcours ».
+ */
+export function alumniWho(level: ReviewLevelKey | null, cohort: number | null): string {
+  return level ? authorWho(level, cohort) : 'Ancien·ne du parcours';
 }
 
 export const BADGE = { ALUMNI: 'Parcours vérifié', TEAM: 'Réponse officielle' } as const;

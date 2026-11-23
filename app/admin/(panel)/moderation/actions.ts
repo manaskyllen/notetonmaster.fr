@@ -104,7 +104,6 @@ async function notifyAuthor(
     reviewDecisionMail({
       decision,
       programTitle: r.program.title,
-      reviewTitle: r.title,
       reason,
       hasAccount: !!r.student,
       programUrl: `${appUrl()}/parcours/${r.program.slug}#${r.ref}`,

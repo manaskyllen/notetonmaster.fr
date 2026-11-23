@@ -305,7 +305,8 @@ export async function proxy(req: NextRequest) {
     process.env.CDN_CACHE_PUBLIC === 'true' &&
     req.method === 'GET' &&
     !req.headers.has('next-action') &&
-    !/^\/(espace|admin|api|connexion|avis|messages|reponse|_next)/.test(pathname) &&
+    // /q/: the short links of the QR codes are counted at each scan, never cached.
+    !/^\/(espace|admin|api|connexion|avis|messages|reponse|q\/|_next)/.test(pathname) &&
     !req.cookies.getAll().some((c) => SESSION_COOKIE_RE.test(c.name))
   )
     res.headers.set(

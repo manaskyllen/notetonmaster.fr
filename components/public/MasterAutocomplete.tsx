@@ -92,14 +92,14 @@ export function MasterAutocomplete({
     return (
       <div className="flex flex-col gap-2.5">
         <span className="nm-label">Quel master as-tu suivi ?</span>
-        <div className="nm-picked flex items-center gap-3.5 rounded-[18px] border-2 border-violet-500 bg-violet-100 px-4 py-3.5">
+        <div className="nm-picked flex flex-wrap items-center gap-3.5 rounded-[18px] border-2 border-violet-500 bg-violet-100 px-4 py-3.5">
           <span
             aria-hidden="true"
             className="flex size-10 flex-none items-center justify-center rounded-[12px] bg-violet-500 text-on-violet"
           >
             <Icon name="parcours" size={20} />
           </span>
-          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="flex min-w-0 flex-[1_1_180px] flex-col gap-0.5">
             <span className="font-display text-[17px] leading-[1.2] font-bold">{picked.title}</span>
             <span className="text-[13px] text-[color-mix(in_srgb,var(--ink)_50%,var(--ink-muted))]">
               {picked.subtitle}
@@ -111,7 +111,7 @@ export function MasterAutocomplete({
               onChange('');
               window.setTimeout(() => input.current?.focus(), 0);
             }}
-            className="min-h-tap flex-none cursor-pointer rounded-pill border-[1.5px] border-ink bg-surface-0 px-3.5 font-sans text-[14px] font-semibold text-ink"
+            className="min-h-tap flex-none cursor-pointer rounded-pill border-[1.5px] border-ink max-[479px]:ml-[54px] bg-surface-0 px-3.5 font-sans text-[14px] font-semibold text-ink"
           >
             Changer
             <span className="sr-only"> de master</span>

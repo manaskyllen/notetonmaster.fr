@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { PromoInvite } from '@/components/public/PromoInvite';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
-import { Button, buttonClasses } from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { CheckboxCard } from '@/components/ui/form/CheckboxCard';
 import { ChoiceGroup } from '@/components/ui/form/Choice';
 import { Field, FieldError } from '@/components/ui/form/Field';
@@ -28,13 +29,25 @@ import {
   EMPLOYMENT_STATUSES,
   JOB_TITLE_HELP,
   JOB_TITLE_MAX,
+  LEFT_HELP,
+  LEFT_LABEL,
+  LEFT_STATUSES,
   type EmploymentStatus,
 } from '@/lib/domain/graduate';
 import { detectNamedPerson } from '@/lib/domain/names';
-import { CRITERIA, CRITERION_LABEL, type CriterionKey } from '@/lib/domain/rating';
+import {
+  authorWho,
+  CRITERIA,
+  CRITERION_LABEL,
+  LEVEL_CHOICE,
+  REVIEW_LEVEL_IDS,
+  type CriterionKey,
+  type ReviewLevelKey,
+} from '@/lib/domain/rating';
 import {
   CURRENT_YEAR,
-  REVIEW_MIN_CHARS,
+  LEAVE_REASON_MAX,
+  reviewTextHint,
   reviewStep1Checked,
   reviewStep2,
   reviewStep3,
@@ -52,7 +65,7 @@ import { useSearchShortcut } from './SearchShortcut';
 
 export type ProgramOption = MasterOption;
 
-type Level = 'M1' | 'M2' | 'GRADUATE';
+type Level = ReviewLevelKey;
 type Mode = 'none' | 'account';
 
 type Draft = {
@@ -64,6 +77,8 @@ type Draft = {
   overallRating: number;
   pros: string;
   cons: string;
+  /** « Qu'est-ce qui t'a fait partir ? » (LEFT only). */
+  leaveReason: string;
   scores: Partial<Record<CriterionKey, number>>;
   mode: Mode;
   email: string;
@@ -81,6 +96,7 @@ const EMPTY: Draft = {
   overallRating: 0,
   pros: '',
   cons: '',
+  leaveReason: '',
   scores: {},
   mode: 'none',
   email: '',
@@ -90,22 +106,20 @@ const EMPTY: Draft = {
 };
 
 const TITLES = ['Ton master', 'Ton avis', 'Comment publier ?'];
-const LEVELS: { value: Level; label: string }[] = [
-  { value: 'M1', label: 'En M1' },
-  { value: 'M2', label: 'En M2' },
-  { value: 'GRADUATE', label: 'Diplômé·e' },
-];
+const LEVELS = REVIEW_LEVEL_IDS.map((value) => ({ value, label: LEVEL_CHOICE[value] }));
+/** « Ta situation n'est pas dans la liste ? Écris-nous » (page À propos › Contact). */
+const OTHER_SITUATION = (
+  <>
+    Ta situation n’est pas dans la liste ?{' '}
+    <Link href="/a-propos#contact" className="font-semibold">
+      Écris-nous
+    </Link>
+  </>
+);
 // "2026 … 2022, 2021 ou avant".
 const YEARS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
 /** #3B3648: halfway between ink and ink-muted, in both themes. */
 const INK_SOFT = 'text-[color-mix(in_srgb,var(--ink)_50%,var(--ink-muted))]';
-
-function lengthHint(value: string) {
-  const n = value.trim().length;
-  return n >= REVIEW_MIN_CHARS
-    ? { text: 'C’est bon ✓', tone: 'ok' as const }
-    : { text: `Encore ${REVIEW_MIN_CHARS - n} caractères au moins`, tone: 'muted' as const };
-}
 
 /** What a draft keeps: the fields typed, never the account address nor the charter tick. */
 type DraftFields = Omit<Draft, 'email' | 'charter'> & { email?: string };
@@ -122,6 +136,7 @@ const snapshot = (program: string, step: number, d: Draft) =>
     d.overallRating,
     d.pros,
     d.cons,
+    d.leaveReason,
     d.scores,
     d.mode,
     d.acceptsQuestions,
@@ -137,6 +152,7 @@ function hasContent(d: Draft) {
     d.overallRating ||
     d.pros.trim() ||
     d.cons.trim() ||
+    d.leaveReason.trim() ||
     Object.keys(d.scores).length
   );
 }
@@ -294,8 +310,18 @@ export function ReviewForm({
     setD((x) => ({ ...x, [k]: v }));
     setErrors((e) => (e[k] ? { ...e, [k]: '' } : e));
   };
-  const nameHit = useMemo(() => detectNamedPerson(d.pros, d.cons), [d.pros, d.cons]);
+  const left = d.level === 'LEFT';
+  const nameHit = useMemo(
+    () => detectNamedPerson(d.pros, d.cons, left ? d.leaveReason : null),
+    [d.pros, d.cons, d.leaveReason, left],
+  );
   const graduate = d.level === 'GRADUATE';
+  /** Another status: « Et aujourd'hui ? » (and the job) start again from nothing. */
+  const setLevel = (level: Level) => {
+    if (level === d.level) return;
+    setD((x) => ({ ...x, level, employmentStatus: '', jobTitle: '' }));
+    setErrors((e) => ({ ...e, level: '', employmentStatus: '', jobTitle: '' }));
+  };
   const employed = graduate && d.employmentStatus === 'EMPLOYED';
   const jobNameHit = employed && detectNamedPerson(d.jobTitle).found;
   const program = programs.find((p) => p.slug === d.programSlug);
@@ -325,7 +351,7 @@ export function ReviewForm({
       const turnstileToken = await turnstile.getToken();
       const r = await submitReview({
         ...d,
-        title: '',
+        leaveReason: left ? d.leaveReason : '',
         cohortYear: Number(d.cohortYear),
         turnstileToken,
       });
@@ -345,7 +371,12 @@ export function ReviewForm({
           r.fieldErrors?.jobTitle
         )
           setStep(1);
-        else if (r.fieldErrors?.pros || r.fieldErrors?.cons || r.fieldErrors?.overallRating)
+        else if (
+          r.fieldErrors?.pros ||
+          r.fieldErrors?.cons ||
+          r.fieldErrors?.leaveReason ||
+          r.fieldErrors?.overallRating
+        )
           setStep(2);
       }
     });
@@ -359,7 +390,7 @@ export function ReviewForm({
     return (
       <section
         role="status"
-        className="nm-thanks flex flex-col items-start gap-4 rounded-[32px] bg-lime-400 p-10 text-on-lime"
+        className="nm-thanks flex flex-col items-start gap-4 rounded-[32px] bg-lime-400 p-10 text-on-lime max-sm:p-6"
       >
         <span
           aria-hidden="true"
@@ -381,14 +412,15 @@ export function ReviewForm({
         <h1 className="m-0 font-display text-[42px] leading-[1.05] font-extrabold tracking-[-0.03em]">
           Merci, c’est envoyé !
         </h1>
-        <p className="m-0 text-[17px] leading-[1.5]">
+        <p className="m-0 text-[17px] leading-[1.5] [overflow-wrap:anywhere]">
           {confirmed
             ? confirmed === 'published'
               ? 'C’est confirmé : ton avis est publié.'
               : 'C’est confirmé : ton avis passe en relecture (48 h maximum). Tu recevras un mail quand il sera publié.'
             : account
-              ? `Ton avis est en relecture (48 h maximum).${done.loggedIn ? '' : ' Saisis le code reçu par mail pour ouvrir ton espace.'}${done.wantsBadge ? ' Depuis ton espace, tu pourras prouver ton parcours pour obtenir le badge.' : ''}`
-              : `Confirme ton avis avec le code envoyé à ${done.email}. Il passe ensuite en relecture (48 h maximum) et sera publié sans badge « Parcours vérifié ».${done.acceptsQuestions ? ' Les questions des étudiant·es t’arriveront par mail.' : ''}`}
+              ? 'Ton avis est en relecture (48 h maximum).'
+              : // The mail has a link and a code: the code is typed just below.
+                `Confirme ton avis avec le code ou le lien envoyé à ${done.email}. Il passera ensuite en relecture (48 h maximum).`}
         </p>
         {!confirmed && !(account && done.loggedIn) && (
           <div className="w-full max-w-[460px] rounded-[20px] bg-surface-0 p-5 text-ink">
@@ -415,30 +447,28 @@ export function ReviewForm({
             />
           </div>
         )}
-        <div className="flex flex-wrap gap-2.5">
-          {account && done.loggedIn && (
+        {done.share && <PromoInvite data={done.share} />}
+        {/* Two text links (styles/motion.css .nm-more); the verification needs an account. */}
+        {/* 12 px under the invitation: the 16 px gap of the card, minus 4. */}
+        <p className="m-0 -mt-1 flex flex-wrap gap-x-5.5 gap-y-1.5 text-[14px] font-semibold">
+          {account && (
             <Link
-              href={
-                done.wantsBadge
-                  ? `/espace/verification?parcours=${encodeURIComponent(d.programSlug)}`
-                  : '/espace'
-              }
-              className={buttonClasses('night', 'form')}
+              href={`/espace/verification?parcours=${encodeURIComponent(d.programSlug)}`}
+              className="nm-more"
             >
-              {done.wantsBadge ? 'Faire vérifier mon parcours' : 'Voir mon espace'}
+              Faire vérifier mon parcours <span aria-hidden="true">→</span>
             </Link>
           )}
-          <Link href="/explorer" className={buttonClasses('outline', 'form', 'text-on-lime')}>
-            Explorer d’autres masters
+          <Link href="/explorer" className="nm-more">
+            Explorer d’autres masters <span aria-hidden="true">→</span>
           </Link>
-        </div>
+        </p>
       </section>
     );
   }
 
-  const prosHint = lengthHint(d.pros);
-  const consHint = lengthHint(d.cons);
-  const levelLabel = d.level === 'GRADUATE' ? 'Diplômé·e' : d.level;
+  const prosHint = reviewTextHint(d.pros);
+  const consHint = reviewTextHint(d.cons);
   const badgePending = withAccount && d.wantsBadge;
 
   if (other)
@@ -556,9 +586,30 @@ export function ReviewForm({
                 legend="Tu es…"
                 options={LEVELS}
                 value={d.level}
-                onChange={(v) => set('level', v)}
+                onChange={setLevel}
                 error={errors.level}
+                hint={OTHER_SITUATION}
               />
+              {left && (
+                <div className="nm-unfold">
+                  <div className="flex flex-col gap-3.5 rounded-[18px] bg-surface-50 p-4.5">
+                    <ChoiceGroup
+                      legend={
+                        <>
+                          Et aujourd’hui ?<span className="nm-label__optional"> (facultatif)</span>
+                        </>
+                      }
+                      variant="situation"
+                      options={LEFT_STATUSES.map((s) => ({ value: s, label: LEFT_LABEL[s] }))}
+                      value={d.employmentStatus}
+                      onChange={(v) => set('employmentStatus', v)}
+                      onClear={() => set('employmentStatus', '')}
+                      error={errors.employmentStatus}
+                    />
+                    <p className="nm-hint m-0">{LEFT_HELP}</p>
+                  </div>
+                </div>
+              )}
               {graduate && (
                 <div className="nm-unfold">
                   <div className="flex flex-col gap-3.5 rounded-[18px] bg-surface-50 p-4.5">
@@ -652,7 +703,7 @@ export function ReviewForm({
                 )}
               </Field>
               <Field
-                label="Ce qui pourrait être mieux"
+                label="Ce que tu n’as pas aimé"
                 id="minus"
                 hint={consHint.text}
                 hintTone={consHint.tone}
@@ -667,6 +718,25 @@ export function ReviewForm({
                   />
                 )}
               </Field>
+              {left && (
+                <Field
+                  label="Qu’est-ce qui t’a fait partir ?"
+                  optional
+                  id="why"
+                  hint="Reste général : évite les détails qui pourraient te faire reconnaître."
+                  error={errors.leaveReason}
+                >
+                  {(a) => (
+                    <Textarea
+                      {...a}
+                      maxLength={LEAVE_REASON_MAX}
+                      value={d.leaveReason}
+                      onChange={(e) => set('leaveReason', e.target.value)}
+                      placeholder="Une réorientation, le contenu, l’ambiance, une opportunité…"
+                    />
+                  )}
+                </Field>
+              )}
               {nameHit.found && (
                 <div
                   role="alert"
@@ -813,13 +883,15 @@ export function ReviewForm({
                 <span className="text-[13px] text-ink-muted">Ton avis apparaîtra ainsi</span>
                 <span className="flex flex-wrap items-center gap-2">
                   <span className="font-bold">
-                    Anonyme · {levelLabel} · promo {d.cohortYear}
+                    Anonyme · {d.level && authorWho(d.level, Number(d.cohortYear) || null)}
                   </span>
-                  {graduate && d.employmentStatus && (
+                  {(graduate || left) && d.employmentStatus && (
                     <span className={cn('text-[14px]', INK_SOFT)}>
-                      {employed
-                        ? `En poste · ${d.jobTitle.trim()}`
-                        : EMPLOYMENT_LABEL[d.employmentStatus]}
+                      {left
+                        ? LEFT_LABEL[d.employmentStatus]
+                        : employed
+                          ? `En poste · ${d.jobTitle.trim()}`
+                          : EMPLOYMENT_LABEL[d.employmentStatus]}
                     </span>
                   )}
                   <span

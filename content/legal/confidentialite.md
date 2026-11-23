@@ -1,6 +1,6 @@
 ---
 title: Confidentialité
-updated: 2026-11-17
+updated: 2026-11-23
 ---
 
 ## Ce qu’on collecte
@@ -10,6 +10,7 @@ updated: 2026-11-17
 - Pour le badge « Parcours vérifié » : ton adresse universitaire, ou le justificatif envoyé. Le justificatif est supprimé dès la décision ; on ne garde que la date de vérification.
 - Tes avis, tes favoris et tes préférences d’alertes.
 - Des données techniques de connexion (adresse IP, date et heure).
+- Nous comptons le nombre de scans de chaque QR code, sans aucune donnée vous concernant.
 
 ## Pourquoi
 

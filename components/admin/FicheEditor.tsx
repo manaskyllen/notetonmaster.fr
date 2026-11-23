@@ -571,7 +571,7 @@ export function FicheEditor({ data, extras }: { data: FicheEditData; extras: Fic
             <h2 id="s-src-t" className={H2}>
               Provenance
             </h2>
-            <div className="overflow-x-auto">
+            <div className="relative overflow-x-auto">
               <table className="w-full border-collapse text-[13px]">
                 <caption className="sr-only">Source, date et état de chaque champ</caption>
                 <thead>

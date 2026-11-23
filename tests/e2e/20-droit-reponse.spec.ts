@@ -7,13 +7,14 @@ const VNP = 'valorisation-des-nouveaux-patrimoines';
 test('a teaching team replies once under a review, after moderation', async ({ page }) => {
   const tag = Date.now().toString(36);
   const ref = `avis-e${tag}`.slice(0, 16);
-  const title = `Voyage d’étude ${tag}`;
+  // Unique text of the review, to find its card.
+  const pros = `Des intervenant·es du métier toute l’année (${tag}).`;
   await sql(
-    `INSERT INTO "Review" (id, ref, "programId", "authorEmailHash", level, "cohortYear", "overallRating", title, pros, cons, status, "publishedAt", "updatedAt")
-     SELECT gen_random_uuid()::text, $1, id, $2, 'M2', 2025, 2, $3, 'Des intervenant·es du métier toute l’année.',
+    `INSERT INTO "Review" (id, ref, "programId", "authorEmailHash", level, "cohortYear", "overallRating", pros, cons, status, "publishedAt", "updatedAt")
+     SELECT gen_random_uuid()::text, $1, id, $2, 'M2', 2025, 2, $3,
             'Le voyage d’étude annoncé a été remplacé par deux sorties.', 'PUBLISHED', now(), now()
        FROM "Program" WHERE slug = $4`,
-    [ref, `e2e:${tag}`, title, VNP],
+    [ref, `e2e:${tag}`, pros, VNP],
   );
   try {
     await page.goto(`/parcours/${VNP}`);
@@ -51,7 +52,7 @@ test('a teaching team replies once under a review, after moderation', async ({ p
     ).toBeVisible();
     await expect(page.locator('[aria-current="step"]')).toHaveText('2. Répondre');
     await page.getByRole('link', { name: 'Sans réponse' }).click();
-    const card = page.locator('[data-review]').filter({ hasText: title });
+    const card = page.locator('[data-review]').filter({ hasText: pros });
     await expect(card).toBeVisible();
     await waitForHydration(page);
     await card.getByRole('button', { name: 'Répondre à cet avis' }).click();
@@ -66,7 +67,7 @@ test('a teaching team replies once under a review, after moderation', async ({ p
     await expect(
       page
         .locator('[data-review]')
-        .filter({ hasText: title })
+        .filter({ hasText: pros })
         .getByText('Ma réponse · En relecture'),
     ).toBeVisible();
 
@@ -75,7 +76,7 @@ test('a teaching team replies once under a review, after moderation', async ({ p
     await page.goto('/admin/moderation?file=reponses');
     await waitForHydration(page);
     const queue = page.getByRole('region', { name: 'Réponses des formations' });
-    await queue.getByRole('button').filter({ hasText: title }).click();
+    await queue.getByRole('button').filter({ hasText: ref }).click();
     const detail = page.getByRole('region', { name: 'Détail' });
     await expect(
       detail.getByText('adresse vérifiée @univ-nantes.fr', { exact: false }),

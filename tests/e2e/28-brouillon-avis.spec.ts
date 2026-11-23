@@ -149,7 +149,7 @@ test('after a review is sent, the form opens empty (and Back does not restore it
     .getByLabel('Ce que tu as aimé')
     .fill('Les ateliers de terrain sont concrets et bien encadrés.');
   await page
-    .getByLabel('Ce qui pourrait être mieux')
+    .getByLabel('Ce que tu n’as pas aimé')
     .fill('Les emplois du temps arrivent souvent trop tard.');
   await page.getByRole('button', { name: 'Continuer' }).click();
   await page.getByLabel(/je respecte la/).check();

@@ -33,6 +33,7 @@ import { SiteFooter } from '@/components/site/SiteFooter';
 import { InteractiveDemos } from './InteractiveDemos';
 import { ProgramCard, type ProgramCardData } from '@/components/catalog/ProgramCard';
 import { BrandName } from '@/components/ui/BrandName';
+import { REVIEW_MIN_CHARS } from '@/lib/validation';
 
 const DEMO_CARD: Omit<ProgramCardData, 'programId' | 'slug' | 'title'> = {
   universityId: 'demo-nantes',
@@ -245,7 +246,7 @@ export default function DesignPage() {
               label="Ce que tu as aimé"
               multiline
               placeholder="Les cours, les stages, l’ambiance…"
-              hint="30 caractères minimum."
+              hint={`${REVIEW_MIN_CHARS} caractères minimum.`}
             />
             <Select
               label="Université"
@@ -359,7 +360,6 @@ export default function DesignPage() {
             who="M1 · promo 2025"
             date="janvier 2026"
             rating={3}
-            title="Programme dense, promo soudée"
             plus="Une promo petite et soudée, des intervenant·es du métier."
             minus="Beaucoup de cours en même temps au premier semestre, peu de temps pour le mémoire."
             verified={false}

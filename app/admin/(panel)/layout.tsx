@@ -54,6 +54,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       : []),
     { href: '/admin/equipe', label: 'Équipe & rôles', icon: 'users' },
     { href: '/admin/audit', label: 'Journal d’audit', icon: 'history' },
+    ...(can(admin.role, 'team.manage')
+      ? [{ href: '/admin/qr', label: 'QR codes', icon: 'link' } as NavItem]
+      : []),
     ...(can(admin.role, 'team.manage') || can(admin.role, 'data.edit')
       ? [{ href: '/admin/parametres', label: 'Paramètres', icon: 'settings' } as NavItem]
       : []),

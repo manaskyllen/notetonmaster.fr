@@ -13,7 +13,8 @@ export interface MyReview {
   programTitle: string;
   programSlug: string;
   city: string;
-  title: string | null;
+  /** « Ce que tu as aimé », cut at two lines. */
+  excerpt: string;
   rating: number;
   status: string;
   statusLabel: string;
@@ -48,9 +49,7 @@ export function MyReviews({ reviews }: { reviews: MyReview[] }) {
           </div>
           <div className="flex items-center gap-3">
             <Grade value={r.rating} />
-            <span className="font-display text-[20px] font-bold">
-              {r.title ? `« ${r.title} »` : 'Avis sans titre'}
-            </span>
+            <span className="line-clamp-2 min-w-0 text-[15px] leading-[1.5]">{r.excerpt}</span>
           </div>
           {r.message && (
             <div className="rounded-[14px] bg-warning-bg px-4 py-3 text-[14px] leading-[1.5] text-ink">

@@ -4,6 +4,7 @@
  * - explicit User-Agent, robots.txt (RFC 9309) read and cached 24 h per host, TDMRep honoured;
  * - one request at a time per host, at most one every 2 s (or Crawl-delay);
  * - 429/503: Retry-After then exponential back-off; after 3 failures the host is paused 24 h;
+ *   (these values live in ./robot-policy.ts, shown on /a-propos#notre-robot);
  * - 30 s timeout, size limits, accepted content types, at most 5 redirects and never outside the
  *   allowed domains of the source. No JavaScript, no login, no form.
  * - Open-data exception, kept as narrow as possible: the distribution URLs a producer publishes as
@@ -16,10 +17,20 @@ import { mkdir, rename, rm } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { crawlerContactEmail } from '@/lib/contact';
 import { isAllowed, robotsForStatus, type Robots } from './robots';
+import {
+  CRAWLER_NAME,
+  CRAWLER_VERSION,
+  HOST_PAUSE_HOURS,
+  HOUR_MS,
+  MAX_FAILURES,
+  MIN_DELAY_FLOOR_SECONDS,
+  ROBOTS_CACHE_HOURS,
+} from './robot-policy';
 import { isReservedByFile, isReservedByHeader, parseTdmRep, type TdmRule } from './tdm';
 import { allowHttpFromEnv, assertFetchableUrl, BlockedUrlError, safeFetch } from './net-guard';
 
-export const DAY_MS = 24 * 3600_000;
+const ROBOTS_CACHE_MS = ROBOTS_CACHE_HOURS * HOUR_MS;
+const HOST_PAUSE_MS = HOST_PAUSE_HOURS * HOUR_MS;
 
 export interface HostState {
   host: string;
@@ -152,9 +163,9 @@ export class PoliteHttpClient {
     this.o = {
       userAgent: opts.userAgent,
       allowedDomains: opts.allowedDomains,
-      minDelayMs: opts.minDelayMs ?? 2000,
+      minDelayMs: opts.minDelayMs ?? MIN_DELAY_FLOOR_SECONDS * 1000,
       timeoutMs: opts.timeoutMs ?? 30_000,
-      maxRetries: opts.maxRetries ?? 3,
+      maxRetries: opts.maxRetries ?? MAX_FAILURES,
       store: opts.store ?? new MemoryHostStore(),
       fetchImpl:
         opts.fetchImpl ??
@@ -214,12 +225,12 @@ export class PoliteHttpClient {
   async robotsFor(origin: URL): Promise<Robots> {
     const host = origin.host;
     const mem = this.robots.get(host);
-    if (mem && this.o.now() - mem.at < DAY_MS) return mem.robots;
+    if (mem && this.o.now() - mem.at < ROBOTS_CACHE_MS) return mem.robots;
     const state = await this.o.store.get(host);
     if (
       state?.robotsFetchedAt &&
       state.robotsStatus != null &&
-      this.o.now() - state.robotsFetchedAt.getTime() < DAY_MS
+      this.o.now() - state.robotsFetchedAt.getTime() < ROBOTS_CACHE_MS
     ) {
       const robots = robotsForStatus(state.robotsStatus, state.robotsTxt ?? '');
       this.robots.set(host, { robots, at: state.robotsFetchedAt.getTime() });
@@ -255,7 +266,7 @@ export class PoliteHttpClient {
     if (
       state?.tdmrep &&
       state.robotsFetchedAt &&
-      this.o.now() - state.robotsFetchedAt.getTime() < DAY_MS
+      this.o.now() - state.robotsFetchedAt.getTime() < ROBOTS_CACHE_MS
     )
       return state.tdmrep;
     let rules: TdmRule[] = [];
@@ -346,11 +357,14 @@ export class PoliteHttpClient {
         const failures = (state?.failures ?? 0) + 1;
         await this.o.store.save(host, { failures });
         if (attempt >= this.o.maxRetries) {
-          const until = new Date(this.o.now() + DAY_MS);
+          const until = new Date(this.o.now() + HOST_PAUSE_MS);
           const reason = `${this.o.maxRetries} échecs de suite (${status ?? (err as Error).message})`;
           await this.o.store.save(host, { pausedUntil: until, pausedReason: reason, failures: 0 });
           await this.emit({ type: 'host-paused', host, reason, until });
-          throw new HttpError(`Hôte ${host} mis en pause 24 h : ${reason}`, status);
+          throw new HttpError(
+            `Hôte ${host} mis en pause ${HOST_PAUSE_HOURS} h : ${reason}`,
+            status,
+          );
         }
         const retryAfter =
           err instanceof RetryableError ? parseRetryAfter(err.headers, this.o.now()) : null;
@@ -518,7 +532,7 @@ export function parseRetryAfter(headers: Headers, now: number): number | null {
  */
 export function crawlerUserAgent() {
   const info = process.env.CRAWLER_INFO_URL ?? 'https://notetonmaster.example/a-propos#notre-robot';
-  return `notetonmasterBot/1.0 (+${info}; ${crawlerContactEmail()})`;
+  return `${CRAWLER_NAME}/${CRAWLER_VERSION} (+${info}; ${crawlerContactEmail()})`;
 }
 
 /** URL patterns of the open-data exception, shared by the connectors. */

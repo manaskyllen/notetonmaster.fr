@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { REVIEW_LEVEL_IDS } from '@/lib/domain/rating';
 import {
   EMPLOYMENT_STATUSES,
   graduateSituationErrors,
@@ -42,12 +43,26 @@ export const CONTACT_SUBJECTS = {
 
 // ───────────── reviews ─────────────
 
-export const REVIEW_MIN_CHARS = 30;
+/**
+ * Minimum of « Ce que tu as aimé » and « Ce que tu n'as pas aimé », spaces at both ends not
+ * counted: the schemas below (server) and the counters of the forms (client) all read it.
+ */
+export const REVIEW_MIN_CHARS = 15;
+
+/** Counter under these two fields: « Encore 3 caractères au moins », then « C'est bon ✓ ». */
+export function reviewTextHint(value: string): { text: string; tone: 'ok' | 'muted' } {
+  const left = REVIEW_MIN_CHARS - value.trim().length;
+  return left <= 0
+    ? { text: 'C’est bon ✓', tone: 'ok' }
+    : { text: `Encore ${left} caractère${left > 1 ? 's' : ''} au moins`, tone: 'muted' };
+}
+/** « Qu'est-ce qui t'a fait partir ? » (LEFT only, optional). */
+export const LEAVE_REASON_MAX = 1500;
 export const CURRENT_YEAR = new Date().getFullYear();
 
 export const reviewStep1 = z.object({
   programSlug: z.string({ error: 'Choisis ton master.' }).min(1, 'Choisis ton master.'),
-  level: z.enum(['M1', 'M2', 'GRADUATE'], { error: 'Indique ton niveau.' }),
+  level: z.enum(REVIEW_LEVEL_IDS, { error: 'Indique ton niveau.' }),
   cohortYear: z.coerce
     .number({ error: 'Indique ton année d’entrée.' })
     .int()
@@ -71,7 +86,6 @@ export const reviewStep2 = z.object({
     .int()
     .min(1, 'Donne une note globale.')
     .max(5),
-  title: z.string().trim().max(80, '80 caractères maximum.').optional().or(z.literal('')),
   pros: z
     .string()
     .trim()
@@ -82,6 +96,12 @@ export const reviewStep2 = z.object({
     .trim()
     .min(REVIEW_MIN_CHARS, `${REVIEW_MIN_CHARS} caractères minimum.`)
     .max(3000, '3 000 caractères maximum.'),
+  leaveReason: z
+    .string()
+    .trim()
+    .max(LEAVE_REASON_MAX, '1 500 caractères maximum.')
+    .nullish()
+    .or(z.literal('')),
   scores: z
     .object({
       CONTENT: criterionScore,

@@ -3,12 +3,14 @@ import { cn } from '@/lib/cn';
 import { Icon } from './Icon';
 import { Grade } from './Grade';
 
-export type ReviewLevel = 'M1' | 'M2' | 'D';
+export type ReviewLevel = 'M1' | 'M2' | 'D' | 'Ex';
 
 const LEVEL_CLASS: Record<ReviewLevel, string> = {
   M1: 'bg-coral-300 text-on-lime',
   M2: 'bg-violet-100 text-violet-700',
   D: 'bg-lime-400 text-on-lime',
+  // Left during the year: neutral grey (#F0EEF5), never a colour that judges.
+  Ex: 'bg-surface-100 text-ink',
 };
 
 export interface ReviewCardProps {
@@ -17,7 +19,6 @@ export interface ReviewCardProps {
   who: string;
   date?: string;
   rating: number;
-  title?: string | null;
   plus: string;
   minus: string;
   verified?: boolean;
@@ -25,6 +26,8 @@ export interface ReviewCardProps {
   openToQuestions?: boolean;
   /** Graduates: « en poste · chargé de mission patrimoine » (after « Aujourd'hui : »). */
   today?: string | null;
+  /** Left during the year: « Pourquoi je suis parti·e », under « On a aimé » / « Moins bien ». */
+  leaveReason?: string | null;
   /** Helpful button, report link, ask button… (defaults to a report link only). */
   actions?: React.ReactNode;
   /** Content rendered under the actions (e.g. the question form). */
@@ -33,7 +36,6 @@ export interface ReviewCardProps {
   reply?: React.ReactNode;
   reportHref?: string;
   className?: string;
-  headingLevel?: 'h2' | 'h3';
 }
 
 export function VerifiedBadge({ verified }: { verified: boolean }) {
@@ -54,20 +56,18 @@ export function ReviewCard({
   who,
   date,
   rating,
-  title,
   plus,
   minus,
   verified = true,
   openToQuestions,
   today,
+  leaveReason,
   actions,
   footer,
   reply,
   reportHref = '/signaler',
   className,
-  headingLevel = 'h3',
 }: ReviewCardProps) {
-  const H = headingLevel;
   return (
     <article
       className={cn(
@@ -101,7 +101,6 @@ export function ReviewCard({
         </div>
         <Grade value={rating} />
       </div>
-      {title ? <H className="m-0 font-display text-h3 font-bold">« {title} »</H> : null}
       {today ? (
         <span className="inline-flex items-center gap-2 self-start rounded-[12px] bg-surface-50 px-3.5 py-2 text-[14px] text-ink">
           <svg
@@ -139,6 +138,14 @@ export function ReviewCard({
           <span className="whitespace-pre-line">{minus}</span>
         </div>
       </div>
+      {leaveReason ? (
+        <div className="flex flex-col gap-1.5 rounded-md bg-surface-50 px-4 py-3.5 text-[15px] leading-[1.5]">
+          <span className="text-[12px] font-bold tracking-[0.05em] text-ink uppercase">
+            Pourquoi je suis parti·e
+          </span>
+          <span className="whitespace-pre-line">{leaveReason}</span>
+        </div>
+      ) : null}
       {reply}
       <div className="flex flex-wrap items-center gap-2.5">
         {actions ?? <ReportLink href={reportHref} />}

@@ -3,15 +3,43 @@ import { ReviewForm } from '@/components/public/ReviewForm';
 import { getCurrentStudent } from '@/lib/auth/student';
 import { decrypt } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
+import { reviewFormTitle, reviewFormUrl } from '@/lib/domain/share';
 import { splitParcoursTitle } from '@/lib/domain/titles';
+import { getProgram } from '@/lib/queries/catalog';
 import { draftOwnerOf } from '@/lib/review-draft-owner';
+import { PRIVATE_ROBOTS, seoMetadata } from '@/lib/seo/meta';
+import { reviewFormOgPath } from '@/lib/share-data';
+import { siteOrigin } from '@/lib/seo/site';
 
-export const metadata: Metadata = {
-  title: 'Donner mon avis',
-  robots: { index: false, follow: false },
-  description:
-    'Donne ton avis sur ton master en 3 minutes, avec ou sans compte. Anonyme et relu avant publication.',
-};
+const DESCRIPTION =
+  'Donne ton avis sur ton master en 3 minutes, avec ou sans compte. Anonyme et relu avant publication.';
+
+/**
+ * Set on a parcours (?parcours=…, the link « Inviter ma promo à donner son avis » of the fiche):
+ * the link previews (WhatsApp, Discord, Messenger…) show « Donne ton avis sur {Parcours} » and
+ * the share image of the parcours. Never indexed.
+ */
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ parcours?: string }>;
+}): Promise<Metadata> {
+  const { parcours } = await searchParams;
+  const p = typeof parcours === 'string' && parcours ? await getProgram(parcours) : null;
+  if (!p) return { title: 'Donner mon avis', robots: PRIVATE_ROBOTS, description: DESCRIPTION };
+  const title = splitParcoursTitle(p.title).title;
+  const meta = seoMetadata({
+    title: `${reviewFormTitle(title)} | notetonmaster`,
+    description: `${p.university.shortName ?? p.university.name}, ${p.city}. ${DESCRIPTION}`,
+    canonical: reviewFormUrl(siteOrigin(), p.slug),
+    image: {
+      path: reviewFormOgPath(p.slug, title),
+      alt: `${reviewFormTitle(title)} – ${p.university.name}, ${p.city}`,
+    },
+  });
+  // No canonical for a page that is not indexed; the preview keeps the address of the form.
+  return { ...meta, alternates: undefined, robots: PRIVATE_ROBOTS };
+}
 export const dynamic = 'force-dynamic';
 
 export default async function NewReviewPage({

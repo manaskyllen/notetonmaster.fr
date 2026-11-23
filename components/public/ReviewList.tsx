@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { chipClasses } from '@/components/ui/Chip';
 import { HelpfulButton, ReportLink, ReviewCard, type ReviewLevel } from '@/components/ui/ReviewCard';
 import { todayLine } from '@/lib/domain/graduate';
-import type { ReviewLevelId } from '@/lib/domain/review-filters';
+import { LEVEL_SUFFIX, type ReviewLevelId } from '@/lib/domain/review-filters';
 import { gradeColor, LEVEL_SHORT } from '@/lib/domain/rating';
 import { formatRating } from '@/lib/format';
 import { toggleHelpful } from '@/app/(public)/parcours/actions';
@@ -15,15 +15,15 @@ import { DrReply } from './DrReply';
 export interface ReviewItem {
   id: string;
   ref: string;
-  level: 'M1' | 'M2' | 'GRADUATE';
+  level: 'M1' | 'M2' | 'GRADUATE' | 'LEFT';
   employmentStatus: 'EMPLOYED' | 'JOB_SEEKING' | 'FURTHER_STUDY' | 'OTHER' | null;
   jobTitle: string | null;
   who: string;
   date: string;
   rating: number;
-  title: string | null;
   pros: string;
   cons: string;
+  leaveReason: string | null;
   isVerified: boolean;
   acceptsQuestions: boolean;
   helpfulCount: number;
@@ -74,8 +74,6 @@ function Helpful({ review }: { review: ReviewItem }) {
     />
   );
 }
-
-const LEVEL_SUFFIX = { all: '', M1: ' · M1', M2: ' · M2', GRADUATE: ' · diplômé·es' } as const;
 
 /**
  * "Note globale" card: average, count and verified share of the reviews of the level filter.
@@ -210,12 +208,12 @@ export function ReviewList({
                 who={r.who}
                 date={r.date}
                 rating={r.rating}
-                title={r.title}
                 plus={r.pros}
                 minus={r.cons}
                 verified={r.isVerified}
                 openToQuestions={r.acceptsQuestions}
-                today={r.level === 'GRADUATE' ? todayLine(r.employmentStatus, r.jobTitle) : null}
+                today={todayLine(r.employmentStatus, r.jobTitle, r.level)}
+                leaveReason={r.leaveReason}
                 reply={r.reply ? <DrReply {...r.reply} /> : undefined}
                 actions={
                   <>

@@ -21,6 +21,9 @@ import { newReviewRef } from '@/lib/reviews/ref';
 import { getSettings } from '@/lib/settings';
 import { reviewSchema } from '@/lib/validation';
 import { afterReviewChange } from '@/lib/cache/next';
+import type { ShareData } from '@/lib/domain/share';
+import { getProgram } from '@/lib/queries/catalog';
+import { shareDataFor } from '@/lib/share-data';
 
 export type SubmitResult =
   | {
@@ -30,6 +33,8 @@ export type SubmitResult =
       loggedIn: boolean;
       wantsBadge: boolean;
       acceptsQuestions: boolean;
+      /** « Et ta promo, elle en pense quoi ? » (issue #13): the same for every review sent. */
+      share: ShareData | null;
     }
   | { ok: false; message?: string; fieldErrors?: Record<string, string> };
 
@@ -42,6 +47,8 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
       message: 'Certains champs sont à corriger.',
     };
   const d = parsed.data;
+  // « Qu'est-ce qui t'a fait partir ? » belongs to LEFT only.
+  const leaveReason = (d.level === 'LEFT' && d.leaveReason?.trim()) || null;
   const human = await verifyTurnstile('review', turnstileTokenOf(input));
   if (!human.ok) return { ok: false, message: human.message };
   const settings = await getSettings();
@@ -57,7 +64,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
     };
 
   if (settings['moderation.nameDetection']) {
-    const hit = detectNamedPerson(d.title, d.pros, d.cons);
+    const hit = detectNamedPerson(d.pros, d.cons, leaveReason);
     if (hit.found)
       return {
         ok: false,
@@ -126,7 +133,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
       }),
     );
     await logConnection('REVIEW_SUBMIT', emailHash);
-    return neutralAnswer(d, email, !!current);
+    return neutralAnswer(d, email, !!current, await promoShare(d.programSlug));
   }
 
   // « Avec mon espace » without a session: the review waits for the code (or link) of the login
@@ -134,9 +141,11 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
   const student = proven ? current : null;
   const watched = (settings['moderation.watchTerms'] as string[])
     .map(normalize)
-    .some((w) => w && normalize(`${d.title ?? ''} ${d.pros} ${d.cons}`).includes(w));
+    .some((w) => w && normalize(`${d.pros} ${d.cons} ${leaveReason ?? ''}`).includes(w));
   const autoPublish =
-    settings['moderation.autoPublish'] && !watched && !containsContacts(`${d.pros} ${d.cons}`);
+    settings['moderation.autoPublish'] &&
+    !watched &&
+    !containsContacts(`${d.pros} ${d.cons} ${leaveReason ?? ''}`);
   const status = !student ? 'PENDING_CONFIRMATION' : autoPublish ? 'PUBLISHED' : 'PENDING';
   const scores = Object.entries(d.scores).filter(
     (e): e is [string, number] => typeof e[1] === 'number',
@@ -153,9 +162,9 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
       ...normalizeSituation(d),
       cohortYear: d.cohortYear,
       overallRating: d.overallRating,
-      title: d.title || null,
       pros: d.pros,
       cons: d.cons,
+      leaveReason,
       status,
       acceptsQuestions: d.acceptsQuestions,
       wantsBadge: d.mode === 'account' && d.wantsBadge,
@@ -197,7 +206,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
     );
   }
 
-  return neutralAnswer(d, email, !!current);
+  return neutralAnswer(d, email, !!current, await promoShare(d.programSlug));
 }
 
 /** The answer of a review sent: the same whether it was recorded or was a duplicate. */
@@ -205,6 +214,7 @@ function neutralAnswer(
   d: { mode: 'none' | 'account'; wantsBadge: boolean; acceptsQuestions: boolean },
   email: string,
   loggedIn: boolean,
+  share: ShareData | null,
 ): SubmitResult {
   return {
     ok: true,
@@ -213,7 +223,14 @@ function neutralAnswer(
     loggedIn,
     wantsBadge: d.wantsBadge,
     acceptsQuestions: d.acceptsQuestions,
+    share,
   };
+}
+
+/** The parcours as « Partager » shows it: public data only, nothing about the review sent. */
+async function promoShare(slug: string): Promise<ShareData | null> {
+  const p = await getProgram(slug);
+  return p ? shareDataFor(p) : null;
 }
 
 async function sendReviewConfirmation(

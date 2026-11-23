@@ -25,7 +25,7 @@ export default async function ReplyPage({ params }: { params: Promise<{ token: s
         where: { id: payload.conversationId },
         include: {
           messages: { orderBy: { createdAt: 'asc' } },
-          review: { select: { title: true, program: { select: { title: true } } } },
+          review: { select: { program: { select: { title: true } } } },
         },
       })
     : null;
@@ -51,10 +51,7 @@ export default async function ReplyPage({ params }: { params: Promise<{ token: s
             <h1 className="m-0 font-display text-[clamp(32px,5vw,44px)] leading-[1.05] font-extrabold tracking-[-0.03em]">
               {payload.role === 'AUTHOR' ? 'Quelqu’un te pose une question' : 'Tu as une réponse'}
             </h1>
-            <p className="m-0 text-ink-muted">
-              {conv.review.program.title}
-              {conv.review.title ? ` · avis « ${conv.review.title} »` : ''}
-            </p>
+            <p className="m-0 text-ink-muted">{conv.review.program.title}</p>
           </div>
           <div className="flex flex-col gap-3 rounded-[18px] bg-surface-100 p-4">
             {conv.messages.map((m) => {

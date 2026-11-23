@@ -166,32 +166,30 @@ export type ReviewDecision = 'PUBLISHED' | 'NEEDS_EDIT' | 'REJECTED' | 'HIDDEN';
 export function reviewDecisionMail(p: {
   decision: ReviewDecision;
   programTitle: string;
-  reviewTitle: string | null;
   reason?: string | null;
   hasAccount: boolean;
   programUrl: string;
 }): Mail {
-  const t = p.reviewTitle ? ` « ${p.reviewTitle} »` : '';
   const copy = {
     PUBLISHED: {
       subject: 'Ton avis est publié',
       h: 'Ton avis est en ligne',
-      body: `Ton avis${t} sur ${p.programTitle} a été relu et publié. Merci, il aidera la promo d’après.`,
+      body: `Ton avis sur ${p.programTitle} a été relu et publié. Merci, il aidera la promo d’après.`,
     },
     NEEDS_EDIT: {
       subject: 'Ton avis est à reformuler',
       h: 'Une petite reformulation',
-      body: `Ton avis${t} sur ${p.programTitle} ne peut pas être publié tel quel.`,
+      body: `Ton avis sur ${p.programTitle} ne peut pas être publié tel quel.`,
     },
     REJECTED: {
       subject: 'Ton avis n’a pas été publié',
       h: 'Ton avis n’a pas été publié',
-      body: `Ton avis${t} sur ${p.programTitle} n’a pas été publié.`,
+      body: `Ton avis sur ${p.programTitle} n’a pas été publié.`,
     },
     HIDDEN: {
       subject: 'Ton avis est masqué',
       h: 'Ton avis est masqué',
-      body: `Ton avis${t} sur ${p.programTitle} a été retiré du site.`,
+      body: `Ton avis sur ${p.programTitle} a été retiré du site.`,
     },
   }[p.decision];
   return {
@@ -287,7 +285,6 @@ function AnonymousReplyWarning() {
 export function questionReceivedMail(p: {
   programTitle: string;
   universityName: string;
-  reviewTitle: string | null;
   question: string;
   replyUrl: string;
   hasAccount: boolean;
@@ -310,8 +307,7 @@ export function questionReceivedMail(p: {
         <H1>Quelqu’un te demande de l’aide</H1>
         <P>
           Un·e étudiant·e qui s’intéresse au master <strong>{p.programTitle}</strong> (
-          {p.universityName}) a lu ton avis{p.reviewTitle ? ` « ${p.reviewTitle} »` : ''} et te pose
-          une question :
+          {p.universityName}) a lu ton avis et te pose une question :
         </P>
         <Quote>« {p.question} »</Quote>
         <CTA href={p.replyUrl}>Répondre anonymement</CTA>

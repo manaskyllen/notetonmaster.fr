@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ReportForm } from '@/components/public/ReportForm';
 import { prisma } from '@/lib/db';
-import { LEVEL_LABEL } from '@/lib/domain/rating';
+import { authorWho } from '@/lib/domain/rating';
 import { appUrl } from '@/emails/Layout';
 
 export const metadata: Metadata = {
@@ -56,11 +56,8 @@ export default async function SignalerPage({
                   {review.program.title}
                 </span>
                 <span className="text-[14px] font-bold">
-                  Anonyme · {LEVEL_LABEL[review.level]} · promo {review.cohortYear}
+                  Anonyme · {authorWho(review.level, review.cohortYear)}
                 </span>
-                {review.title && (
-                  <span className="font-display text-[18px] font-bold">« {review.title} »</span>
-                )}
                 <span className="line-clamp-3 text-[14px] text-ink-muted">{review.pros}</span>
                 <span className="font-mono text-code text-ink-muted">ID {review.ref}</span>
               </article>

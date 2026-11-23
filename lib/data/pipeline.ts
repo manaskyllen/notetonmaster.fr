@@ -12,6 +12,7 @@ import { prisma } from '@/lib/db';
 import type { SyncRun } from '@/lib/db/generated/client';
 import { getSettings } from '@/lib/settings';
 import { PoliteHttpClient, crawlerUserAgent } from './http';
+import { effectiveMinDelaySeconds } from './robot-policy';
 import { PrismaHostStore } from './host-store';
 import { buildDiff, type RecordPlan } from './diff';
 import {
@@ -103,7 +104,7 @@ export function makeHttp(
     allowedDomains: connector.http.allowedDomains,
     openDataExceptions: connector.http.openDataExceptions,
     deniedHosts: connector.http.deniedHosts,
-    minDelayMs: Math.max(2, minDelaySeconds) * 1000,
+    minDelayMs: effectiveMinDelaySeconds(minDelaySeconds) * 1000,
     store: new PrismaHostStore(),
     onEvent: async (e) => {
       if (e.type === 'skip') await ctx.log('SKIP', `${e.url} : ${e.reason}`);

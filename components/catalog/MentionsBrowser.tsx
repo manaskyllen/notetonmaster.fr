@@ -174,7 +174,9 @@ export function MentionsBrowser({
                 {t.short}
               </span>
               <span className="flex min-w-0 flex-col gap-px">
-                <span className="text-[14px] leading-tight font-bold">{t.name}</span>
+                <span className="text-[14px] leading-tight font-bold hyphens-auto [overflow-wrap:anywhere]">
+                  {t.name}
+                </span>
                 <span className="text-[12px] text-ink-muted">
                   {plural(count, 'mention', 'mentions')}
                 </span>

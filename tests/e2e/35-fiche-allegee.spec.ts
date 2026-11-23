@@ -5,7 +5,7 @@ import { E2E_EXTRAS } from './fixtures/names';
 /** Fiche parcours: reviews first, identity at the bottom. */
 const VNP = 'valorisation-des-nouveaux-patrimoines';
 
-test('hero: only « Suivre » and « Donner mon avis »; tabs over the whole width, no column', async ({
+test('hero: only « Suivre », « Partager » and « Donner mon avis »; tabs over the whole width, no column', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -17,6 +17,7 @@ test('hero: only « Suivre » and « Donner mon avis »; tabs over the whole wid
     hero.getByRole('link', { name: /^Suivre : .* \(connexion requise\)$/ }),
   ).toBeVisible();
   await expect(hero.getByRole('link', { name: 'Donner mon avis' })).toBeVisible();
+  await expect(hero.getByRole('button', { name: 'Partager' })).toBeVisible();
   await expect(hero.getByRole('button', { name: /vœux/ })).toHaveCount(0);
   await expect(page.getByRole('complementary')).toHaveCount(0);
   await expect(page.getByRole('tab')).toHaveText([

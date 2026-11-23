@@ -6,7 +6,7 @@ import { requireAdmin } from '@/lib/auth/admin';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@/lib/db/generated/client';
 import type { ReviewStatus } from '@/lib/db/generated/enums';
-import { LEVEL_SHORT } from '@/lib/domain/rating';
+import { LEVEL_SHORT, REVIEW_LEVEL_IDS } from '@/lib/domain/rating';
 import { codeCandidates, codeVariants } from '@/lib/domain/search';
 import { readPage, type Params } from '@/lib/pagination';
 
@@ -33,6 +33,7 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
   const one = (k: string) => (Array.isArray(sp[k]) ? sp[k][0] : sp[k]) ?? '';
   const q = one('q').trim();
   const status = STATUSES.find((s) => s === one('statut'));
+  const level = REVIEW_LEVEL_IDS.find((l) => l === one('niveau'));
   const { page, offset } = readPage(sp, { perPage: PER_PAGE });
 
   // Search: title, reference, program title, or a code of the program (RNCP, Mon Master).
@@ -48,14 +49,16 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
   const search: Prisma.ReviewWhereInput = q
     ? {
         OR: [
-          { title: { contains: q, mode: 'insensitive' } },
+          { pros: { contains: q, mode: 'insensitive' } },
           { ref: { contains: q, mode: 'insensitive' } },
           { program: { title: { contains: q, mode: 'insensitive' } } },
           ...(coded.length ? [{ programId: { in: coded } }] : []),
         ],
       }
     : {};
-  const where = { ...search, ...(status ? { status } : {}) };
+  // The status counters follow the search and the author filter, not the status filter itself.
+  const scope: Prisma.ReviewWhereInput = { ...search, ...(level ? { level } : {}) };
+  const where = { ...scope, ...(status ? { status } : {}) };
 
   const [rows, total, byStatus, demo, decided] = await Promise.all([
     prisma.review.findMany({
@@ -67,7 +70,7 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
         id: true,
         ref: true,
         submittedAt: true,
-        title: true,
+        pros: true,
         level: true,
         cohortYear: true,
         overallRating: true,
@@ -77,7 +80,7 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
       },
     }),
     prisma.review.count({ where }),
-    prisma.review.groupBy({ by: ['status'], where: search, _count: { _all: true } }),
+    prisma.review.groupBy({ by: ['status'], where: scope, _count: { _all: true } }),
     prisma.review.count({ where: { isDemo: true } }),
     prisma.$queryRaw<{ hours: number | null }[]>`
       SELECT avg(extract(epoch FROM ("moderatedAt" - "submittedAt")) / 3600)::float AS hours
@@ -129,14 +132,16 @@ export default async function AvisAdminPage({ searchParams }: { searchParams: Pr
       <ReviewsTable
         q={q}
         status={status ?? 'all'}
+        level={level ?? 'all'}
         counts={counts}
         rows={rows.map((r) => ({
           id: r.id,
           ref: r.ref,
           date: d.format(r.submittedAt),
-          title: r.title,
+          excerpt: r.pros,
           program: r.program.title,
-          author: `Anonyme · ${LEVEL_SHORT[r.level]} · ${r.cohortYear}`,
+          // Never the year for someone who left during the year (anonymity, issue #18).
+          author: `Anonyme · ${LEVEL_SHORT[r.level]}${r.level === 'LEFT' ? '' : ` · ${r.cohortYear}`}`,
           rating: r.overallRating,
           flags: flags.get(r.id) ?? 0,
           status: r.status,

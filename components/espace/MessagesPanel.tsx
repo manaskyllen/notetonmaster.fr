@@ -60,7 +60,7 @@ function Thread({ c, hasMore: more }: { c: ConversationView; hasMore: boolean })
         <span className="flex flex-col gap-0.5">
           <span className="text-[16px] font-bold">{c.otherAlias}</span>
           <span className="text-[13px] text-ink-muted">
-            sur {c.role === 'AUTHOR' ? 'ton avis' : 'l’avis'} « {c.reviewTitle ?? c.programTitle} »
+            à propos de {c.role === 'AUTHOR' ? 'ton avis' : 'l’avis'} sur {c.programTitle}
           </span>
         </span>
         <span className="flex gap-2">
@@ -327,9 +327,7 @@ export function MessagesPanel({
                     {formatRelative(new Date(c.lastMessageAt))}
                   </span>
                 </span>
-                <span className="text-[13px] text-ink-muted">
-                  Sur « {c.reviewTitle ?? c.programTitle} »
-                </span>
+                <span className="text-[13px] text-ink-muted">Sur {c.programTitle}</span>
                 <span className="line-clamp-1 text-[14px]">{c.messages.at(-1)?.body}</span>
               </Link>
             </li>

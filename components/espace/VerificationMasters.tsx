@@ -23,7 +23,6 @@ export interface MasterToVerify {
   title: string;
   university: string;
   domains: string[];
-  review: string;
   state: MasterVerificationState;
   /** « avec ton mail universitaire le 3 oct. 2026 » */
   approvedHow: string | null;
@@ -106,9 +105,7 @@ function MasterCard({ m, initiallyOpen }: { m: MasterToVerify; initiallyOpen: bo
           <span id={`verif-${m.slug}-title`} className="font-display text-[19px] font-bold">
             {m.title}
           </span>
-          <span className="text-[13px] text-ink-muted">
-            {m.university} · ton avis « {m.review} »
-          </span>
+          <span className="text-[13px] text-ink-muted">{m.university}</span>
         </span>
         <span
           className={cn(

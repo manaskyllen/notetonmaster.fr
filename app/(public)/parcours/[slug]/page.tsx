@@ -5,6 +5,7 @@ import { AdmissionEvolution } from '@/components/public/AdmissionEvolution';
 import { AdmissionOrigins } from '@/components/public/AdmissionOrigins';
 import { datasetUrl } from '@/lib/connectors/monmaster-opendata/urls';
 import { FollowButton } from '@/components/public/FollowButton';
+import { ShareButton } from '@/components/public/ShareButton';
 import { followedSet } from '@/lib/favorites';
 import { after } from 'next/server';
 import { QuestionsPanel } from '@/components/public/QuestionsPanel';
@@ -28,7 +29,7 @@ import {
 } from '@/lib/domain/program-outline';
 import { ReviewList, type ReviewItem } from '@/components/public/ReviewList';
 import { ReviewsSummaryButton } from '@/components/public/ReviewsSummaryButton';
-import { REVIEW_FILTERS } from '@/lib/domain/review-filters';
+import { visibleReviewFilters } from '@/lib/domain/review-filters';
 import { splitParcoursTitle } from '@/lib/domain/titles';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { buttonClasses, CtaArrow, ctaClasses } from '@/components/ui/Button';
@@ -37,7 +38,7 @@ import { Pagination } from '@/components/ui/Pagination';
 import { ScoreBar } from '@/components/ui/ScoreBar';
 import { getCurrentStudent } from '@/lib/auth/student';
 import { prisma } from '@/lib/db';
-import { CRITERION_LABEL, LEVEL_LABEL } from '@/lib/domain/rating';
+import { authorWho, CRITERION_LABEL } from '@/lib/domain/rating';
 import { formatDate, formatInt } from '@/lib/format';
 import {
   getProgram,
@@ -60,6 +61,7 @@ import { parcoursHomonyms } from '@/lib/catalog/homonyms';
 import { pageJsonLd, programJsonLd } from '@/lib/seo/jsonld';
 import { seoMetadata } from '@/lib/seo/meta';
 import { ogImagePath } from '@/lib/seo/og-path';
+import { shareDataFor } from '@/lib/share-data';
 import { pagedSeoTitle, parcoursDescription, parcoursTitle } from '@/lib/seo/titles';
 
 export const dynamic = 'force-dynamic';
@@ -298,12 +300,12 @@ export default async function ParcoursPage({
     level: r.level,
     employmentStatus: r.employmentStatus,
     jobTitle: r.jobTitle,
-    who: `${LEVEL_LABEL[r.level]} · promo ${r.cohortYear}`,
+    who: authorWho(r.level, r.cohortYear),
     date: monthYear.format(r.publishedAt),
     rating: r.rating,
-    title: r.title,
     pros: r.pros,
     cons: r.cons,
+    leaveReason: r.leaveReason,
     isVerified: r.isVerified,
     acceptsQuestions: r.acceptsQuestions,
     helpfulCount: r.helpfulCount,
@@ -321,7 +323,7 @@ export default async function ParcoursPage({
           stats={stats}
           level={level}
           sort={sort}
-          levels={REVIEW_FILTERS.map((f) => ({
+          levels={visibleReviewFilters(rp.byLevel, level).map((f) => ({
             id: f.id,
             label: f.label,
             href: avisHref(p.slug, { niveau: f.id, tri: sort }),
@@ -661,15 +663,17 @@ export default async function ParcoursPage({
           />
         )}
 
-        <section className="relative flex flex-wrap items-end justify-between gap-8 overflow-hidden rounded-xl bg-violet-500 p-10 text-on-violet max-sm:p-6">
+        {/* Not overflow-hidden itself: the « Partager » menu goes past its bottom edge (a clipping
+            ancestor would also scroll the hero when the menu takes the focus). Only the shapes are
+            clipped, in their own layer. */}
+        <section className="relative flex flex-wrap items-end justify-between gap-8 rounded-xl bg-violet-500 p-10 text-on-violet max-sm:p-6">
           <div
             aria-hidden="true"
-            className="absolute -top-15 -right-15 size-65 rounded-pill bg-lime-400 opacity-90 max-sm:-top-20 max-sm:-right-20 max-sm:size-36"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute top-30 right-37.5 size-22.5 rotate-[18deg] rounded-[28px] bg-coral-300 max-sm:hidden"
-          />
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]"
+          >
+            <div className="absolute -top-15 -right-15 size-65 rounded-pill bg-lime-400 opacity-90 max-sm:-top-20 max-sm:-right-20 max-sm:size-36" />
+            <div className="absolute top-30 right-37.5 size-22.5 rotate-[18deg] rounded-[28px] bg-coral-300 max-sm:hidden" />
+          </div>
           <div className="relative flex min-w-0 flex-1 flex-col gap-4">
             <div className="flex flex-wrap gap-2">
               <span className="rounded-pill bg-white px-3 py-1.5 text-[12px] font-bold tracking-[0.05em] text-[#3b23b8] uppercase">
@@ -729,6 +733,8 @@ export default async function ParcoursPage({
                   initial={followed.has(p.id)}
                   loggedIn={!!student}
                 />
+                {/* Only where a review can be left: a published fiche of an open city. */}
+                {p.isPublished && p.inOpenZone && <ShareButton data={shareDataFor(p)} />}
                 <Link
                   href={`/avis/nouveau?parcours=${p.slug}`}
                   className={ctaClasses('lime', 'l', 'min-h-13')}

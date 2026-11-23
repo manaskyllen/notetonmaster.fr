@@ -152,7 +152,7 @@ jobs:
       - name: Bout en bout complet, une base et un serveur par processus
         env:
           E2E_SERVERS: '4'
-        run: sh scripts/e2e-stack.sh run --project=e2e
+        run: sh scripts/e2e-stack.sh run --project=e2e --project=mobile-iphone --project=mobile-android
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

@@ -46,7 +46,6 @@ const form = (email: string, mode: 'none' | 'account') => ({
   level: 'M2',
   cohortYear: 2024,
   overallRating: 4,
-  title: 'Un bon master',
   pros: 'Les cours sont solides et bien organisés sur les deux années.',
   cons: 'Peu de lien avec les entreprises pendant la première année.',
   scores: {},
@@ -155,5 +154,28 @@ describe('the « Merci » screen of a review without account', () => {
     expect(resendPending).toEqual(resendNothing);
     await prisma.review.deleteMany({ where: { authorEmailHash: hashEmail(pending) } });
     await prisma.magicLinkToken.deleteMany({ where: { emailHash: hashEmail(pending) } });
+  });
+});
+
+describe('minimum length of « Ce que tu as aimé » and « Ce que tu n’as pas aimé »', () => {
+  const FIFTEEN = 'Cours concrets.'; // 15 characters
+  it('the server accepts 15 characters (spaces at both ends not counted), refuses 14', async () => {
+    const ok = `${tag}-min15@example.org`;
+    const short = `${tag}-min14@example.org`;
+    victimEmails.push(ok, short);
+    expect(
+      await submitReview({ ...form(ok, 'none'), pros: `  ${FIFTEEN} `, cons: FIFTEEN }),
+    ).toMatchObject({ ok: true });
+    const saved = await prisma.review.findFirst({ where: { authorEmailHash: hashEmail(ok) } });
+    expect(saved).toMatchObject({ pros: FIFTEEN, cons: FIFTEEN });
+
+    request.reset();
+    const refused = await submitReview({
+      ...form(short, 'none'),
+      pros: `  ${FIFTEEN.slice(0, 14)}  `,
+      cons: FIFTEEN,
+    });
+    expect(refused).toMatchObject({ ok: false, fieldErrors: { pros: '15 caractères minimum.' } });
+    expect(await prisma.review.count({ where: { authorEmailHash: hashEmail(short) } })).toBe(0);
   });
 });

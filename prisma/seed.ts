@@ -1001,7 +1001,6 @@ async function seedCommunity(
         jobTitle: r.jobTitle ?? null,
         cohortYear: r.cohort,
         overallRating: r.rating,
-        title: r.title,
         pros: r.pros,
         cons: r.cons,
         status,

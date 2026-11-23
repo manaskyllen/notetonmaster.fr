@@ -6,8 +6,20 @@ import { Container } from '@/components/public/PageShell';
 import { seoMetadata } from '@/lib/seo/meta';
 import { BrandName, withBrand } from '@/components/ui/BrandName';
 import { Icon } from '@/components/ui/Icon';
+import { cn } from '@/lib/cn';
+import { CopyButton } from '@/components/public/CopyButton';
 import { crawlerContactEmail } from '@/lib/contact';
 import { crawlerUserAgent } from '@/lib/data/http';
+import {
+  cadenceLabel,
+  effectiveMinDelaySeconds,
+  HOST_PAUSE_HOURS,
+  MAIL_EXCLUSION_HOURS,
+  MAX_FAILURES,
+  ROBOTS_CACHE_HOURS,
+  ROBOTS_EXCLUSION,
+} from '@/lib/data/robot-policy';
+import { prisma } from '@/lib/db';
 import { getSetting } from '@/lib/settings';
 
 export function generateMetadata(): Metadata {
@@ -19,43 +31,60 @@ export function generateMetadata(): Metadata {
   });
 }
 
+/**
+ * Where the data comes from. The frequencies are those of the robot, read from the schedule of
+ * the sources (DataSource.schedule, prisma/fixtures/sources.json): « Notre robot » shows the same.
+ */
 const SOURCES = [
-  [
-    'Mon Master',
-    'Catalogue des masters et admission : candidatures, propositions et origine des admis. Données ouvertes du ministère.',
-    'Mise à jour : chaque session',
-  ],
-  [
-    'France Compétences',
-    'Fiches RNCP : numéro, niveau et intitulé officiel de chaque mention, universités habilitées.',
-    'Mise à jour : quotidienne',
-  ],
-  [
-    'Sites des universités',
-    'Programmes, livrets pédagogiques, brochures. Lus uniquement quand les sites l’autorisent.',
-    'Mise à jour : mensuelle',
-  ],
+  {
+    name: 'Mon Master',
+    text: 'Catalogue des masters et admission : candidatures, propositions et origine des admis. Données ouvertes du ministère.',
+    keys: ['monmaster-opendata', 'monmaster-fiches'],
+  },
+  {
+    name: 'France Compétences',
+    text: 'Fiches RNCP : numéro, niveau et intitulé officiel de chaque mention, universités habilitées.',
+    keys: ['rncp'],
+  },
+  {
+    name: 'Sites des universités',
+    text: 'Programmes, livrets pédagogiques, brochures. Lus uniquement quand les sites l’autorisent.',
+    keys: ['univ-sites'],
+    // Read every night, but a page is only downloaded again when it changed (ETag, Last-Modified).
+    note: 'seules les pages modifiées sont relues',
+  },
 ] as const;
 
-/** What the robot reads, where, how often (prisma/fixtures/sources.json, lib/connectors). */
+/** What the robot reads, where, and how often (lib/connectors). */
 const ROBOT_SOURCES = [
-  [
-    'Données ouvertes du ministère',
-    'data.enseignementsup-recherche.gouv.fr : catalogue et admission Mon Master, établissements, insertion professionnelle, diplômes préparés.',
-    'Chaque semaine ou chaque mois, selon le jeu de données',
-  ],
-  ['Mon Master', 'monmaster.gouv.fr : la fiche détaillée de chaque parcours.', 'Chaque semaine'],
-  [
-    'France compétences',
-    'data.gouv.fr : le fichier d’export des fiches RNCP, publié en données ouvertes.',
-    'Chaque jour',
-  ],
-  [
-    'Sites des universités',
-    'Les pages publiques du catalogue de formation : présentation, programme, admission. Jamais d’espace connecté ni de page personnelle.',
-    'Une passe par nuit ; une page inchangée n’est pas retéléchargée',
-  ],
+  {
+    name: 'Mon Master',
+    domain: 'monmaster.gouv.fr',
+    text: 'La fiche détaillée de chaque parcours.',
+    keys: ['monmaster-fiches'],
+  },
+  {
+    name: 'Données du ministère',
+    domain: 'data.enseignementsup-recherche.gouv.fr',
+    text: 'Catalogue et admission Mon Master, établissements, insertion des diplômé·es, diplômes préparés.',
+    keys: ['monmaster-opendata', 'esr-etablissements', 'insersup', 'sise-diplomes'],
+  },
+  {
+    name: 'France compétences',
+    domain: 'data.gouv.fr',
+    text: 'Le fichier d’export des fiches RNCP, publié en données ouvertes.',
+    keys: ['rncp'],
+  },
+  {
+    name: 'Sites des universités',
+    domain: 'pages publiques du catalogue',
+    text: 'Présentation, programme, admission. Une page qui n’a pas changé n’est pas retéléchargée.',
+    keys: ['univ-sites'],
+  },
 ] as const;
+
+const CARD = 'flex flex-col rounded-lg border border-border bg-surface-0 p-6 max-sm:p-5';
+const H3 = 'm-0 font-display text-[22px] font-bold';
 
 const STEPS = [
   [
@@ -118,8 +147,17 @@ export default async function AProposPage({
     parcours && /^[a-z0-9-]{1,120}$/.test(parcours)
       ? `${appUrl()}/parcours/${parcours}`
       : undefined;
-  const minDelay = Math.max(2, await getSetting('collect.minDelaySeconds'));
+  const [minDelaySetting, sources] = await Promise.all([
+    getSetting('collect.minDelaySeconds'),
+    prisma.dataSource.findMany({ where: { enabled: true }, select: { key: true, schedule: true } }),
+  ]);
+  const minDelay = effectiveMinDelaySeconds(minDelaySetting);
+  const schedule = new Map(sources.map((x) => [x.key, x.schedule]));
+  const cadence = (keys: readonly string[]) =>
+    cadenceLabel(keys.filter((k) => schedule.has(k)).map((k) => schedule.get(k)));
   const robotContact = crawlerContactEmail();
+  const userAgent = crawlerUserAgent();
+  const exclusionMail = `mailto:${robotContact}?subject=${encodeURIComponent('Exclure notre site')}`;
   return (
     <main>
       <Container className="flex flex-col gap-14 pt-8 pb-20">
@@ -143,16 +181,24 @@ export default async function AProposPage({
             D’où viennent les données
           </h2>
           <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(250px,100%),1fr))] gap-3.5">
-            {SOURCES.map(([t, d, u]) => (
-              <li
-                key={t}
-                className="flex flex-col gap-2 rounded-lg border border-border bg-surface-0 p-5.5"
-              >
-                <span className="font-display text-[20px] font-bold">{t}</span>
-                <span className="text-[15px] leading-[1.5]">{d}</span>
-                <span className="mt-auto text-[13px] font-semibold text-ink-muted">{u}</span>
-              </li>
-            ))}
+            {SOURCES.map((x) => {
+              const when = cadence(x.keys);
+              return (
+                <li
+                  key={x.name}
+                  className="flex flex-col gap-2 rounded-lg border border-border bg-surface-0 p-5.5"
+                >
+                  <span className="font-display text-[20px] font-bold">{x.name}</span>
+                  <span className="text-[15px] leading-[1.5]">{x.text}</span>
+                  {when && (
+                    <span className="mt-auto text-[13px] font-semibold text-ink-muted">
+                      Mise à jour : {when.toLowerCase()}
+                      {'note' in x ? `, ${x.note}` : ''}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
           <p className="m-0 text-[15px] text-ink-muted">
             Chaque chiffre du site indique sa source et son année. Quand une donnée manque, on
@@ -161,60 +207,174 @@ export default async function AProposPage({
           </p>
         </section>
 
-        <section id="notre-robot" className="flex scroll-mt-24 flex-col gap-4.5">
-          <h2 className="m-0 font-display text-[36px] font-extrabold tracking-[-0.03em]">
-            Notre robot
-          </h2>
-          <p className="m-0 max-w-[760px] text-[16px] leading-[1.55]">
-            Pour tenir les fiches à jour, un robot lit des données publiques sur les formations. Il
-            ne garde aucune donnée personnelle : sur les sites des universités, les adresses mail,
-            les numéros de téléphone et les noms des responsables sont retirés avant d’être
-            enregistrés.
-          </p>
-          <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(250px,100%),1fr))] gap-3.5">
-            {ROBOT_SOURCES.map(([t, d, u]) => (
-              <li
-                key={t}
-                className="flex flex-col gap-2 rounded-lg border border-border bg-surface-0 p-5.5"
-              >
-                <span className="font-display text-[20px] font-bold">{t}</span>
-                <span className="text-[15px] leading-[1.5]">{d}</span>
-                <span className="mt-auto text-[13px] font-semibold text-ink-muted">{u}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex max-w-[760px] flex-col gap-3 text-[16px] leading-[1.55]">
-            <p className="m-0">
-              <strong>Il respecte robots.txt</strong>, relu au moins une fois par jour, ainsi que
-              les réserves de fouille de textes et de données (TDMRep). Seule exception : le fichier
-              d’export RNCP publié en données ouvertes sur data.gouv.fr.
-            </p>
-            <p className="m-0">
-              <strong>Il limite son rythme</strong> : une seule requête à la fois par site, au moins{' '}
-              {minDelay} secondes entre deux requêtes, davantage si le site indique un{' '}
-              <code>Crawl-delay</code>. Après trois erreurs de suite, il laisse le site tranquille
-              pendant 24 h.
-            </p>
-            <p className="m-0">Il s’annonce toujours avec ce User-Agent :</p>
-            <code
-              data-testid="robot-user-agent"
-              className="block overflow-x-auto rounded-md bg-surface-50 px-4 py-3 text-[14px] break-all"
+        <section
+          id="notre-robot"
+          aria-labelledby="notre-robot-titre"
+          className="flex scroll-mt-24 flex-col gap-4.5"
+        >
+          <div className="flex max-w-[760px] flex-col gap-2">
+            <h2
+              id="notre-robot-titre"
+              className="m-0 font-display text-[36px] font-extrabold tracking-[-0.03em]"
             >
-              {crawlerUserAgent()}
-            </code>
-            <p className="m-0">
-              Contact :{' '}
-              <a href={`mailto:${robotContact}`} data-testid="robot-contact">
-                {robotContact}
-              </a>
+              Notre robot
+            </h2>
+            <p className="m-0 text-[17px] leading-[1.55]">
+              Un robot lit les données publiques des formations pour garder les fiches à jour. Il va
+              lentement, respecte les règles de chaque site et ne garde aucune donnée personnelle.
             </p>
-            <h3 className="m-0 mt-2 font-display text-[22px] font-bold">Exclure votre site</h3>
-            <p className="m-0">
-              Ajoutez à votre robots.txt les deux lignes <code>User-agent: notetonmasterBot</code>{' '}
-              et <code>Disallow: /</code> : c’est pris en compte à la prochaine lecture de
-              robots.txt, sous 24 h au plus. Vous pouvez aussi écrire à {robotContact} : on retire
-              votre site de la collecte sous 72 h.
-            </p>
+          </div>
+
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] items-stretch gap-3.5">
+            <div className={cn(CARD, 'gap-1')}>
+              <h3 className={cn(H3, 'mb-2')}>Ce qu’il lit</h3>
+              <ul className="m-0 list-none p-0">
+                {ROBOT_SOURCES.map((x) => {
+                  const when = cadence(x.keys);
+                  return (
+                    <li
+                      key={x.name}
+                      className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3.5 gap-y-2 border-t border-border py-3.5 max-sm:grid-cols-1"
+                    >
+                      <span className="flex min-w-0 flex-col gap-0.75">
+                        <span className="text-[16px] font-bold">{x.name}</span>
+                        <span className="font-mono text-[12px] text-ink-muted [overflow-wrap:anywhere]">
+                          {x.domain}
+                        </span>
+                        <span className="text-[14px] leading-[1.45]">{x.text}</span>
+                      </span>
+                      {when && (
+                        <span className="self-start justify-self-start rounded-pill bg-surface-100 px-2.5 py-1 text-[12px] font-bold whitespace-nowrap text-ink">
+                          {when}
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className={cn(CARD, 'gap-4')}>
+              <h3 className={H3}>Comment il se comporte</h3>
+              <ul className="m-0 flex list-none flex-col gap-4 p-0">
+                {(
+                  [
+                    [
+                      'file',
+                      'Respecte robots.txt',
+                      <>
+                        Relu au moins une fois toutes les {ROBOTS_CACHE_HOURS} h. Les réserves de
+                        fouille de textes et de données (TDMRep) sont aussi respectées, sauf pour
+                        l’export RNCP de data.gouv.fr.
+                      </>,
+                    ],
+                    [
+                      'clock',
+                      'Une requête à la fois',
+                      <>
+                        Par site, avec au moins {minDelay} secondes d’écart. Plus, si le site fixe
+                        un <code className="text-[13px] whitespace-nowrap">Crawl-delay</code>.
+                      </>,
+                    ],
+                    [
+                      'alert',
+                      'Se retire en cas d’erreur',
+                      <>
+                        Après {MAX_FAILURES} erreurs d’affilée, il laisse le site tranquille pendant{' '}
+                        {HOST_PAUSE_HOURS} heures.
+                      </>,
+                    ],
+                    [
+                      'lock',
+                      'Aucune donnée personnelle',
+                      <>
+                        Jamais d’espace connecté ni de page personnelle. Adresses mail, téléphones
+                        et noms des responsables sont retirés avant tout enregistrement.
+                      </>,
+                    ],
+                  ] as const
+                ).map(([icon, title, text]) => (
+                  <li key={title} className="flex items-start gap-3.5">
+                    <span
+                      aria-hidden="true"
+                      className="flex size-10 flex-none items-center justify-center rounded-[12px] bg-violet-100 text-violet-700"
+                    >
+                      <Icon name={icon} size={20} />
+                    </span>
+                    <span className="flex flex-col gap-1">
+                      <span className="text-[16px] font-bold">{title}</span>
+                      <span className="text-[14px] leading-[1.5]">{text}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] gap-3.5">
+            <div className="flex flex-col gap-3.5 rounded-lg bg-night p-6 text-on-night max-sm:p-5">
+              <h3 className={H3}>Le reconnaître dans vos journaux</h3>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[12px] font-bold tracking-[.06em] text-on-night-muted uppercase">
+                  User-Agent
+                </span>
+                <div className="flex flex-wrap items-center gap-2.5 rounded-[14px] bg-white/10 px-3.5 py-3">
+                  <code
+                    data-testid="robot-user-agent"
+                    className="min-w-0 flex-[1_1_260px] font-mono text-[13px] leading-[1.5] text-lime-400 [overflow-wrap:anywhere]"
+                  >
+                    {userAgent}
+                  </code>
+                  <CopyButton text={userAgent} label="Copier le User-Agent" />
+                </div>
+              </div>
+              <p className="m-0 text-[14px] leading-[1.5]">
+                Une question sur son passage ?{' '}
+                <a
+                  href={`mailto:${robotContact}`}
+                  data-testid="robot-contact"
+                  className="font-bold text-lime-400 [overflow-wrap:anywhere]"
+                >
+                  {robotContact}
+                </a>
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3.5 rounded-lg bg-lime-400 p-6 text-on-lime max-sm:p-5">
+              <div className="flex flex-col gap-1">
+                <span className="text-[12px] font-bold tracking-[.06em] uppercase opacity-80">
+                  Vous gérez le site d’une université ?
+                </span>
+                <h3 className={H3}>Exclure votre site</h3>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[14px] font-bold">
+                  Option 1 · Dans votre robots.txt{' '}
+                  <span className="font-medium">
+                    (pris en compte sous {ROBOTS_CACHE_HOURS} h au plus)
+                  </span>
+                </span>
+                <div className="flex flex-wrap items-center gap-2.5 rounded-[14px] bg-night px-3.5 py-3">
+                  <pre className="m-0 min-w-0 flex-[1_1_200px] font-mono text-[13px] leading-[1.6] whitespace-pre-wrap text-lime-400">
+                    {ROBOTS_EXCLUSION}
+                  </pre>
+                  <CopyButton text={ROBOTS_EXCLUSION} label="Copier les lignes de robots.txt" />
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-2.5">
+                <span className="text-[14px] font-bold">
+                  Option 2 · Par mail{' '}
+                  <span className="font-medium">
+                    (retiré de la collecte sous {MAIL_EXCLUSION_HOURS} h)
+                  </span>
+                </span>
+                <a
+                  href={exclusionMail}
+                  className="inline-flex min-h-11 max-w-full items-center rounded-pill bg-night px-5 text-[15px] font-bold text-on-night no-underline [overflow-wrap:anywhere]"
+                >
+                  Écrire à {robotContact}
+                </a>
+              </div>
+            </div>
           </div>
         </section>
 

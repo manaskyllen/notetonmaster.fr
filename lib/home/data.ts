@@ -44,7 +44,7 @@ export interface HomeReview {
   programTitle: string;
   programSlug: string;
   where: string;
-  level: 'M1' | 'M2' | 'GRADUATE';
+  level: 'M1' | 'M2' | 'GRADUATE' | 'LEFT';
 }
 
 /** Reviews published before the section « Ce qu'en disent les étudiant·es » appears. */

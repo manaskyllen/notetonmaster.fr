@@ -21,9 +21,20 @@ async function audit(page: Page, label: string) {
   expect(serious, `${label}: serious/critical axe violations`).toEqual([]);
 }
 
-for (const scheme of ['light', 'dark'] as const) {
+// Light and dark on a computer, and light on a phone (390 px, issue #14).
+const VARIANTS = [
+  { scheme: 'light', width: null },
+  { scheme: 'dark', width: null },
+  { scheme: 'light', width: 390 },
+] as const;
+
+for (const { scheme: s, width } of VARIANTS) {
+  const scheme = width ? `${s}, ${width} px` : s;
   test.describe(`accessibility (${scheme})`, () => {
-    test.use({ colorScheme: scheme });
+    test.use({
+      colorScheme: s,
+      ...(width ? { viewport: { width, height: 844 }, isMobile: true, hasTouch: true } : {}),
+    });
     test('home', async ({ page }) => {
       await page.goto('/');
       await audit(page, `home ${scheme}`);

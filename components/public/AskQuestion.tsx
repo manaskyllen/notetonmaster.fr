@@ -22,7 +22,7 @@ export function AskQuestionToggle({
   review,
   loggedIn,
 }: {
-  review: { id: string; title: string | null };
+  review: { id: string };
   loggedIn?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -74,7 +74,7 @@ function AskForm({
   onClose,
 }: {
   titleId: string;
-  review: { id: string; title: string | null };
+  review: { id: string };
   loggedIn: boolean;
   onSent: () => void;
   onClose: () => void;
@@ -159,11 +159,7 @@ function AskForm({
         <h2 id={titleId} className="nm-modal__title">
           Poser une question
         </h2>
-        {review.title && (
-          <span className="pr-12 text-[14px] text-ink-muted">
-            À l’auteur·rice de l’avis « {review.title} »
-          </span>
-        )}
+        <span className="pr-12 text-[14px] text-ink-muted">À l’auteur·rice de cet avis</span>
       </span>
       {error && <Notice tone="danger">{error}</Notice>}
       <Field label="Ta question" error={errors.message}>

@@ -68,6 +68,19 @@ const ADMIN_MATRIX: Row[] = [
     'moderation.manage',
     [{ kind: 'avis', id: NONE, action: 'publish' }],
   ],
+  [
+    '(panel)/qr/actions.ts',
+    'createQrLink',
+    'team.manage',
+    [{ label: 'Matrice', slug: 'matrice-qr', targetPath: '/' }],
+  ],
+  [
+    '(panel)/qr/actions.ts',
+    'updateQrLink',
+    'team.manage',
+    [{ id: NONE, label: 'Matrice', targetPath: '/' }],
+  ],
+  ['(panel)/qr/actions.ts', 'archiveQrLink', 'team.manage', [NONE]],
   ['(panel)/parametres/actions.ts', 'saveSettings', 'team.manage', [{}]],
   ['(panel)/parametres/actions.ts', 'saveBanner', 'team.manage', [{}]],
   ['(panel)/parametres/villes-actions.ts', 'saveZones', 'team.manage', [[]]],
@@ -148,6 +161,7 @@ const MODULES: Record<string, () => Promise<unknown>> = {
   '(panel)/parametres/actions.ts': () => import('@/app/admin/(panel)/parametres/actions'),
   '(panel)/parametres/villes-actions.ts': () =>
     import('@/app/admin/(panel)/parametres/villes-actions'),
+  '(panel)/qr/actions.ts': () => import('@/app/admin/(panel)/qr/actions'),
   '(panel)/recuperation/actions.ts': () => import('@/app/admin/(panel)/recuperation/actions'),
   '(panel)/recuperation/rapprochements/actions.ts': () =>
     import('@/app/admin/(panel)/recuperation/rapprochements/actions'),
@@ -295,6 +309,14 @@ describe('admin routes', () => {
       'connectionLogs.view',
       async () =>
         (await import('@/app/admin/legal/[id]/export/route')).GET(new Request('http://x'), {
+          params: Promise.resolve({ id: NONE }),
+        }),
+    ],
+    [
+      '/admin/qr/[id]/code',
+      'team.manage',
+      async () =>
+        (await import('@/app/admin/qr/[id]/code/route')).GET(new Request('http://x'), {
           params: Promise.resolve({ id: NONE }),
         }),
     ],
