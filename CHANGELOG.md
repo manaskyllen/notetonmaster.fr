@@ -14,6 +14,14 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
   (disciplines « S.H.S. » et « M.E.E.F. » non reconnues) ; corrigé, et signalé dans « À traiter »
   de l'administration si cela se reproduit.
 
+### Avis
+
+- Formulaire d'avis : nouveau statut « J'ai arrêté en cours », avec « Et aujourd'hui ? »
+  facultatif et « Qu'est-ce qui t'a fait partir ? » facultatif. Sur la fiche : pastille « Ex »,
+  « A quitté le master en cours » sans année, bloc « Pourquoi je suis parti·e » et filtre
+  « Parti·es en cours » (s'il y a au moins un avis de ce type). Modération : statut et motif
+  visibles, filtre par statut de l'auteur·rice dans « Tous les avis ».
+
 ### Sécurité
 
 - Anonymat renforcé au dépôt d'un avis ; un avis « avec mon espace » est rattaché après
@@ -40,3 +48,6 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
   applicatif (ajout seulement).
 - `20261124090000_mention_domains` : domaine des mentions qui n'en avaient pas, d'après les
   disciplines de leurs parcours (données seulement, aucun domaine existant modifié).
+- `20261125090000_review_level_left` : statut `LEFT` et colonne facultative `leaveReason` des avis
+  (ajouts seulement ; retour en arrière : `down.sql` du dossier, refusé tant qu'un avis utilise ce
+  statut).

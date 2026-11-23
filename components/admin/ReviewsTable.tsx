@@ -41,6 +41,14 @@ const FILTERS = [
   ['REJECTED', 'Refusés'],
   ['PENDING_CONFIRMATION', 'Mail à confirmer'],
 ] as const;
+/** Status of the author (?niveau=…): M1, M2, graduates, left during the year. */
+const LEVELS = [
+  ['all', 'Tous'],
+  ['M1', 'M1'],
+  ['M2', 'M2'],
+  ['GRADUATE', 'Diplômé·es'],
+  ['LEFT', 'Parti·es en cours'],
+] as const;
 
 /**
  * « Tous les avis »: the page of reviews rendered by the server (?q, ?statut, ?page, 25 per page);
@@ -51,12 +59,15 @@ export function ReviewsTable({
   counts,
   q: initialQ,
   status: st,
+  level = 'all',
   pagination,
 }: {
   rows: AdminReviewRow[];
   counts: Record<string, number>;
   q: string;
   status: string;
+  /** Status of the author: all, M1, M2, GRADUATE, LEFT. */
+  level?: string;
   pagination?: React.ReactNode;
 }) {
   const url = useListUrl();
@@ -107,6 +118,19 @@ export function ReviewsTable({
               className={chipClasses(st === k, 'filter', 'min-h-10 px-3 text-[13px]')}
             >
               {l} · {counts[k] ?? 0}
+            </Link>
+          ))}
+        </nav>
+        <nav aria-label="Statut de l’auteur·rice" className="flex flex-wrap gap-1.5">
+          {LEVELS.map(([k, l]) => (
+            <Link
+              key={k}
+              href={url.hrefWith({ niveau: k === 'all' ? null : k })}
+              scroll={false}
+              aria-current={level === k ? 'true' : undefined}
+              className={chipClasses(level === k, 'filter', 'min-h-10 px-3 text-[13px]')}
+            >
+              {l}
             </Link>
           ))}
         </nav>

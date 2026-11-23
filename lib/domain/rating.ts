@@ -34,8 +34,34 @@ export function ratingSummary(values: number[]): {
   return { average: avg, label: `${formatRating(avg)} · ${count} avis`, count };
 }
 
-export const LEVEL_SHORT = { M1: 'M1', M2: 'M2', GRADUATE: 'D' } as const;
-export const LEVEL_LABEL = { M1: 'M1', M2: 'M2', GRADUATE: 'Diplômé·e' } as const;
+/** Status of the author of a review (enum ReviewLevel). LEFT: « J'ai arrêté en cours ». */
+export const REVIEW_LEVEL_IDS = ['M1', 'M2', 'GRADUATE', 'LEFT'] as const;
+export type ReviewLevelKey = (typeof REVIEW_LEVEL_IDS)[number];
+
+/** Choices of « Tu es… » (review form, Mon espace). */
+export const LEVEL_CHOICE: Record<ReviewLevelKey, string> = {
+  M1: 'En M1',
+  M2: 'En M2',
+  GRADUATE: 'Diplômé·e',
+  LEFT: 'J’ai arrêté en cours',
+};
+/** Tile of a review card. */
+export const LEVEL_SHORT = { M1: 'M1', M2: 'M2', GRADUATE: 'D', LEFT: 'Ex' } as const;
+export const LEVEL_LABEL = {
+  M1: 'M1',
+  M2: 'M2',
+  GRADUATE: 'Diplômé·e',
+  LEFT: 'A quitté le master en cours',
+} as const;
+
+/**
+ * « M2 · promo 2025 » after « Anonyme · ». Never a year for LEFT: few people leave during the
+ * year, and a year with the master can be enough to recognise someone in a small promo.
+ */
+export function authorWho(level: ReviewLevelKey, cohortYear: number | null | undefined): string {
+  if (level === 'LEFT' || cohortYear == null) return LEVEL_LABEL[level];
+  return `${LEVEL_LABEL[level]} · promo ${cohortYear}`;
+}
 
 /**
  * Light tints from red (1) to green (5); the text on them stays `ink` (contrast ≥ 10:1).

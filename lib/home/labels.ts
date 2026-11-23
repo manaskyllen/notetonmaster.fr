@@ -68,7 +68,12 @@ export function excerpt(text: string, max = 220): string {
 }
 
 /** Who wrote it, as little as the fiche says: « en M1 », « en M2 », « diplômé·e ». */
-export const AUTHOR_LEVEL = { M1: 'en M1', M2: 'en M2', GRADUATE: 'diplômé·e' } as const;
+export const AUTHOR_LEVEL = {
+  M1: 'en M1',
+  M2: 'en M2',
+  GRADUATE: 'diplômé·e',
+  LEFT: 'parti·e en cours',
+} as const;
 
 // ───────────── Highlight ─────────────
 

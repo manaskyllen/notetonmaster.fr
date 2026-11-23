@@ -3,12 +3,14 @@ import { cn } from '@/lib/cn';
 import { Icon } from './Icon';
 import { Grade } from './Grade';
 
-export type ReviewLevel = 'M1' | 'M2' | 'D';
+export type ReviewLevel = 'M1' | 'M2' | 'D' | 'Ex';
 
 const LEVEL_CLASS: Record<ReviewLevel, string> = {
   M1: 'bg-coral-300 text-on-lime',
   M2: 'bg-violet-100 text-violet-700',
   D: 'bg-lime-400 text-on-lime',
+  // Left during the year: neutral grey (#F0EEF5), never a colour that judges.
+  Ex: 'bg-surface-100 text-ink',
 };
 
 export interface ReviewCardProps {
@@ -25,6 +27,8 @@ export interface ReviewCardProps {
   openToQuestions?: boolean;
   /** Graduates: « en poste · chargé de mission patrimoine » (after « Aujourd'hui : »). */
   today?: string | null;
+  /** Left during the year: « Pourquoi je suis parti·e », under « On a aimé » / « Moins bien ». */
+  leaveReason?: string | null;
   /** Helpful button, report link, ask button… (defaults to a report link only). */
   actions?: React.ReactNode;
   /** Content rendered under the actions (e.g. the question form). */
@@ -60,6 +64,7 @@ export function ReviewCard({
   verified = true,
   openToQuestions,
   today,
+  leaveReason,
   actions,
   footer,
   reply,
@@ -139,6 +144,14 @@ export function ReviewCard({
           <span className="whitespace-pre-line">{minus}</span>
         </div>
       </div>
+      {leaveReason ? (
+        <div className="flex flex-col gap-1.5 rounded-md bg-surface-50 px-4 py-3.5 text-[15px] leading-[1.5]">
+          <span className="text-[12px] font-bold tracking-[0.05em] text-ink uppercase">
+            Pourquoi je suis parti·e
+          </span>
+          <span className="whitespace-pre-line">{leaveReason}</span>
+        </div>
+      ) : null}
       {reply}
       <div className="flex flex-wrap items-center gap-2.5">
         {actions ?? <ReportLink href={reportHref} />}

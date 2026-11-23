@@ -5,7 +5,13 @@ import { prisma } from '@/lib/db';
 import type { Prisma } from '@/lib/db/generated/client';
 import type { Modality } from '@/lib/db/generated/enums';
 import { summarizeOrigins } from '@/lib/domain/admission-origins';
-import { CRITERIA, type CriterionKey } from '@/lib/domain/rating';
+import { hasSituation } from '@/lib/domain/graduate';
+import {
+  CRITERIA,
+  REVIEW_LEVEL_IDS,
+  type CriterionKey,
+  type ReviewLevelKey,
+} from '@/lib/domain/rating';
 
 // ───────────────────────────── admission stats ─────────────────────────────
 
@@ -225,14 +231,17 @@ export type ProgramDetail = NonNullable<Awaited<ReturnType<typeof getProgram>>>;
 export interface PublicReview {
   id: string;
   ref: string;
-  level: 'M1' | 'M2' | 'GRADUATE';
+  level: ReviewLevelKey;
   employmentStatus: 'EMPLOYED' | 'JOB_SEEKING' | 'FURTHER_STUDY' | 'OTHER' | null;
   jobTitle: string | null;
-  cohortYear: number;
+  /** Never sent for LEFT (anonymity: lib/domain/rating.ts authorWho). */
+  cohortYear: number | null;
   rating: number;
   title: string | null;
   pros: string;
   cons: string;
+  /** « Pourquoi je suis parti·e » (LEFT only). */
+  leaveReason: string | null;
   isVerified: boolean;
   acceptsQuestions: boolean;
   helpfulCount: number;
@@ -243,7 +252,7 @@ export interface PublicReview {
   reply: { body: string; domain: string; publishedAt: Date } | null;
 }
 
-export const REVIEW_LEVELS = ['M1', 'M2', 'GRADUATE'] as const;
+export const REVIEW_LEVELS = REVIEW_LEVEL_IDS;
 export type ReviewLevelFilter = (typeof REVIEW_LEVELS)[number] | 'all';
 export const REVIEW_SORTS = [
   { id: 'recents', label: 'Plus récents' },
@@ -313,6 +322,10 @@ export async function getReviewPage(
     requestedPage: opts.page,
     count,
     total: byLevel.reduce((a, l) => a + l._count._all, 0),
+    /** Published reviews per level (the « Parti·es en cours » filter needs one at least). */
+    byLevel: Object.fromEntries(byLevel.map((l) => [l.level, l._count._all])) as Partial<
+      Record<ReviewLevelKey, number>
+    >,
     hasDemo: demo > 0,
     stats: {
       count,
@@ -375,6 +388,7 @@ export async function getPublishedReviews(
       title: true,
       pros: true,
       cons: true,
+      leaveReason: true,
       isVerified: true,
       acceptsQuestions: true,
       helpfulCount: true,
@@ -398,13 +412,14 @@ export async function getPublishedReviews(
     id: r.id,
     ref: r.ref,
     level: r.level,
-    employmentStatus: r.level === 'GRADUATE' ? r.employmentStatus : null,
+    employmentStatus: hasSituation(r.level) ? r.employmentStatus : null,
     jobTitle: r.level === 'GRADUATE' && r.employmentStatus === 'EMPLOYED' ? r.jobTitle : null,
-    cohortYear: r.cohortYear,
+    cohortYear: r.level === 'LEFT' ? null : r.cohortYear,
     rating: r.overallRating,
     title: r.title,
     pros: r.pros,
     cons: r.cons,
+    leaveReason: r.level === 'LEFT' ? r.leaveReason?.trim() || null : null,
     isVerified: r.isVerified,
     // Account holders can switch questions off globally; reviews without account keep their own choice.
     acceptsQuestions:

@@ -42,6 +42,8 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
       message: 'Certains champs sont à corriger.',
     };
   const d = parsed.data;
+  // « Qu'est-ce qui t'a fait partir ? » belongs to LEFT only.
+  const leaveReason = (d.level === 'LEFT' && d.leaveReason?.trim()) || null;
   const human = await verifyTurnstile('review', turnstileTokenOf(input));
   if (!human.ok) return { ok: false, message: human.message };
   const settings = await getSettings();
@@ -57,7 +59,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
     };
 
   if (settings['moderation.nameDetection']) {
-    const hit = detectNamedPerson(d.title, d.pros, d.cons);
+    const hit = detectNamedPerson(d.title, d.pros, d.cons, leaveReason);
     if (hit.found)
       return {
         ok: false,
@@ -134,9 +136,14 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
   const student = proven ? current : null;
   const watched = (settings['moderation.watchTerms'] as string[])
     .map(normalize)
-    .some((w) => w && normalize(`${d.title ?? ''} ${d.pros} ${d.cons}`).includes(w));
+    .some(
+      (w) =>
+        w && normalize(`${d.title ?? ''} ${d.pros} ${d.cons} ${leaveReason ?? ''}`).includes(w),
+    );
   const autoPublish =
-    settings['moderation.autoPublish'] && !watched && !containsContacts(`${d.pros} ${d.cons}`);
+    settings['moderation.autoPublish'] &&
+    !watched &&
+    !containsContacts(`${d.pros} ${d.cons} ${leaveReason ?? ''}`);
   const status = !student ? 'PENDING_CONFIRMATION' : autoPublish ? 'PUBLISHED' : 'PENDING';
   const scores = Object.entries(d.scores).filter(
     (e): e is [string, number] => typeof e[1] === 'number',
@@ -156,6 +163,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
       title: d.title || null,
       pros: d.pros,
       cons: d.cons,
+      leaveReason,
       status,
       acceptsQuestions: d.acceptsQuestions,
       wantsBadge: d.mode === 'account' && d.wantsBadge,

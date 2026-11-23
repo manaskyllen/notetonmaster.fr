@@ -11,7 +11,7 @@ import { ReviewCard, type ReviewLevel } from '@/components/ui/ReviewCard';
 import { getCurrentResponder } from '@/lib/auth/staff';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@/lib/db/generated/client';
-import { LEVEL_LABEL, LEVEL_SHORT } from '@/lib/domain/rating';
+import { authorWho, LEVEL_SHORT } from '@/lib/domain/rating';
 import { readPage, type Params } from '@/lib/pagination';
 import { staffLogout } from './actions';
 
@@ -82,6 +82,7 @@ export default async function ReponseFormationPage({
           title: true,
           pros: true,
           cons: true,
+          leaveReason: true,
           isVerified: true,
           publishedAt: true,
           program: { select: { slug: true, title: true } },
@@ -131,12 +132,13 @@ export default async function ReponseFormationPage({
               </Link>
               <ReviewCard
                 level={LEVEL_SHORT[r.level] as ReviewLevel}
-                who={`${LEVEL_LABEL[r.level]} · promo ${r.cohortYear}`}
+                who={authorWho(r.level, r.cohortYear)}
                 date={r.publishedAt ? monthYear.format(r.publishedAt) : ''}
                 rating={r.overallRating}
                 title={r.title}
                 plus={r.pros}
                 minus={r.cons}
+                leaveReason={r.level === 'LEFT' ? r.leaveReason : null}
                 verified={r.isVerified}
               />
               <ResponseEditor

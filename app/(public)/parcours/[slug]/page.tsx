@@ -28,7 +28,7 @@ import {
 } from '@/lib/domain/program-outline';
 import { ReviewList, type ReviewItem } from '@/components/public/ReviewList';
 import { ReviewsSummaryButton } from '@/components/public/ReviewsSummaryButton';
-import { REVIEW_FILTERS } from '@/lib/domain/review-filters';
+import { visibleReviewFilters } from '@/lib/domain/review-filters';
 import { splitParcoursTitle } from '@/lib/domain/titles';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { buttonClasses, CtaArrow, ctaClasses } from '@/components/ui/Button';
@@ -37,7 +37,7 @@ import { Pagination } from '@/components/ui/Pagination';
 import { ScoreBar } from '@/components/ui/ScoreBar';
 import { getCurrentStudent } from '@/lib/auth/student';
 import { prisma } from '@/lib/db';
-import { CRITERION_LABEL, LEVEL_LABEL } from '@/lib/domain/rating';
+import { authorWho, CRITERION_LABEL } from '@/lib/domain/rating';
 import { formatDate, formatInt } from '@/lib/format';
 import {
   getProgram,
@@ -298,12 +298,13 @@ export default async function ParcoursPage({
     level: r.level,
     employmentStatus: r.employmentStatus,
     jobTitle: r.jobTitle,
-    who: `${LEVEL_LABEL[r.level]} · promo ${r.cohortYear}`,
+    who: authorWho(r.level, r.cohortYear),
     date: monthYear.format(r.publishedAt),
     rating: r.rating,
     title: r.title,
     pros: r.pros,
     cons: r.cons,
+    leaveReason: r.leaveReason,
     isVerified: r.isVerified,
     acceptsQuestions: r.acceptsQuestions,
     helpfulCount: r.helpfulCount,
@@ -321,7 +322,7 @@ export default async function ParcoursPage({
           stats={stats}
           level={level}
           sort={sort}
-          levels={REVIEW_FILTERS.map((f) => ({
+          levels={visibleReviewFilters(rp.byLevel, level).map((f) => ({
             id: f.id,
             label: f.label,
             href: avisHref(p.slug, { niveau: f.id, tri: sort }),

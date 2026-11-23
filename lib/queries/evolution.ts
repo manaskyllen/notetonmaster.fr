@@ -77,7 +77,8 @@ export async function getEvolution(p: {
       : [],
     prisma.review.groupBy({
       by: ['cohortYear'],
-      where: { programId: p.id, status: 'PUBLISHED' },
+      // Never by year for LEFT: its cohort year is not shown (lib/domain/rating.ts authorWho).
+      where: { programId: p.id, status: 'PUBLISHED', level: { not: 'LEFT' } },
       _avg: { overallRating: true },
       _count: { _all: true },
     }),

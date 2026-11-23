@@ -18,6 +18,10 @@ export interface ChoiceGroupProps<V extends string> {
   options: ChoiceOption<V>[];
   value: V | '' | null | undefined;
   onChange: (v: V) => void;
+  /** Optional choice: a click on the chosen card unselects it (then `onClear`). */
+  onClear?: () => void;
+  /** Line under the cards, inside the group (e.g. « Ta situation n'est pas dans la liste ? »). */
+  hint?: React.ReactNode;
   /**
    * `level` (52px), `situation` (48px, graduate status), `mode` (publication cards),
    * `request` (Signaler: type of request).
@@ -30,14 +34,15 @@ export interface ChoiceGroupProps<V extends string> {
 }
 
 const ROW: Record<NonNullable<ChoiceGroupProps<string>['variant']>, string> = {
-  level: 'flex flex-wrap gap-2',
+  // Four statuses: 2 × 2 on a phone, one row from 640 px.
+  level: 'grid grid-cols-2 gap-2 sm:grid-cols-4',
   situation: 'flex flex-wrap gap-2',
   mode: 'grid grid-cols-[repeat(auto-fit,minmax(min(240px,100%),1fr))] gap-2.5',
   request: 'grid grid-cols-[repeat(auto-fit,minmax(min(240px,100%),1fr))] gap-2.5',
 };
 
 const ITEM: Record<NonNullable<ChoiceGroupProps<string>['variant']>, string> = {
-  level: 'flex-[1_1_140px]',
+  level: 'min-w-0 text-center leading-tight',
   situation: 'flex-[1_1_150px]',
   mode: '',
   request: '',
@@ -53,6 +58,8 @@ export function ChoiceGroup<V extends string>({
   options,
   value,
   onChange,
+  onClear,
+  hint,
   variant = 'level',
   error,
   className,
@@ -84,7 +91,7 @@ export function ChoiceGroup<V extends string>({
             role="radio"
             aria-checked={on}
             tabIndex={on || (current === -1 && i === 0) ? 0 : -1}
-            onClick={() => onChange(o.value)}
+            onClick={() => (on && onClear ? onClear() : onChange(o.value))}
             onKeyDown={(e) => {
               if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -117,18 +124,24 @@ export function ChoiceGroup<V extends string>({
       })}
     </div>
   );
+  const after = (
+    <>
+      {error && <span className="nm-error mt-2 block">{error}</span>}
+      {hint && <span className="nm-hint mt-2 block">{hint}</span>}
+    </>
+  );
   if (!legend)
     return (
       <div className={className}>
         {group}
-        {error && <span className="nm-error mt-2 block">{error}</span>}
+        {after}
       </div>
     );
   return (
     <fieldset className={cn('m-0 min-w-0 border-0 p-0', className)}>
       <legend className="nm-label mb-2.5 px-0.5">{legend}</legend>
       {group}
-      {error && <span className="nm-error mt-2 block">{error}</span>}
+      {after}
     </fieldset>
   );
 }

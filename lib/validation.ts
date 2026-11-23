@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { REVIEW_LEVEL_IDS } from '@/lib/domain/rating';
 import {
   EMPLOYMENT_STATUSES,
   graduateSituationErrors,
@@ -43,11 +44,13 @@ export const CONTACT_SUBJECTS = {
 // ───────────── reviews ─────────────
 
 export const REVIEW_MIN_CHARS = 30;
+/** « Qu'est-ce qui t'a fait partir ? » (LEFT only, optional). */
+export const LEAVE_REASON_MAX = 1500;
 export const CURRENT_YEAR = new Date().getFullYear();
 
 export const reviewStep1 = z.object({
   programSlug: z.string({ error: 'Choisis ton master.' }).min(1, 'Choisis ton master.'),
-  level: z.enum(['M1', 'M2', 'GRADUATE'], { error: 'Indique ton niveau.' }),
+  level: z.enum(REVIEW_LEVEL_IDS, { error: 'Indique ton niveau.' }),
   cohortYear: z.coerce
     .number({ error: 'Indique ton année d’entrée.' })
     .int()
@@ -82,6 +85,12 @@ export const reviewStep2 = z.object({
     .trim()
     .min(REVIEW_MIN_CHARS, `${REVIEW_MIN_CHARS} caractères minimum.`)
     .max(3000, '3 000 caractères maximum.'),
+  leaveReason: z
+    .string()
+    .trim()
+    .max(LEAVE_REASON_MAX, '1 500 caractères maximum.')
+    .nullish()
+    .or(z.literal('')),
   scores: z
     .object({
       CONTENT: criterionScore,

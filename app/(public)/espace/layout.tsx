@@ -3,6 +3,7 @@ import { EspaceNav, TabFade } from '@/components/espace/EspaceNav';
 import { CtaArrow, ctaClasses } from '@/components/ui/Button';
 import { DemoNotice } from '@/components/ui/Notice';
 import { cn } from '@/lib/cn';
+import { LEVEL_SHORT } from '@/lib/domain/rating';
 import { getEspace } from '@/lib/espace';
 import { logout } from '../connexion/actions';
 
@@ -32,7 +33,7 @@ export default async function EspaceLayout({ children }: { children: React.React
               aria-hidden="true"
               className="flex size-11 flex-none items-center justify-center rounded-[14px] bg-violet-100 font-display text-[16px] font-extrabold text-violet-700"
             >
-              {level === 'GRADUATE' ? 'D' : (level ?? '·')}
+              {level ? LEVEL_SHORT[level] : '·'}
             </span>
             <span className="flex min-w-0 flex-col gap-0.5">
               <span className="text-[15px] font-bold">Mon espace</span>

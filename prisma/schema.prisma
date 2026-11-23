@@ -1126,10 +1126,13 @@ enum VerificationStatus {
   MORE_INFO
 }
 
+/// LEFT: « J'ai arrêté en cours » (left the master before the end). Its cohort year is asked
+/// but never shown: few people leave, a year and a master can be enough to recognise someone.
 enum ReviewLevel {
   M1
   M2
   GRADUATE
+  LEFT
 }
 
 /// "Parcours vérifié" is earned master by master (brief 8.3): one verification links a student
@@ -1166,7 +1169,7 @@ model ProgramVerification {
   @@index([documentId])
 }
 
-/// Situation of a graduate today (required when level = GRADUATE).
+/// Situation today: required when level = GRADUATE, optional when level = LEFT.
 enum EmploymentStatus {
   EMPLOYED
   JOB_SEEKING
@@ -1202,13 +1205,14 @@ model Review {
   contactEmailEnc  String? // reviews without an account
   level            ReviewLevel
   viewCount        Int               @default(0) // reads, once per visitor and per day (ReviewView)
-  employmentStatus EmploymentStatus? // required for GRADUATE
+  employmentStatus EmploymentStatus? // required for GRADUATE, optional for LEFT
   jobTitle         String?           @db.VarChar(80) // required for EMPLOYED: "type of job, type of employer"
-  cohortYear       Int
+  cohortYear       Int // never shown for LEFT
   overallRating    Int
   title            String?
   pros             String
   cons             String
+  leaveReason      String? // « Qu'est-ce qui t'a fait partir ? » (LEFT only, optional)
   status           ReviewStatus      @default(PENDING)
   isVerified       Boolean           @default(false)
   acceptsQuestions Boolean           @default(false)
