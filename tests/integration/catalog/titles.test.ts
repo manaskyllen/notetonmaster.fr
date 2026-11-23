@@ -9,11 +9,13 @@ describe('titles: « Parcours : M2 Spécialité »', () => {
       title: 'Droit des affaires approfondi',
       parent: 'Droit des affaires',
       entersInM2: true,
+      subtitle: null,
     });
     expect(splitParcoursTitle('Valorisation des nouveaux patrimoines')).toEqual({
       title: 'Valorisation des nouveaux patrimoines',
       parent: null,
       entersInM2: false,
+      subtitle: null,
     });
     expect(splitParcoursTitle('MEEF : M1 ou M2 ?').parent).toBeNull();
   });
@@ -30,6 +32,7 @@ describe('titles: « Parcours : M2 Spécialité »', () => {
     if (rows.length < 5) return; // pilot seed only: no such title
     for (const r of rows) {
       const s = splitParcoursTitle(r.title);
+      if (s.subtitle) continue; // its title lost a « (tronc commun …) »: compared by the index test
       expect(s.entersInM2, r.title).toBe(true);
       expect(r.entryLevel, r.title).toBe('M2');
       if (r.searchIndex) expect(r.searchIndex).toEqual({ title: s.title, parentTitle: s.parent });

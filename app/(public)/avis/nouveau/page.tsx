@@ -6,6 +6,7 @@ import { prisma } from '@/lib/db';
 import { reviewFormTitle, reviewFormUrl } from '@/lib/domain/share';
 import { splitParcoursTitle } from '@/lib/domain/titles';
 import { getProgram } from '@/lib/queries/catalog';
+import { currentProgramSlug } from '@/lib/data/slugs';
 import { draftOwnerOf } from '@/lib/review-draft-owner';
 import { PRIVATE_ROBOTS, seoMetadata } from '@/lib/seo/meta';
 import { reviewFormOgPath } from '@/lib/share-data';
@@ -24,8 +25,10 @@ export async function generateMetadata({
 }: {
   searchParams: Promise<{ parcours?: string }>;
 }): Promise<Metadata> {
-  const { parcours } = await searchParams;
-  const p = typeof parcours === 'string' && parcours ? await getProgram(parcours) : null;
+  const { parcours: asked } = await searchParams;
+  // A former slug (a cursus merged into its parcours, a link printed before): the parcours.
+  const parcours = typeof asked === 'string' && asked ? await currentProgramSlug(asked) : null;
+  const p = parcours ? await getProgram(parcours) : null;
   if (!p) return { title: 'Donner mon avis', robots: PRIVATE_ROBOTS, description: DESCRIPTION };
   const title = splitParcoursTitle(p.title).title;
   const meta = seoMetadata({
@@ -47,7 +50,8 @@ export default async function NewReviewPage({
 }: {
   searchParams: Promise<{ parcours?: string }>;
 }) {
-  const [{ parcours }, student] = await Promise.all([searchParams, getCurrentStudent()]);
+  const [{ parcours: asked }, student] = await Promise.all([searchParams, getCurrentStudent()]);
+  const parcours = typeof asked === 'string' && asked ? await currentProgramSlug(asked) : null;
   // Only the program named in the URL: the form searches the others (/api/search).
   const p = parcours
     ? await prisma.program.findFirst({
@@ -84,7 +88,7 @@ export default async function NewReviewPage({
     <main className="mx-auto box-border w-full max-w-[768px] px-6 pt-8 pb-20">
       <ReviewForm
         programs={options}
-        initialProgram={options.some((o) => o.slug === parcours) ? parcours : undefined}
+        initialProgram={parcours && options.some((o) => o.slug === parcours) ? parcours : undefined}
         accountEmail={student ? decrypt(student.emailEnc) : null}
         draftOwner={student ? draftOwnerOf(student.id) : null}
       />

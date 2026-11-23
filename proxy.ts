@@ -42,7 +42,8 @@ function csp(nonce: string, turnstile: boolean) {
 
 /**
  * A fiche parcours is answered here before the page streams (its loading screen would commit a
- * 200 first): a former slug (renamed homonym, ProgramSlugRedirect) → 301 to the new one; an
+ * 200 first): a former slug (renamed homonym, cursus merged into its parcours: ProgramSlugRedirect)
+ * → 301 to the new one; an
  * unknown or unpublished slug → a real 404. One indexed lookup by slug.
  */
 async function parcoursGate(
@@ -59,10 +60,13 @@ async function parcoursGate(
   const { prisma } = await import('@/lib/db');
   const p = await prisma.program.findUnique({
     where: { slug },
-    select: { isPublished: true, inOpenZone: true },
+    select: { isPublished: true, inOpenZone: true, status: true },
   });
-  if (p?.isPublished) return p.inOpenZone ? null : { notYet: slug };
-  if (p) return { missing: true };
+  // A cursus merged into its parcours (issue #21) answers 301 like a former slug.
+  if (p && p.status !== 'MERGED') {
+    if (p.isPublished) return p.inOpenZone ? null : { notYet: slug };
+    return { missing: true };
+  }
   const r = await prisma.programSlugRedirect.findUnique({
     where: { slug },
     select: { programId: true },

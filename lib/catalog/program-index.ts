@@ -7,6 +7,7 @@ import { communeIndex, forgetCommuneIndex } from '../data/commune-index';
 import { refreshProgramAvailability } from '../launch/zones';
 import { normCity } from '../data/normalize';
 import { disciplineDomainSql } from '../domain/discipline-domain';
+import { SQL_SUBTITLE } from './variants';
 
 /**
  * ProgramSearchIndex: one row per listed program, rebuilt after each publication and
@@ -56,6 +57,20 @@ agg AS (
                           AND (s."monMasterEntryId" IS NOT NULL) = l.mm
    GROUP BY 1, 2
 ),
+cur AS (
+  -- Cursus (issue #21): numbers of the latest session, the largest first.
+  SELECT e."programId", count(*)::int AS n,
+         array_agg(e."cursusLabel" ORDER BY st.capacity DESC NULLS LAST, e.code) AS labels,
+         bool_or(e."cursusLabel" IS NULL) AS anynull
+    FROM "MonMasterEntry" e
+    JOIN listed l ON l.id = e."programId"
+    LEFT JOIN LATERAL (
+      SELECT s.capacity FROM "AdmissionStat" s WHERE s."monMasterEntryId" = e.id
+       ORDER BY s.session DESC LIMIT 1
+    ) st ON true
+   WHERE e."lastSession" = (SELECT max(x."lastSession") FROM "MonMasterEntry" x WHERE x."programId" = e."programId")
+   GROUP BY 1
+),
 acc AS (
   SELECT DISTINCT ON (s."programId") s."programId", s."accessRate"
     FROM "AdmissionStat" s JOIN listed l ON l.id = s."programId"
@@ -78,7 +93,8 @@ base AS (
          ARRAY(SELECT z.slug FROM "LaunchZone" z WHERE z.open AND z."communeCodes" && p."siteCommunes"
                 ORDER BY z."order") AS zone_slugs,
          substring(p.title FROM '^(.+?) : M2 .+$') AS parent_title,
-         coalesce(substring(p.title FROM '^.+? : M2 (.+)$'), p.title) AS title
+         coalesce(substring(p.title FROM '^.+? : M2 (.+)$'), p.title) AS full_title,
+         cur.n AS cursus_n, cur.labels AS cursus_labels, cur.anynull AS cursus_anynull
     FROM listed p
     JOIN "University" u ON u.id = p."universityId"
     JOIN "Mention" m ON m.id = p."mentionId"
@@ -94,6 +110,17 @@ base AS (
     ) ci ON true
     LEFT JOIN agg ON agg."programId" = p.id
     LEFT JOIN acc ON acc."programId" = p.id
+    LEFT JOIN cur ON cur."programId" = p.id
+),
+split AS (
+  -- A final « (tronc commun menant vers …) » leaves the title: the subtitle (lib/catalog/variants.ts).
+  SELECT b.*, regexp_match(b.full_title, '${SQL_SUBTITLE.replace(/'/g, "''")}', 'i') AS sub
+    FROM base b
+),
+titled AS (
+  SELECT s.*, coalesce(s.sub[1], s.full_title) AS title,
+         CASE WHEN s.sub IS NOT NULL THEN upper(left(s.sub[2], 1)) || substr(s.sub[2], 2) END AS subtitle
+    FROM split s
 ),
 calc AS (
   SELECT b.*,
@@ -111,7 +138,7 @@ calc AS (
               ELSE 'PRIVATE' END AS kind,
          CASE WHEN length(b.uname) <= 42 OR b.ushort IS NULL THEN b.uname ELSE b.ushort END AS ushort_display,
          coalesce(b.city_name, b.raw_city) AS city_display
-    FROM base b
+    FROM titled b
 )
 SELECT id AS "programId", slug, title, parent_title AS "parentTitle", source_title AS "sourceTitle",
        "shortName", status, uid AS "universityId", uslug AS "universitySlug",
@@ -134,9 +161,17 @@ SELECT id AS "programId", slug, title, parent_title AS "parentTitle", source_tit
             WHEN access_rate <= 30 THEN 'selectif' ELSE 'accessible' END AS "accessBand",
        session AS "lastSession",
        coalesce(n, 0)::int AS "reviewCount", coalesce(nv, 0)::int AS "verifiedReviewCount", avg::float AS "avgRating", reco AS "recommendShare",
+       subtitle,
+       coalesce(cursus_n, 1) AS "cursusCount",
+       CASE WHEN coalesce(cursus_n, 1) < 2 THEN '{}'::text[] ELSE array_remove(cursus_labels, NULL) END AS "cursusLabels",
+       CASE WHEN coalesce(cursus_n, 1) < 2 THEN 'single'
+            WHEN cursus_anynull THEN 'unnamed'
+            WHEN cursus_n = 2 AND 'Formation initiale' = ANY(cursus_labels)
+                 AND ('En alternance' = ANY(cursus_labels) OR 'En apprentissage' = ANY(cursus_labels)) THEN 'rhythm'
+            ELSE 'named' END AS "cursusKind",
        setweight(to_tsvector('french', public.nm_unaccent(coalesce(title, '') || ' ' || coalesce("shortName", ''))), 'A')
          || setweight(to_tsvector('french', public.nm_unaccent(coalesce(mname, '') || ' ' || uname || ' ' || coalesce(ushort, ''))), 'B')
-         || setweight(to_tsvector('french', public.nm_unaccent(concat_ws(' ', city_display, department, region, component, campus_name,
+         || setweight(to_tsvector('french', public.nm_unaccent(concat_ws(' ', subtitle, city_display, department, region, component, campus_name,
                       CASE WHEN 'alternance' = ANY(modalities) THEN 'alternance apprentissage' END,
                       CASE WHEN parent_title IS NOT NULL OR "entryLevel" = 'M2' THEN 'm2' END))), 'C')
          || setweight(to_tsvector('french', public.nm_unaccent(concat_ws(' ', array_to_string(keywords, ' '), cert_title,
@@ -151,7 +186,8 @@ const COLUMNS = `"programId", slug, title, "parentTitle", "sourceTitle", "shortN
   "isPublicSector", "mentionId", "mentionSlug", "mentionName", "domainSlug", discipline, "disciplineSlug",
   "componentName", "campusName", "cityKey", "cityName", "cityInsee", "departmentCode", "departmentName",
   region, "regionSlug", lat, lng, "isAbroad", "zoneSlugs", modalities, "durationYears", "entryLevel", places, applications, offers, "accessRate",
-  "accessBand", "lastSession", "reviewCount", "verifiedReviewCount", "avgRating", "recommendShare", tsv, "titleNorm",
+  "accessBand", "lastSession", "reviewCount", "verifiedReviewCount", "avgRating", "recommendShare",
+  subtitle, "cursusCount", "cursusLabels", "cursusKind", tsv, "titleNorm",
   "textNorm", "updatedAt"`;
 
 /** Countries and cities abroad seen in Mon Master `lieux` (Phnom Penh, Hô Chi Minh-Ville…). */
