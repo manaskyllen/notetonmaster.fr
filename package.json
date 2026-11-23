@@ -30,6 +30,8 @@
     "test:watch": "vitest",
     "seo:check": "tsx scripts/seo-check.ts",
     "cursus:dry-run": "tsx scripts/cursus-dry-run.ts",
+    "cursus:migrate": "tsx scripts/cursus-migrate.ts",
+    "cursus:check": "tsx scripts/cursus-check.ts",
     "e2e": "playwright test",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

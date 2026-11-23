@@ -42,6 +42,7 @@ import {
   type MMRecord,
 } from './normalize';
 import { publishMonMaster, type MMOps } from './publish';
+import { baseTitleKey } from '@/lib/catalog/variants';
 import { DATASETS, MM_STAT_SOURCE, allStaged, datasetUrl, sourceLabel, titleCase } from './shared';
 
 export { DATASETS, MM_STAT_SOURCE };
@@ -54,7 +55,9 @@ const mm = (s: StagingRecord) => s.normalized as unknown as Norm;
 const range = (a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 
 async function programRefs(): Promise<ProgramRef[]> {
+  // A fiche merged into its parcours (issue #21) has no number left: never a match target.
   const ps = await prisma.program.findMany({
+    where: { status: { not: 'MERGED' } },
     select: {
       id: true,
       universityId: true,
@@ -462,8 +465,11 @@ export const connector: PipelineConnector = {
           planField(prov, 'PROGRAM', pid, field, lbl, { ...src, ...extra, value });
         // Decision C: the existing title is kept when the normalised titles are identical;
         // a new title only gets a minimal typographic clean-up (no case change, no accent added).
+        // A parcours of several cursus keeps its base title (« - Site Evry » names a cursus).
         const title =
-          existing && normProgramTitle(existing.title) === n.titleKey
+          existing &&
+          (normProgramTitle(existing.title) === n.titleKey ||
+            baseTitleKey(existing.title) === baseTitleKey(n.title))
             ? existing.title
             : cleanTitle(n.title);
         changes.push(f('title', 'Intitulé du parcours', title));

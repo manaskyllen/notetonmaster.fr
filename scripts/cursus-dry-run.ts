@@ -13,7 +13,15 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { baseTitleKey, detectVariantSuffix, groupKey, placeLabels } from '../lib/catalog/variants';
+import {
+  baseTitleKey,
+  cursusKind,
+  detectVariantSuffix,
+  groupKey,
+  labelCursus,
+  planGroups,
+  splitSubtitle,
+} from '../lib/catalog/variants';
 import { specificPlaces } from '../lib/connectors/monmaster-opendata/normalize';
 import { normCode, normText, slugify, splitMonMasterPlaces } from '../lib/data/normalize';
 import { PrismaClient } from '../lib/db/generated/client';
@@ -39,6 +47,7 @@ interface Row {
   universityId: string;
   uai: string | null;
   universityName: string;
+  city: string;
   mentionId: string;
   mentionName: string;
   rncp: string | null;
@@ -93,7 +102,7 @@ async function load(prisma: PrismaClient) {
          )
          SELECT p.id, p.slug, p.title, p.status::text, p."isPublished", p."inOpenZone",
            p."entryLevel"::text, p.modality::text, p."variantOfId",
-           p."universityId", u.uai, u.name AS "universityName",
+           p."universityId", u.uai, u.name AS "universityName", p.city,
            p."mentionId", m.name AS "mentionName", m."rncpCode" AS rncp,
            c.codes, le.lieux,
            (SELECT array_agg(DISTINCT e.inmp) FILTER (WHERE e.inmp IS NOT NULL) FROM "MonMasterEntry" e WHERE e."programId" = p.id) AS inmps,
@@ -191,77 +200,95 @@ async function main() {
     };
   });
   const active = fiches.filter((f) => f.status === 'ACTIVE');
-  const byKey = new Map<string, Fiche[]>();
-  for (const f of active) byKey.set(f.key, [...(byKey.get(f.key) ?? []), f]);
-  const groups = [...byKey.values()]
-    .filter((g) => g.length > 1)
-    .map((g) =>
-      g.sort((a, b) => (b.capacity ?? -1) - (a.capacity ?? -1) || a.slug.localeCompare(b.slug)),
-    );
+  const byId = new Map(active.map((f) => [f.id, f]));
+  const wantedSlug = (f: { title: string; universityName: string }) =>
+    slugify(`${splitSubtitle(detectVariantSuffix(f.title).base).title} ${f.universityName}`);
+  // Same rules as the migration (lib/catalog/variants.ts planGroups, labelCursus).
+  const planned = planGroups(
+    active.map((f) => ({
+      id: f.id,
+      title: f.title,
+      uai: f.uai ?? `id:${f.universityId}`,
+      mention: f.rncp ?? `id:${f.mentionId}`,
+      inmps: f.inmps ?? [],
+      places: f.capacity,
+      slug: f.slug,
+    })),
+    (f) => wantedSlug(byId.get(f.id)!),
+  );
+  const keeperIds = new Map<Fiche[], string>();
+  const groups = planned.map((pg) => {
+    const g = pg.memberIds
+      .map((id) => byId.get(id)!)
+      .sort((a, b) => (b.capacity ?? -1) - (a.capacity ?? -1) || a.slug.localeCompare(b.slug));
+    keeperIds.set(g, pg.keeperId);
+    return g;
+  });
+  // Rule 2 left aside: identical titles whose inmp differ.
+  const byKeyAll = new Map<string, Fiche[]>();
+  for (const f of active) byKeyAll.set(f.key, [...(byKeyAll.get(f.key) ?? []), f]);
+  const notGrouped = [...byKeyAll.values()].filter(
+    (g) => g.length > 1 && !groups.some((x) => x.includes(g[0]!)),
+  );
 
-  // Labels: the suffix when there is one; numbers without a suffix are told apart by their places.
   const unlabelled: Fiche[][] = [];
+  const kindOf = new Map<Fiche[], string>();
   for (const g of groups) {
-    const bare = g.filter((f) => !f.label);
-    if (bare.length === 1) bare[0]!.label = 'Cursus principal';
-    else if (bare.length > 1) {
-      const labels = placeLabels(
-        bare.map((f) => ({
-          id: f.id,
-          workStudy: !!f.workStudy,
-          places: specificPlaces({
-            places: splitMonMasterPlaces(f.lieux),
-            etaName: f.universityName,
-          }),
-        })),
-      );
-      for (const f of bare) f.label = labels.get(f.id) ?? null;
-      if (bare.some((f) => !f.label)) unlabelled.push(g);
-    }
+    const labels = labelCursus(
+      g.map((f) => ({
+        id: f.id,
+        title: f.title,
+        workStudy: !!f.workStudy,
+        hint: f.city,
+        places: specificPlaces({
+          places: splitMonMasterPlaces(f.lieux),
+          etaName: f.universityName,
+        }),
+      })),
+    );
+    for (const f of g) f.label = labels.get(f.id) ?? null;
+    const kind = cursusKind(g.map((f) => f.label));
+    kindOf.set(g, kind);
+    if (kind === 'unnamed') unlabelled.push(g);
   }
-  const labelText = (f: Fiche) => f.label ?? '⚠ indéterminé';
-
-  /** What tells the cursus of a group apart (the first that applies). */
-  const classOf = (g: Fiche[]) =>
-    g.some((f) => detectVariantSuffix(f.title).suffix)
-      ? 'suffixe du titre'
-      : unlabelled.includes(g)
-        ? 'rien (titre, lieux et rythme identiques)'
-        : g.some((f) => f.label === 'En alternance') &&
-            !g.some((f) => f.label && !['En alternance', 'Cursus principal'].includes(f.label))
-          ? 'rythme seul (alternance)'
-          : 'lieu d’enseignement';
+  const labelText = (f: Fiche) => f.label ?? '⚠ sans libellé';
+  const CASE: Record<string, string> = {
+    named: 'A · cursus nommés (lieu ou suffixe)',
+    rhythm: 'B · paire initiale / alternance',
+    unnamed: 'C · sans libellé (fiches Mon Master)',
+  };
+  const classOf = (g: Fiche[]) => CASE[kindOf.get(g)!]!;
   /** Mon Master parcours code (inmp): one shared by all, several, or missing. */
   const inmpOf = (g: Fiche[]) => {
-    if (g.some((f) => !f.inmps?.length)) return 'inmp manquant';
-    const all = new Set(g.flatMap((f) => f.inmps!));
-    return g.every((f) => f.inmps!.some((i) => g.every((o) => o.inmps!.includes(i))))
-      ? 'même inmp'
-      : all.size > 1
-        ? 'inmp différents'
+    const all = new Set(g.flatMap((f) => f.inmps ?? []));
+    return all.size > 1
+      ? 'inmp différents'
+      : g.some((f) => !f.inmps?.length)
+        ? 'inmp manquant'
         : 'même inmp';
   };
 
-  // URL of each parcours: the base title slug if free (or held by one of its numbers), else the slug
-  // of the number with the most places.
+  // URL of each parcours: the short base title + establishment if free (or held by the kept
+  // fiche), else the URL of the kept fiche.
   const slugOwner = new Map(fiches.map((f) => [f.slug, f.id]));
   const target = new Map<Fiche[], { slug: string; how: string }>();
   for (const g of groups) {
-    const base = slugify(`${g[0]!.base} ${g[0]!.universityName}`);
-    const owner = slugOwner.get(base);
+    const keeper = byId.get(keeperIds.get(g)!)!;
+    const want = wantedSlug(keeper);
+    const owner = slugOwner.get(want);
     target.set(
       g,
-      !owner || g.some((f) => f.id === owner)
+      !owner || owner === keeper.id
         ? {
-            slug: base,
+            slug: want,
             how: owner
-              ? 'titre de base + établissement, déjà l’URL d’un cursus'
-              : 'titre de base + établissement',
+              ? 'titre de base court + établissement (déjà la sienne)'
+              : 'titre de base court + établissement',
           }
-        : { slug: g[0]!.slug, how: 'cursus le plus grand (titre de base déjà pris)' },
+        : { slug: keeper.slug, how: 'URL de la fiche gardée (titre de base déjà pris)' },
     );
   }
-  const keeperOf = (g: Fiche[]) => g.find((f) => f.slug === target.get(g)!.slug) ?? g[0]!;
+  const keeperOf = (g: Fiche[]) => byId.get(keeperIds.get(g)!)!;
   const grouped = groups.flat();
   const movers = groups.flatMap((g) => g.filter((f) => f !== keeperOf(g)));
   const redirects = groups.flatMap((g) => g.filter((f) => f.slug !== target.get(g)!.slug));
@@ -330,7 +357,7 @@ async function main() {
     }
     // a cut title joins any other active fiche with that key (its own base title)
     let n = 0;
-    for (const [k, c] of m) if (c + (byKey.get(k)?.length ?? 0) > 1) n++;
+    for (const [k, c] of m) if (c + (byKeyAll.get(k)?.length ?? 0) > 1) n++;
     return n;
   };
   const topTails = [...tails.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, 50);
@@ -395,9 +422,13 @@ async function main() {
     `| Groupes formés par un titre identique (sans suffixe) | ${groups.filter((g) => !g.some((f) => detectVariantSuffix(f.title).suffix)).length} |`,
   );
   L.push('');
-  L.push('Ce qui distingue les cursus, et accord avec le code parcours Mon Master (`inmp`) :', '');
+  L.push(
+    `Titres identiques laissés à part parce que leurs \`inmp\` diffèrent (règle 2) : ${notGrouped.length} groupes, ${notGrouped.flat().length} fiches.`,
+    '',
+  );
+  L.push('Cas d’affichage, et accord avec le code parcours Mon Master (`inmp`) :', '');
   const classes = tally(groups.map((g) => `${classOf(g)}|${inmpOf(g)}`));
-  L.push('| Distingués par | inmp | Groupes | Fiches |', '|---|---|---|---|');
+  L.push('| Cas | inmp | Groupes | Fiches |', '|---|---|---|---|');
   for (const [k, v] of classes.sort((a, b) => a[0].localeCompare(b[0]))) {
     const [c, i] = k.split('|');
     L.push(

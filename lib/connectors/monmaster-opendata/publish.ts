@@ -25,6 +25,7 @@ import {
 } from '@/lib/data/merge';
 import { normCode, normMention, normText, slugify } from '@/lib/data/normalize';
 import { applyParentDecisions } from '@/lib/data/parents';
+import { applyCursusGrouping } from '@/lib/catalog/cursus';
 import type { EtabNorm } from '../esr-etablissements';
 import { emptyStats, type PipelineContext } from '../types';
 import { displayedRank, specificPlaces, type MMRecord } from './normalize';
@@ -954,7 +955,7 @@ export async function publishMonMaster(
     counters.mergeProposals = rows.length;
   });
 
-  // 11. successions, work-study variants, mentions to publish, fiches emptied by a merge, staging
+  // 11. successions, mentions to publish, fiches emptied by a merge, cursus, staging
   await phase(10, async () => {
     const accByProgram = new Map<string, Map<string, number>>();
     for (const i of items) {
@@ -981,15 +982,6 @@ export async function publishMonMaster(
         JSON.stringify(part),
       );
     counters.successions = links.size;
-    // work-study version of an on-site parcours (same UAI and inmp): « même parcours, autre modalité »
-    // raw-sql: constant SQL; every value is a $n parameter (jsonb_to_recordset batch).
-    await prisma.$executeRawUnsafe(
-      `UPDATE "Program" AS w SET "variantOfId" = o.id, "updatedAt" = now()
-       FROM "MonMasterEntry" ew, "MonMasterEntry" eo, "Program" o
-       WHERE ew."programId" = w.id AND eo."programId" = o.id AND ew.inmp IS NOT NULL AND ew.inmp = eo.inmp
-         AND w."universityId" = o."universityId" AND w.modality = 'WORK_STUDY' AND o.modality <> 'WORK_STUDY'
-         AND w."variantOfId" IS NULL AND w.id <> o.id`,
-    );
     await prisma.mention.updateMany({
       where: { origin: 'SYNC', isPublished: false, programs: { some: {} } },
       data: { isPublished: true },
@@ -1018,6 +1010,13 @@ export async function publishMonMaster(
         });
     }
     counters.parentsLinked = await applyParentDecisions((m) => ctx.log('INFO', m));
+    // Cursus of one parcours (issue #21): the rules, then the corrections made in the admin. A
+    // known number stays in its parcours; a new one joins the parcours of its group.
+    const cursus = await applyCursusGrouping({ runId: `sync:${ctx.runId}` }, (m) =>
+      ctx.log('WARN', m),
+    );
+    counters.cursusGroups = cursus.groups;
+    counters.cursusMerged = cursus.merged;
     await prisma.stagingRecord.updateMany({
       where: { runId: ctx.runId, appliedAt: null },
       data: { appliedAt: new Date() },
