@@ -160,7 +160,8 @@ const ARTICLES = new Set(['le', 'la', 'les', "l'"]);
 export function placeName(s: string): string {
   const t = s
     .replace(/\s*\([^()]*\)\s*$/, '')
-    .replace(/\bc[ée]dex\b(\s*\d+)?/gi, ' ')
+    .replace(/\bc[ée]dex\s+\d+/gi, ' ')
+    .replace(/\bc[ée]dex\b/gi, ' ')
     .replace(/[’`]/g, "'")
     .replace(/\s*-\s*/g, ' ')
     .replace(/\s+/g, ' ')

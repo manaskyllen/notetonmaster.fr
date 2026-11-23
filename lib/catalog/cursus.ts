@@ -277,6 +277,21 @@ export async function mergeInto(tx: Tx, run: JournalRun, fromId: string, toId: s
   );
 }
 
+/** `/parcours/<old>` or `?parcours=<old>` (review form) → the new slug; anything else unchanged. */
+export function retarget(path: string, oldSlug: string, newSlug: string): string {
+  const u = new URL(path, 'http://x');
+  let changed = false;
+  if (u.pathname === `/parcours/${oldSlug}`) {
+    u.pathname = `/parcours/${newSlug}`;
+    changed = true;
+  }
+  if (u.searchParams.get('parcours') === oldSlug) {
+    u.searchParams.set('parcours', newSlug);
+    changed = true;
+  }
+  return changed ? u.pathname + u.search + u.hash : path;
+}
+
 /** Short links aimed at `oldSlug` (fiche or review form): the parcours slug instead. */
 async function repointShortLinks(
   tx: Tx,
@@ -287,20 +302,10 @@ async function repointShortLinks(
 ) {
   if (oldSlug === newSlug) return;
   const links = await tx.qrLink.findMany({ select: { id: true, targetPath: true } });
-  const esc = oldSlug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const re = new RegExp(`(^/parcours/|[?&]parcours=)${esc}(?=$|[/?#&])`);
   for (const l of links) {
-    if (!re.test(l.targetPath)) continue;
-    await moveColumn(
-      tx,
-      run,
-      about,
-      'qr_links',
-      'target_path',
-      l.targetPath.replace(re, `$1${newSlug}`),
-      `id = $4`,
-      [l.id],
-    );
+    const target = retarget(l.targetPath, oldSlug, newSlug);
+    if (target === l.targetPath) continue;
+    await moveColumn(tx, run, about, 'qr_links', 'target_path', target, `id = $4`, [l.id]);
   }
 }
 

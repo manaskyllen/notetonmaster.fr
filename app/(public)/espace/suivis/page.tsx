@@ -48,6 +48,9 @@ export default async function SavedPage({ searchParams }: { searchParams: Promis
                 modalities: true,
                 entryLevel: true,
                 isPublicSector: true,
+                cursusCount: true,
+                cursusLabels: true,
+                cursusKind: true,
               },
             },
           },
@@ -86,6 +89,9 @@ export default async function SavedPage({ searchParams }: { searchParams: Promis
       avgRating: p.reviewCount ? p.avgRating : null,
       reviewCount: p.reviewCount,
       recommendShare: p.recommendShare,
+      cursusCount: i?.cursusCount,
+      cursusLabels: i?.cursusLabels,
+      cursusKind: i?.cursusKind,
       fresh: freshOf.get(p.id) ?? 0,
     };
   });

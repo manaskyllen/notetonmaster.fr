@@ -3,7 +3,7 @@ import { Grade } from '@/components/ui/Grade';
 import { MatchedBy } from '@/components/ui/MatchedBy';
 import type { MatchedBy as MatchedByValue } from '@/lib/domain/search';
 import { cn } from '@/lib/cn';
-import { modalityLine, reviewsLine } from '@/lib/domain/program-card';
+import { cursusLine, modalityLine, reviewsLine, rhythmPill } from '@/lib/domain/program-card';
 import { uniToneOf } from '@/lib/ui-helpers';
 
 /** What the card needs, from the search index (Explorer, mention) or another query. */
@@ -23,6 +23,10 @@ export interface ProgramCardData {
   avgRating: number | null;
   reviewCount: number;
   recommendShare: number | null;
+  /** Cursus of the parcours (issue #21), from the search index. */
+  cursusCount?: number;
+  cursusLabels?: string[];
+  cursusKind?: string;
   matchedBy?: MatchedByValue | null;
 }
 
@@ -57,6 +61,8 @@ export function ProgramCard({
   className?: string;
 }) {
   const reviews = p.avgRating != null ? reviewsLine(p.reviewCount, p.recommendShare) : null;
+  const cursus = cursusLine(p);
+  const rhythm = rhythmPill(p.modalities, p);
   return (
     <li
       className={cn(
@@ -77,9 +83,9 @@ export function ProgramCard({
           {p.universityShort}
         </span>
         <span className="text-[13px] text-ink-muted">{p.cityName}</span>
-        {p.modalities.includes('alternance') && (
+        {rhythm && (
           <span className="rounded-pill bg-warning-bg px-2.5 py-1 text-[12px] font-bold text-warning">
-            Alternance
+            {rhythm}
           </span>
         )}
         {!p.isPublicSector && (
@@ -95,6 +101,19 @@ export function ProgramCard({
         {p.title}
       </Link>
       <span className="text-[14px] text-ink-soft">{modalityLine(p)}</span>
+      {cursus && (
+        <span className="flex flex-wrap items-center gap-1.5">
+          <span className="mr-0.5 text-[13px] font-bold text-ink">{cursus.count}</span>
+          {cursus.names.map((n) => (
+            <span
+              key={n}
+              className="inline-flex items-center rounded-[8px] bg-surface-100 px-2.25 py-0.75 text-[12px] font-semibold text-ink-soft"
+            >
+              {n}
+            </span>
+          ))}
+        </span>
+      )}
       {p.matchedBy && <MatchedBy match={p.matchedBy} />}
       {badge}
       <div className="mt-auto flex items-center justify-between gap-2">
