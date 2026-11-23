@@ -40,6 +40,8 @@ export const VIEWS = {
   'sans-programme': { label: 'Sans programme', group: 'Par problème', kind: 'NO_PROGRAM' },
   'programme-ancien': { label: 'Programme ancien', group: 'Par problème', kind: 'OLD_PROGRAM' },
   'sans-uai': { label: 'Sans UAI', group: 'Par problème', kind: 'NO_UAI' },
+  /** Parcours whose cursus nothing tells apart (issue #21): to name by hand. */
+  'cursus-sans-libelle': { label: 'Cursus sans libellé', group: 'Par problème' },
 } as const satisfies Record<string, { label: string; group: string; kind?: DataIssueKind }>;
 export type ViewKey = keyof typeof VIEWS;
 export const DEFAULT_VIEW: ViewKey = 'a-traiter';
@@ -135,6 +137,8 @@ export const FICHES_BASE = sql`
       FROM "Program" p JOIN "University" u ON u.id = p."universityId"
       LEFT JOIN mm ON mm."programId" = p.id
       LEFT JOIN "ProgramSearchIndex" i ON i."programId" = p.id
+     -- A fiche merged into its parcours is one of its cursus: listed under the parcours.
+     WHERE p.status <> 'MERGED'
     UNION ALL
     SELECT 'MENTION', m.id, m.name, 'Mention nationale', coalesce(m."rncpCode", 'RNCP —'),
            CASE WHEN NOT m."isPublished" THEN 'draft'
@@ -167,6 +171,12 @@ function viewSql(view: ViewKey) {
       return sql`m.publication = 'off'`;
     case 'brouillons':
       return sql`m.publication = 'draft'`;
+    case 'cursus-sans-libelle':
+      return sql`m.type = 'PROGRAM' AND EXISTS (
+        SELECT 1 FROM "MonMasterEntry" e
+         WHERE e."programId" = m.id AND e."cursusLabel" IS NULL
+           AND e."lastSession" = (SELECT max(x."lastSession") FROM "MonMasterEntry" x WHERE x."programId" = m.id)
+           AND (SELECT count(*) FROM "MonMasterEntry" y WHERE y."programId" = m.id AND y."lastSession" = e."lastSession") > 1)`;
     default:
       return sql`TRUE`;
   }

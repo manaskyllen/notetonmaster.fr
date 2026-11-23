@@ -42,6 +42,7 @@ const DOT: Record<ViewKey, string> = {
   'sans-programme': 'bg-[#b9b3c8]',
   'programme-ancien': 'bg-[#f2c230]',
   'sans-uai': 'bg-[#b9b3c8]',
+  'cursus-sans-libelle': 'bg-violet-500',
 };
 
 export default async function FichesPage({ searchParams }: { searchParams: Promise<Params> }) {
