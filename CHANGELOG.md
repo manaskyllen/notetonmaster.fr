@@ -25,6 +25,10 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
   nouveaux avis (5 à 80 caractères, sans lien), affiché entre « » en tête de l'avis ; modifiable
   depuis Mon espace. Les avis existants sans titre ne changent pas. Le champ des points faibles
   s'appelle désormais « Ce que tu n'as pas aimé ».
+- Fiche parcours : bouton « Partager » (fiche, ou formulaire d'avis déjà réglé sur le parcours
+  pour inviter sa promo), partage natif sur téléphone, « Copier le lien » sur ordinateur ; liens
+  sans paramètre de suivi. Aperçu de lien (titre et image du parcours) pour le formulaire d'avis,
+  qui reste non indexé ; `robots.txt` autorise `/avis/nouveau` pour les aperçus.
 
 ### Sécurité
 

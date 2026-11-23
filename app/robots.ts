@@ -18,9 +18,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
-        // Prefixes: « /avis » covers /avis/nouveau and /avis/confirmer/…, « /reponse » covers
-        // /reponse-formation. No public address starts with one of them.
+        // The review form stays crawlable for the link previews (« Inviter ma promo à donner son
+        // avis »: Messenger, WhatsApp…): it is noindex, nofollow by its meta tag and its
+        // X-Robots-Tag header (proxy.ts), so it is never indexed.
+        allow: ['/', '/avis/nouveau'],
+        // Prefixes: « /avis » covers /avis/confirmer/… (and /avis/nouveau, allowed above by the
+        // longer rule), « /reponse » covers /reponse-formation. No public address starts with one
+        // of them.
         disallow: [...PRIVATE_PREFIXES],
       },
     ],

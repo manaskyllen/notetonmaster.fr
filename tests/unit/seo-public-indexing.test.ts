@@ -78,8 +78,13 @@ describe('PUBLIC_INDEXING=true', () => {
     expect(publicIndexing()).toBe(true);
     expect(r.sitemap).toBe('https://notetonmaster.fr/sitemap.xml');
     const rule = Array.isArray(r.rules) ? r.rules[0]! : r.rules;
-    expect(rule.allow).toBe('/');
+    expect(rule.allow).toEqual(['/', '/avis/nouveau']);
     expect(rule.disallow).toContain('/espace');
+    expect(rule.disallow).toContain('/avis');
+  });
+
+  it('the review form stays noindex although link previews may read it', async () => {
+    expect((await page('/avis/nouveau')).headers.get('x-robots-tag')).toMatch(/noindex/);
   });
 
   it('public pages are indexable, private ones are not', async () => {

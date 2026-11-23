@@ -5,6 +5,7 @@ import { AdmissionEvolution } from '@/components/public/AdmissionEvolution';
 import { AdmissionOrigins } from '@/components/public/AdmissionOrigins';
 import { datasetUrl } from '@/lib/connectors/monmaster-opendata/urls';
 import { FollowButton } from '@/components/public/FollowButton';
+import { ShareButton } from '@/components/public/ShareButton';
 import { followedSet } from '@/lib/favorites';
 import { after } from 'next/server';
 import { QuestionsPanel } from '@/components/public/QuestionsPanel';
@@ -60,6 +61,8 @@ import { parcoursHomonyms } from '@/lib/catalog/homonyms';
 import { pageJsonLd, programJsonLd } from '@/lib/seo/jsonld';
 import { seoMetadata } from '@/lib/seo/meta';
 import { ogImagePath } from '@/lib/seo/og-path';
+import { siteOrigin } from '@/lib/seo/site';
+import { shareTargets } from '@/lib/domain/share';
 import { pagedSeoTitle, parcoursDescription, parcoursTitle } from '@/lib/seo/titles';
 
 export const dynamic = 'force-dynamic';
@@ -730,6 +733,17 @@ export default async function ParcoursPage({
                   initial={followed.has(p.id)}
                   loggedIn={!!student}
                 />
+                {/* Only where a review can be left: a published fiche of an open city. */}
+                {p.isPublished && p.inOpenZone && (
+                  <ShareButton
+                    targets={shareTargets({
+                      origin: siteOrigin(),
+                      slug: p.slug,
+                      parcours: split.title,
+                      university: p.university.shortName ?? p.university.name,
+                    })}
+                  />
+                )}
                 <Link
                   href={`/avis/nouveau?parcours=${p.slug}`}
                   className={ctaClasses('lime', 'l', 'min-h-13')}
