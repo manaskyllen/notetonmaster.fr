@@ -29,6 +29,7 @@
     "test:a11y": "playwright test --project=e2e tests/e2e/08-accessibility.spec.ts tests/e2e/44-admin-axe.spec.ts",
     "test:watch": "vitest",
     "seo:check": "tsx scripts/seo-check.ts",
+    "cursus:dry-run": "tsx scripts/cursus-dry-run.ts",
     "e2e": "playwright test",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
