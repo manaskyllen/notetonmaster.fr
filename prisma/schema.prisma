@@ -1209,7 +1209,7 @@ model Review {
   jobTitle         String?           @db.VarChar(80) // required for EMPLOYED: "type of job, type of employer"
   cohortYear       Int // never shown for LEFT
   overallRating    Int
-  title            String?
+  title            String?           @db.VarChar(80) // « Ton master en une phrase », required for new reviews
   pros             String
   cons             String
   leaveReason      String? // « Qu'est-ce qui t'a fait partir ? » (LEFT only, optional)

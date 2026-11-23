@@ -187,6 +187,13 @@ export async function updateMyReview(reviewId: string, input: unknown): Promise<
       fieldErrors: fieldErrors(parsed.error),
     };
   const d = parsed.data;
+  // A review that has a title keeps one (only those written before it existed may have none).
+  if (r.title && !d.title)
+    return {
+      ok: false,
+      error: 'Certains champs sont à corriger.',
+      fieldErrors: { title: 'Résume ton master en une phrase.' },
+    };
   const leaveReason = (d.level === 'LEFT' && d.leaveReason?.trim()) || null;
   if ((await getSettings())['moderation.nameDetection']) {
     const hit = detectNamedPerson(d.title, d.pros, d.cons, leaveReason, d.jobTitle);

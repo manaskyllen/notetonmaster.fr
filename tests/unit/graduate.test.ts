@@ -7,6 +7,7 @@ const base = {
   programSlug: 'valorisation-des-nouveaux-patrimoines',
   cohortYear: 2023,
   overallRating: 4,
+  title: 'Le terrain avant tout',
   pros: 'Beaucoup de visites et d’intervenants pros du patrimoine.',
   cons: 'L’emploi du temps change souvent et les salles sont loin.',
   mode: 'none',

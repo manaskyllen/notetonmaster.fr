@@ -21,6 +21,10 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
   « A quitté le master en cours » sans année, bloc « Pourquoi je suis parti·e » et filtre
   « Parti·es en cours » (s'il y a au moins un avis de ce type). Modération : statut et motif
   visibles, filtre par statut de l'auteur·rice dans « Tous les avis ».
+- « Ton master en une phrase » : titre de l'avis écrit par l'étudiant·e, obligatoire pour les
+  nouveaux avis (5 à 80 caractères, sans lien), affiché entre « » en tête de l'avis ; modifiable
+  depuis Mon espace. Les avis existants sans titre ne changent pas. Le champ des points faibles
+  s'appelle désormais « Ce que tu n'as pas aimé ».
 
 ### Sécurité
 
@@ -51,3 +55,5 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
 - `20261125090000_review_level_left` : statut `LEFT` et colonne facultative `leaveReason` des avis
   (ajouts seulement ; retour en arrière : `down.sql` du dossier, refusé tant qu'un avis utilise ce
   statut).
+- `20261125100000_review_title_length` : titre des avis limité à 80 caractères (`VARCHAR(80)`,
+  échoue plutôt que de couper ; retour en arrière : `down.sql` du dossier).

@@ -35,6 +35,13 @@ import {
 } from '@/lib/domain/graduate';
 import { detectNamedPerson } from '@/lib/domain/names';
 import {
+  cleanTitle,
+  TITLE_LABEL,
+  TITLE_MAX,
+  TITLE_PLACEHOLDER,
+  titleHint,
+} from '@/lib/domain/review-title';
+import {
   authorWho,
   CRITERIA,
   CRITERION_LABEL,
@@ -78,6 +85,8 @@ type Draft = {
   cons: string;
   /** « Qu'est-ce qui t'a fait partir ? » (LEFT only). */
   leaveReason: string;
+  /** « Ton master en une phrase ». */
+  title: string;
   scores: Partial<Record<CriterionKey, number>>;
   mode: Mode;
   email: string;
@@ -96,6 +105,7 @@ const EMPTY: Draft = {
   pros: '',
   cons: '',
   leaveReason: '',
+  title: '',
   scores: {},
   mode: 'none',
   email: '',
@@ -143,6 +153,7 @@ const snapshot = (program: string, step: number, d: Draft) =>
     d.pros,
     d.cons,
     d.leaveReason,
+    d.title,
     d.scores,
     d.mode,
     d.acceptsQuestions,
@@ -159,6 +170,7 @@ function hasContent(d: Draft) {
     d.pros.trim() ||
     d.cons.trim() ||
     d.leaveReason.trim() ||
+    d.title.trim() ||
     Object.keys(d.scores).length
   );
 }
@@ -318,8 +330,8 @@ export function ReviewForm({
   };
   const left = d.level === 'LEFT';
   const nameHit = useMemo(
-    () => detectNamedPerson(d.pros, d.cons, left ? d.leaveReason : null),
-    [d.pros, d.cons, d.leaveReason, left],
+    () => detectNamedPerson(d.title, d.pros, d.cons, left ? d.leaveReason : null),
+    [d.title, d.pros, d.cons, d.leaveReason, left],
   );
   const graduate = d.level === 'GRADUATE';
   /** Another status: « Et aujourd'hui ? » (and the job) start again from nothing. */
@@ -358,7 +370,6 @@ export function ReviewForm({
       const r = await submitReview({
         ...d,
         leaveReason: left ? d.leaveReason : '',
-        title: '',
         cohortYear: Number(d.cohortYear),
         turnstileToken,
       });
@@ -382,6 +393,7 @@ export function ReviewForm({
           r.fieldErrors?.pros ||
           r.fieldErrors?.cons ||
           r.fieldErrors?.leaveReason ||
+          r.fieldErrors?.title ||
           r.fieldErrors?.overallRating
         )
           setStep(2);
@@ -476,6 +488,7 @@ export function ReviewForm({
 
   const prosHint = lengthHint(d.pros);
   const consHint = lengthHint(d.cons);
+  const tHint = titleHint(d.title);
   const badgePending = withAccount && d.wantsBadge;
 
   if (other)
@@ -710,7 +723,7 @@ export function ReviewForm({
                 )}
               </Field>
               <Field
-                label="Ce qui pourrait être mieux"
+                label="Ce que tu n’as pas aimé"
                 id="minus"
                 hint={consHint.text}
                 hintTone={consHint.tone}
@@ -744,6 +757,24 @@ export function ReviewForm({
                   )}
                 </Field>
               )}
+              {/* Last: summing up is easier once everything is written. */}
+              <Field
+                label={TITLE_LABEL}
+                id="titre"
+                hint={tHint.text}
+                hintTone={tHint.tone}
+                error={errors.title}
+              >
+                {(a) => (
+                  <Input
+                    {...a}
+                    maxLength={TITLE_MAX}
+                    value={d.title}
+                    onChange={(e) => set('title', e.target.value)}
+                    placeholder={TITLE_PLACEHOLDER}
+                  />
+                )}
+              </Field>
               {nameHit.found && (
                 <div
                   role="alert"
@@ -916,6 +947,9 @@ export function ReviewForm({
                       Ouvert aux questions
                     </span>
                   )}
+                </span>
+                <span className="font-display text-[18px] font-bold break-words">
+                  « {cleanTitle(d.title)} »
                 </span>
                 <span className={cn('text-[14px]', INK_SOFT)}>
                   {program?.title} · {d.overallRating} / 5

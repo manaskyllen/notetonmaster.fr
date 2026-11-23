@@ -104,7 +104,7 @@ test('a review by someone who left during the year, from the form to the fiche',
     .getByLabel('Ce que tu as aimé')
     .fill('Les cours d’histoire du patrimoine sont solides et l’équipe reste disponible.');
   await page
-    .getByLabel('Ce qui pourrait être mieux')
+    .getByLabel('Ce que tu n’as pas aimé')
     .fill('Très peu de numérique alors que la brochure le met en avant partout.');
   const why = page.getByLabel(/Qu’est-ce qui t’a fait partir \?/);
   await expect(why).toHaveAttribute('placeholder', /Une réorientation, le contenu/);
@@ -117,6 +117,7 @@ test('a review by someone who left during the year, from the form to the fiche',
   ).toBeVisible();
   await expect(next).toBeDisabled();
   await why.fill('Je voulais travailler dans la médiation numérique, ce master ne m’y menait pas.');
+  await page.getByLabel('Ton master en une phrase').fill('Pas ce que je venais chercher');
   await noHorizontalScroll(page);
 
   // The field goes with the status.
@@ -163,9 +164,11 @@ test('a review by someone who left during the year, from the form to the fiche',
   await waitForHydration(page);
   await page
     .getByRole('region', { name: 'Avis à valider' })
-    .getByRole('button', { name: new RegExp(`Avis ${review!.ref}`) })
+    .getByRole('button', { name: /« Pas ce que je venais chercher »/ })
+    .first()
     .click();
   const detail = page.getByRole('region', { name: 'Détail' });
+  await expect(detail).toContainText(review!.ref);
   await expect(detail).toContainText('Anonyme · A quitté le master en cours');
   await expect(detail).not.toContainText(`promo ${review!.cohortYear}`);
   await expect(detail).toContainText('Pourquoi je suis parti·e : Je voulais travailler');

@@ -11,6 +11,7 @@ const base = {
   level: 'LEFT',
   cohortYear: 2025,
   overallRating: 2,
+  title: 'Le terrain avant tout',
   pros: 'Les cours d’histoire du patrimoine sont solides et l’équipe disponible.',
   cons: 'Très peu de numérique alors que la brochure le met en avant partout.',
   mode: 'none',

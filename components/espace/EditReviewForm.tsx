@@ -20,6 +20,7 @@ import {
   type ReviewLevelKey,
 } from '@/lib/domain/rating';
 import { detectNamedPerson } from '@/lib/domain/names';
+import { TITLE_LABEL, TITLE_MAX, TITLE_PLACEHOLDER, titleHint } from '@/lib/domain/review-title';
 import {
   EMPLOYMENT_LABEL,
   EMPLOYMENT_STATUSES,
@@ -163,20 +164,10 @@ export function EditReviewForm({
         onChange={(n) => set('overallRating', n)}
         help
       />
-      <Field label="Ton avis en une phrase" optional error={errors.title}>
-        {(a) => (
-          <Input
-            {...a}
-            value={v.title}
-            maxLength={80}
-            onChange={(e) => set('title', e.target.value)}
-          />
-        )}
-      </Field>
       {(
         [
           ['pros', 'Ce que tu as aimé'],
-          ['cons', 'Ce qui pourrait être mieux'],
+          ['cons', 'Ce que tu n’as pas aimé'],
         ] as const
       ).map(([k, l]) => {
         const n = v[k].trim().length;
@@ -214,6 +205,24 @@ export function EditReviewForm({
           )}
         </Field>
       )}
+      {/* Optional only for a review written before the title existed (none yet). */}
+      <Field
+        label={TITLE_LABEL}
+        optional={!initial.title}
+        hint={titleHint(v.title).text}
+        hintTone={titleHint(v.title).tone}
+        error={errors.title}
+      >
+        {(a) => (
+          <Input
+            {...a}
+            maxLength={TITLE_MAX}
+            value={v.title}
+            onChange={(e) => set('title', e.target.value)}
+            placeholder={TITLE_PLACEHOLDER}
+          />
+        )}
+      </Field>
       {hit.found && (
         <div
           role="alert"

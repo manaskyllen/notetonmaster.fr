@@ -106,7 +106,10 @@ export function ReviewCard({
         </div>
         <Grade value={rating} />
       </div>
-      {title ? <H className="m-0 font-display text-h3 font-bold">« {title} »</H> : null}
+      {/* « … » added here: the quotes typed in the form are removed (lib/domain/review-title.ts). */}
+      {title ? (
+        <H className="m-0 font-display text-h3 font-bold [overflow-wrap:anywhere]">« {title} »</H>
+      ) : null}
       {today ? (
         <span className="inline-flex items-center gap-2 self-start rounded-[12px] bg-surface-50 px-3.5 py-2 text-[14px] text-ink">
           <svg

@@ -143,7 +143,7 @@ export async function submitReview(input: unknown): Promise<SubmitResult> {
   const autoPublish =
     settings['moderation.autoPublish'] &&
     !watched &&
-    !containsContacts(`${d.pros} ${d.cons} ${leaveReason ?? ''}`);
+    !containsContacts(`${d.title} ${d.pros} ${d.cons} ${leaveReason ?? ''}`);
   const status = !student ? 'PENDING_CONFIRMATION' : autoPublish ? 'PUBLISHED' : 'PENDING';
   const scores = Object.entries(d.scores).filter(
     (e): e is [string, number] => typeof e[1] === 'number',

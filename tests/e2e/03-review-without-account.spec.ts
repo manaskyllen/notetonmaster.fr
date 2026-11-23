@@ -55,8 +55,9 @@ test('publishing a review without account: confirmation mail, then moderation', 
     .getByLabel('Ce que tu as aimé')
     .fill('Le cours de M. Dupont est passionnant et très concret.');
   await page
-    .getByLabel('Ce qui pourrait être mieux')
+    .getByLabel('Ce que tu n’as pas aimé')
     .fill('Peu de créneaux pour les projets tutorés en fin de semestre.');
+  await page.getByLabel('Ton master en une phrase').fill('Concret et passionnant');
   await expect(
     page.getByRole('alert').filter({ hasText: 'semble citer une personne' }),
   ).toBeVisible();
