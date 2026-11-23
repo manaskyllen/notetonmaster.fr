@@ -72,7 +72,8 @@ export function AdmissionOrigins({
         <div
           role="tablist"
           aria-label="Étape"
-          className="flex gap-1 rounded-pill bg-surface-100 p-1"
+          // Wraps on a small phone (320 px) instead of pushing the page sideways.
+          className="flex max-w-full flex-wrap gap-1 rounded-[22px] bg-surface-100 p-1"
         >
           {STAGES.map((s, i) => {
             const on = s.id === stage;

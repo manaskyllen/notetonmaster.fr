@@ -170,7 +170,7 @@ export function ReviewsTable({
           </Button>
         </div>
       )}
-      <div className="overflow-x-auto rounded-lg border border-border bg-surface-0">
+      <div className="relative overflow-x-auto rounded-lg border border-border bg-surface-0">
         <table className="w-full min-w-[860px] border-collapse text-[14px]">
           <caption className="sr-only">Tous les avis</caption>
           <thead>

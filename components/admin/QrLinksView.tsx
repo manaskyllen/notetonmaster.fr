@@ -214,7 +214,7 @@ export function QrLinksView({
         </form>
       </Panel>
 
-      <div className="overflow-x-auto rounded-lg border border-border bg-surface-0">
+      <div className="relative overflow-x-auto rounded-lg border border-border bg-surface-0">
         <table className="w-full min-w-[880px] border-collapse text-[14px]">
           <caption className="sr-only">Liens des QR codes</caption>
           <thead>

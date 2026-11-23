@@ -25,7 +25,7 @@
     "test:coverage": "vitest run --coverage",
     "test:data": "vitest run --config vitest.data.config.ts",
     "test:e2e": "playwright test --project=e2e",
-    "test:e2e:full": "sh scripts/e2e-stack.sh run --project=e2e",
+    "test:e2e:full": "sh scripts/e2e-stack.sh run --project=e2e --project=mobile-iphone --project=mobile-android",
     "test:a11y": "playwright test --project=e2e tests/e2e/08-accessibility.spec.ts tests/e2e/44-admin-axe.spec.ts",
     "test:watch": "vitest",
     "seo:check": "tsx scripts/seo-check.ts",

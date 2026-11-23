@@ -1637,6 +1637,11 @@ body {
     background-color 0.15s ease,
     color 0.15s ease;
 }
+@media (max-width: 639.98px) {
+  .ft-thm {
+    min-height: var(--tap-min);
+  }
+}
 .ft-thm[aria-checked='true'] {
   background: #d4f75a;
   color: #16131f;
@@ -1794,6 +1799,13 @@ body {
   justify-content: center;
   width: 132px;
   min-height: 40px;
+}
+@media (max-width: 639.98px) {
+  .nm-cmp {
+    min-height: var(--tap-min);
+  }
+}
+.nm-cmp {
   padding: 0 12px;
   overflow: hidden;
   border: 1.5px solid var(--border-control);

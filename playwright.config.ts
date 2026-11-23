@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import { SERVERS, STACK, serverUrl } from './tests/e2e/stack';
 
 /**
- * End-to-end tests (Chromium only).
+ * End-to-end tests (Chromium only, phones emulated in the « mobile-* » projects).
  * - CI and `make e2e-full`: a production build served by scripts/e2e-stack.sh, one server and one
  *   database per Playwright worker (E2E_SERVERS, tests/e2e/stack.ts).
  * - `make e2e`: the dev stack, one worker.
@@ -47,6 +47,14 @@ export default defineConfig({
       dependencies: ['setup'],
       use: { ...devices['Desktop Chrome'] },
     },
+    // Key journeys on a phone (issue #14): an iPhone and an Android phone emulated (viewport,
+    // touch, user agent), on Chromium as the rest of the suite. `--project="mobile-*"`.
+    ...(['iPhone 14', 'Pixel 7'] as const).map((device) => ({
+      name: device === 'Pixel 7' ? 'mobile-android' : 'mobile-iphone',
+      testDir: 'tests/mobile',
+      dependencies: ['setup'],
+      use: { ...devices[device], browserName: 'chromium' as const },
+    })),
     // Screenshots taken by hand (tests/visual: the admin at 1440 px into tests/visual/screens,
     // logged-in pages into .shots/). Declared with VISUAL=1 only, so that no run of the suite
     // lists them, not even as skipped: `VISUAL=1 playwright test --project=visual`.

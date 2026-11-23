@@ -749,7 +749,7 @@ export function FichesTable({
 
   return (
     <>
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <table className="w-full min-w-[760px] border-collapse text-[13px]">
           <caption className="sr-only">Fiches · {viewLabel}</caption>
           <thead>

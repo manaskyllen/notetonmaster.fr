@@ -20,7 +20,7 @@ import { cachedOpenZones } from '@/lib/launch/cached';
 /** Cities listed in the « Par ville » column before « Toutes les villes → » (/masters). */
 const FOOTER_CITIES = 5;
 
-const linkClass = 'ft-link self-start text-[15px] leading-[normal]';
+const linkClass = 'ft-link nm-hit self-start text-[15px] leading-[normal]';
 
 async function readStats(): Promise<FooterStats | null> {
   try {
@@ -127,7 +127,7 @@ export async function SiteFooter() {
               className="grid flex-[2_1_520px] grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-8 max-sm:flex-[1_1_100%]"
             >
               {columns.map((c) => (
-                <div key={c.title} className="flex flex-col gap-3">
+                <div key={c.title} className="flex flex-col gap-3 max-sm:gap-6">
                   <span className="text-[12px] leading-[normal] font-bold tracking-[0.08em] text-[#d4f75a] uppercase">
                     {c.title}
                   </span>

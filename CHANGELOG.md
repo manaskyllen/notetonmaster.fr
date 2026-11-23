@@ -30,6 +30,18 @@ qui utilisent le site, les migrations appliquées, la restauration testée le ca
   sans paramètre de suivi. Aperçu de lien (titre et image du parcours) pour le formulaire d'avis,
   qui reste non indexé ; `robots.txt` autorise `/avis/nouveau` pour les aperçus.
 
+### Responsive
+
+- Plus de défilement horizontal de 320 à 1440 px : onglet Admission de la fiche (étapes), index des
+  mentions, comparateur et tableaux de l'administration (textes pour lecteurs d'écran qui
+  débordaient), Mon espace › Compte, vue d'ensemble de l'administration. Les onglets de Mon
+  espace ne décalent plus la page sur téléphone.
+- Téléphone : champs en 16 px au moins (pas de zoom d'iOS), zones de toucher de 44 px (pied de
+  page, fil d'Ariane, logo, bandeau, « Comparer »), carte du master choisi dans le formulaire.
+- Tests : toutes les pages publiques à 320, 390 et 1024 px, `axe` aussi à 390 px, projets
+  Playwright `mobile-iphone` et `mobile-android` (recherche, fiche, partage, avis ; modération et
+  message de contact depuis un téléphone).
+
 ### Administration
 
 - QR codes : liens courts `/q/{code}` gérés dans l'administration (Admin seulement), pour les

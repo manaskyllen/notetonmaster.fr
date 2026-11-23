@@ -90,7 +90,7 @@ export function SiteBanner({ banner }: { banner: BannerData | null }) {
         {banner.dismissible && (
           <button
             type="button"
-            className="ann-x flex size-9 flex-none cursor-pointer items-center justify-center rounded-[10px] border-0 bg-transparent text-inherit"
+            className="ann-x flex size-9 flex-none max-sm:size-tap cursor-pointer items-center justify-center rounded-[10px] border-0 bg-transparent text-inherit"
             aria-label="Masquer ce message"
             onClick={close}
           >

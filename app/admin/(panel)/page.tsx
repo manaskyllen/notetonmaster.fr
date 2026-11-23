@@ -289,72 +289,74 @@ export default async function AdminOverview({
               Villes ouvertes
             </h2>
             {data.cities.length ? (
-              <table className="w-full border-collapse text-[13px]">
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className={cn(TH, 'bg-transparent px-0 py-1.5 dark:bg-transparent')}
-                    >
-                      Ville
-                    </th>
-                    <th
-                      scope="col"
-                      className={cn(
-                        TH,
-                        'bg-transparent px-0 py-1.5 text-right dark:bg-transparent',
-                      )}
-                    >
-                      Fiches
-                    </th>
-                    <th
-                      scope="col"
-                      className={cn(TH, 'bg-transparent py-1.5 pr-0 pl-2.5 dark:bg-transparent')}
-                    >
-                      Programme
-                    </th>
-                    <th
-                      scope="col"
-                      className={cn(
-                        TH,
-                        'bg-transparent px-0 py-1.5 text-right dark:bg-transparent',
-                      )}
-                    >
-                      Avis
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.cities.map((c) => (
-                    <tr key={c.slug} className="border-b border-surface-100">
-                      <th scope="row" className="py-2 text-left font-bold">
-                        <Link
-                          href={`/admin/fiches?vue=publiees&ville=${c.slug}`}
-                          className="text-ink no-underline hover:underline"
-                        >
-                          {c.name}
-                        </Link>
+              <div className="relative overflow-x-auto">
+                <table className="w-full border-collapse text-[13px]">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className={cn(TH, 'bg-transparent px-0 py-1.5 dark:bg-transparent')}
+                      >
+                        Ville
                       </th>
-                      <td className="py-2 text-right tabular-nums">{nf.format(c.fiches)}</td>
-                      <td className="py-2 pl-2.5">
-                        <span className="flex items-center gap-1.5">
-                          <span
-                            aria-hidden="true"
-                            className="h-1.5 flex-1 overflow-hidden rounded-pill bg-surface-100"
-                          >
-                            <span
-                              className="block h-full bg-violet-500"
-                              style={{ width: `${c.programme}%` }}
-                            />
-                          </span>
-                          <span className="w-8.5 text-right tabular-nums">{c.programme} %</span>
-                        </span>
-                      </td>
-                      <td className="py-2 text-right tabular-nums">{nf.format(c.reviews)}</td>
+                      <th
+                        scope="col"
+                        className={cn(
+                          TH,
+                          'bg-transparent px-0 py-1.5 text-right dark:bg-transparent',
+                        )}
+                      >
+                        Fiches
+                      </th>
+                      <th
+                        scope="col"
+                        className={cn(TH, 'bg-transparent py-1.5 pr-0 pl-2.5 dark:bg-transparent')}
+                      >
+                        Programme
+                      </th>
+                      <th
+                        scope="col"
+                        className={cn(
+                          TH,
+                          'bg-transparent px-0 py-1.5 text-right dark:bg-transparent',
+                        )}
+                      >
+                        Avis
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.cities.map((c) => (
+                      <tr key={c.slug} className="border-b border-surface-100">
+                        <th scope="row" className="py-2 text-left font-bold">
+                          <Link
+                            href={`/admin/fiches?vue=publiees&ville=${c.slug}`}
+                            className="text-ink no-underline hover:underline"
+                          >
+                            {c.name}
+                          </Link>
+                        </th>
+                        <td className="py-2 text-right tabular-nums">{nf.format(c.fiches)}</td>
+                        <td className="py-2 pl-2.5">
+                          <span className="flex items-center gap-1.5">
+                            <span
+                              aria-hidden="true"
+                              className="h-1.5 flex-1 overflow-hidden rounded-pill bg-surface-100"
+                            >
+                              <span
+                                className="block h-full bg-violet-500"
+                                style={{ width: `${c.programme}%` }}
+                              />
+                            </span>
+                            <span className="w-8.5 text-right tabular-nums">{c.programme} %</span>
+                          </span>
+                        </td>
+                        <td className="py-2 text-right tabular-nums">{nf.format(c.reviews)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p className="m-0 text-[13px] text-ink-muted">Aucune ville n’est ouverte.</p>
             )}

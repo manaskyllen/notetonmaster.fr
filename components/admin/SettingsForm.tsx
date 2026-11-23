@@ -306,7 +306,7 @@ export function SettingsForm({
           </>
         )}
         {tab === 'notif' && (
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full min-w-[560px] border-collapse text-[14px]">
               <caption className="sr-only">
                 Notifications par mail, par événement et par rôle

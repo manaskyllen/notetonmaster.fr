@@ -29,7 +29,7 @@ export function Breadcrumb({ items, structured }: BreadcrumbProps) {
       {structured && (
         <JsonLd data={{ '@context': 'https://schema.org', ...breadcrumbJsonLd(items) }} />
       )}
-      <ol className="flex flex-wrap items-center gap-2 text-[14px] text-ink-muted">
+      <ol className="flex flex-wrap items-center gap-2 text-[14px] text-ink-muted max-sm:gap-y-6">
         {items.map((it, i) => {
           const last = i === items.length - 1;
           return (
@@ -43,7 +43,7 @@ export function Breadcrumb({ items, structured }: BreadcrumbProps) {
                   <Label text={it.label} />
                 </span>
               ) : (
-                <Link href={it.href} className="text-ink-muted">
+                <Link href={it.href} className="nm-hit text-ink-muted">
                   <Label text={it.label} />
                 </Link>
               )}

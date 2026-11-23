@@ -138,7 +138,9 @@ export default async function ComparerPage({
             montrent la valeur la plus favorable de la ligne.
           </p>
         </div>
-        <div className="overflow-x-auto rounded-xl border border-border bg-surface-0">
+        {/* relative: the sr-only texts of the cells (position: absolute) scroll with the table
+            instead of stretching the page. */}
+        <div className="relative overflow-x-auto rounded-xl border border-border bg-surface-0">
           <table className="w-full min-w-[760px] border-collapse text-[15px]">
             <caption className="sr-only">Comparaison de parcours</caption>
             <colgroup>

@@ -328,3 +328,42 @@
     height: 20px;
   }
 }
+
+/*
+ * Phones: no text field under 16px, or iOS zooms on it (issue #14): the compact controls of the
+ * admin and the fields set smaller by a utility (sorts, comparator, search of a list). Important
+ * in a low layer, so that it wins over those utilities; a field already larger keeps its size.
+ */
+@layer base {
+  @media (max-width: 639.98px) {
+    :is(input, select, textarea):is(
+      [data-density='compact'] .nm-control,
+      [class*='text-[11px]'],
+      [class*='text-[12px]'],
+      [class*='text-[13px]'],
+      [class*='text-[14px]'],
+      [class*='text-[15px]'],
+      [class*='text-sm'],
+      [class*='text-xs']
+    ) {
+      font-size: 16px !important;
+    }
+  }
+}
+
+/*
+ * Phones: a touch area of 44px at least around a small link (footer, breadcrumb, logo) without
+ * moving the layout (issue #14). Neighbours must be 24px apart at least, or their areas overlap.
+ */
+@layer components {
+  @media (max-width: 639.98px) {
+    .nm-hit {
+      position: relative;
+    }
+    .nm-hit::after {
+      content: '';
+      position: absolute;
+      inset: calc(min(0px, (100% - 44px) / 2)) -4px;
+    }
+  }
+}

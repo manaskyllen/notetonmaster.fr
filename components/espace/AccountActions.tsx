@@ -16,6 +16,7 @@ export function AccountActions() {
           variant="outline"
           size="s"
           icon="download"
+          className="max-w-full py-2 text-center whitespace-normal!"
           disabled={pending || !!exported}
           onClick={() =>
             start(async () => {

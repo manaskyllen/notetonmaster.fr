@@ -81,7 +81,7 @@ export function Logo({ href, tone = 'light', size = 'm', iconOnly, className }: 
         className,
       )
     : cn(
-        'inline-flex items-center font-display leading-[1.1] font-extrabold tracking-[-0.045em] whitespace-nowrap no-underline',
+        'nm-hit inline-flex items-center font-display leading-[1.1] font-extrabold tracking-[-0.045em] whitespace-nowrap no-underline',
         WORD_SIZE[size],
         TONE_WORD[tone],
         className,
