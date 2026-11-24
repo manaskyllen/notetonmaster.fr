@@ -40,6 +40,8 @@ export interface Figures {
   /** « ville:nantes » or « toutes ». */
   scope: string;
   city: { slug: string; name: string } | null;
+  /** The guide is about a city that is not open: no figure of the city (tokens without value). */
+  cityClosed?: string | null;
   /** Latest Mon Master session of the database. */
   session: number | null;
   rows: FigureRow[];

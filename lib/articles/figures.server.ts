@@ -103,6 +103,7 @@ export async function computeFigures(
   return {
     scope,
     city: city ? { slug: city.slug, name: city.name } : null,
+    cityClosed: citySlug && !city ? citySlug : null,
     session: c.session,
     rows,
     reviews: raw.reduce((n, r) => n + r.reviewCount, 0),

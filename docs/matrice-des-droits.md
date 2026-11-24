@@ -14,7 +14,7 @@ Les actions marquées 🔐 demandent en plus le code de double authentification 
 | ------------------ | ------------------------------------------------------------------------------------------ |
 | Admin              | tous les droits, dont l'équipe et les paramètres                                           |
 | Modération         | avis, justificatifs, messages, signalements, questions, réponses des équipes               |
-| Données            | fiches, collectes, arbitrages                                                              |
+| Données            | fiches, collectes, arbitrages, guides (éditeur d'articles)                                 |
 | Légal              | demandes légales, données de connexion                                                     |
 | Équipe pédagogique | répond aux avis des parcours de son établissement (adresse d'un domaine officiel vérifiée) |
 | Étudiant·e         | son espace, ses avis, ses conversations, ses justificatifs                                 |
@@ -45,6 +45,7 @@ Les actions marquées 🔐 demandent en plus le code de double authentification 
 | Paramètres et bandeau d'information                            |  ✅   |     ❌     |   ❌    |  ❌   |
 | Ouvrir ou fermer une ville 🔐                                  |  ✅   |     ❌     |   ❌    |  ❌   |
 | QR codes : créer, modifier, archiver, télécharger              |  ✅   |     ❌     |   ❌    |  ❌   |
+| Guides : rédiger, publier, programmer, dépublier, relire       |  ✅   |     ❌     |   ✅    |  ❌   |
 
 Une session admin dure 8 heures au plus et se ferme après 30 minutes d'inactivité. Un changement
 de rôle ou un retrait ferme toutes les sessions du membre.

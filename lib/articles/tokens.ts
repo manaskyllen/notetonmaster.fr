@@ -29,6 +29,9 @@ export function resolveToken(code: string, f: Figures): TokenValue | null {
     if (key === 'villes') return num(f.site.cities);
     return null;
   }
+  // A city that is not open has no figures: its tokens have no value (never a false 0).
+  if (f.cityClosed && (head === 'domaine' || head === 'etablissement' || head === 'ville'))
+    return null;
   if (head === 'domaine') {
     const d = key ? DOMAIN_CODES[key] : undefined;
     if (!d) return null;
@@ -75,6 +78,38 @@ export function resolveToken(code: string, f: Figures): TokenValue | null {
     }
   }
   return null;
+}
+
+const CITY_KEYS = [
+  'nom',
+  'parcours',
+  'etablissements',
+  'mentions',
+  'tres_selectifs',
+  'selectifs',
+  'accessibles',
+  'pct_tres_selectifs',
+  'pct_accessibles',
+  'alternance',
+  'pct_alternance',
+  'distance',
+  'avis',
+];
+
+/**
+ * Whether a code is a token of the README, whatever its value: `ville.parcours` is known even in
+ * a city that is not open (it then has no value), `ville.inconnu` is not. An establishment is
+ * checked against the database by the caller.
+ */
+export function isKnownToken(code: string): boolean {
+  const [head, key, more] = code.split('.');
+  if (more !== undefined) return false;
+  if (head === 'session') return key === undefined;
+  if (head === 'site') return key === 'parcours' || key === 'villes';
+  if (head === 'domaine') return !!key && key in DOMAIN_CODES;
+  if (head === 'ville') return !!key && CITY_KEYS.includes(key);
+  if (head === 'etablissement') return !!key && /^[a-z0-9-]+$/.test(key);
+  return false;
 }
 
 /** Every token code written in a text, in order of appearance, without repeats. */

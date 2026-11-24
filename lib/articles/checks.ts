@@ -94,7 +94,9 @@ export function publishBlockers(
   for (const i of r.issues)
     out.push(
       i.kind === 'token'
-        ? `Jeton inconnu : ${i.source}`
+        ? i.message.startsWith('pas de valeur')
+          ? `Jeton sans valeur : ${i.source}`
+          : `Jeton inconnu : ${i.source}`
         : i.kind === 'block'
           ? `Bloc refusé (${i.message}) : ${i.source}`
           : `Lien refusé (${i.message})`,

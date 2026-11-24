@@ -10,6 +10,7 @@ export const PERMISSIONS = [
   'connectionLogs.view',
   'team.manage',
   'audit.export',
+  'articles.edit',
 ] as const;
 
 export type Permission = (typeof PERMISSIONS)[number];
@@ -24,6 +25,7 @@ export const PERMISSION_LABEL: Record<Permission, string> = {
   'connectionLogs.view': 'Accéder aux données de connexion',
   'team.manage': 'Gérer l’équipe et les paramètres',
   'audit.export': 'Exporter le journal d’audit',
+  'articles.edit': 'Rédiger, publier et dépublier les guides',
 };
 
 /** Permission matrix. */
@@ -37,9 +39,10 @@ const MATRIX: Record<AdminRole, readonly Permission[]> = {
     'legal.manage',
     'team.manage',
     'audit.export',
+    'articles.edit',
   ],
   MODERATOR: ['dashboard.view', 'moderation.manage'],
-  DATA_EDITOR: ['dashboard.view', 'data.edit', 'sync.run', 'sync.validate'],
+  DATA_EDITOR: ['dashboard.view', 'data.edit', 'sync.run', 'sync.validate', 'articles.edit'],
   LEGAL: ['dashboard.view', 'legal.manage', 'connectionLogs.view', 'audit.export'],
 };
 
@@ -58,7 +61,8 @@ export const ROLE_LABEL: Record<AdminRole, string> = {
 
 export const ROLE_HELP: Record<AdminRole, string> = {
   MODERATOR: 'Valide, refuse et masque les avis. Traite les signalements.',
-  DATA_EDITOR: 'Modifie les fiches, lance les synchronisations, arbitre les conflits.',
+  DATA_EDITOR:
+    'Modifie les fiches, lance les synchronisations, arbitre les conflits, rédige les guides.',
   LEGAL: 'Traite les demandes de retrait et les réquisitions. Seul accès aux données de connexion.',
   ADMIN: 'Tous les droits, dont la gestion de l’équipe et des paramètres.',
 };

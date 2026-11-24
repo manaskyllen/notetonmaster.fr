@@ -2,7 +2,7 @@ import { Marked, type Tokens } from 'marked';
 import { BLOCK_LIKE_RE, blockError, esc, parseBlock, renderBlock, type Block } from './blocks';
 import type { Figures } from './figures';
 import { fold, slugify } from './model';
-import { resolveToken, TOKEN_RE } from './tokens';
+import { isKnownToken, resolveToken, TOKEN_RE } from './tokens';
 
 /**
  * Markdown of a guide → HTML, on the server. Raw HTML is never rendered (shown as text), images
@@ -187,7 +187,14 @@ export function renderArticle(
   const values = codes.map((c) => resolveToken(c, figures));
   for (const [i, c] of codes.entries())
     if (!values[i] && !issues.some((x) => x.kind === 'token' && x.source === c))
-      issues.push({ kind: 'token', source: `{{${c}}}`, message: `jeton inconnu {{${c}}}` });
+      issues.push({
+        kind: 'token',
+        source: `{{${c}}}`,
+        message:
+          isKnownToken(c) && !c.startsWith('etablissement.')
+            ? `pas de valeur pour {{${c}}} (ville non ouverte ?)`
+            : `jeton inconnu {{${c}}}`,
+      });
 
   const tokenHtml = (i: number, plain: boolean) => {
     const v = values[i];

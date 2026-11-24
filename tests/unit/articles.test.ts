@@ -135,6 +135,15 @@ describe('jetons', () => {
     expect(resolveToken('site.parcours', all)?.text).toBe('1 234'.replace(' ', ' '));
   });
 
+  it('ville non ouverte : aucun chiffre de ville (jamais un faux 0)', () => {
+    const closed = { ...figures([]), city: null, cityClosed: 'dijon' };
+    expect(resolveToken('domaine.deg', closed)).toBeNull();
+    expect(resolveToken('ville.parcours', closed)).toBeNull();
+    expect(resolveToken('session', closed)?.text).toBe('2026');
+    const r = renderArticle('{{ville.parcours}} parcours', closed, LINKS, 'preview');
+    expect(r.issues[0]!.message).toMatch(/pas de valeur/);
+  });
+
   it('liste les jetons d’un texte', () => {
     expect(tokensIn('a {{ville.nom}} b {{ session }} c {{ville.nom}}')).toEqual([
       'ville.nom',
