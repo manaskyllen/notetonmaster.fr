@@ -159,6 +159,13 @@ export const FICHES_BASE = sql`
            prov.last
       FROM f LEFT JOIN iss ON iss.id = f.id LEFT JOIN prov ON prov."entityId" = f.id)`;
 
+/** Parcours of several cursus that nothing tells apart (issue #21): to name by hand. */
+const UNNAMED_CURSUS = sql`m.type = 'PROGRAM' AND EXISTS (
+  SELECT 1 FROM "MonMasterEntry" e
+   WHERE e."programId" = m.id AND e."cursusLabel" IS NULL
+     AND e."lastSession" = (SELECT max(x."lastSession") FROM "MonMasterEntry" x WHERE x."programId" = m.id)
+     AND (SELECT count(*) FROM "MonMasterEntry" y WHERE y."programId" = m.id AND y."lastSession" = e."lastSession") > 1)`;
+
 function viewSql(view: ViewKey) {
   const v = VIEWS[view] as { kind?: DataIssueKind };
   if (v.kind) return sql`m.publication = 'pub' AND ${v.kind} = ANY(m.kinds)`;
@@ -172,11 +179,7 @@ function viewSql(view: ViewKey) {
     case 'brouillons':
       return sql`m.publication = 'draft'`;
     case 'cursus-sans-libelle':
-      return sql`m.type = 'PROGRAM' AND EXISTS (
-        SELECT 1 FROM "MonMasterEntry" e
-         WHERE e."programId" = m.id AND e."cursusLabel" IS NULL
-           AND e."lastSession" = (SELECT max(x."lastSession") FROM "MonMasterEntry" x WHERE x."programId" = m.id)
-           AND (SELECT count(*) FROM "MonMasterEntry" y WHERE y."programId" = m.id AND y."lastSession" = e."lastSession") > 1)`;
+      return UNNAMED_CURSUS;
     default:
       return sql`TRUE`;
   }
@@ -304,6 +307,7 @@ export async function readViewCounts(): Promise<Record<ViewKey, number>> {
              count(*) FILTER (WHERE publication = 'pub')::int AS publiees,
              count(*) FILTER (WHERE publication = 'off')::int AS "hors-ville",
              count(*) FILTER (WHERE publication = 'draft')::int AS brouillons,
+             count(*) FILTER (WHERE ${UNNAMED_CURSUS})::int AS "cursus-sans-libelle",
              ${Prisma.join(
                kinds.map(
                  ([key, v]) =>
