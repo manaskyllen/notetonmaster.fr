@@ -1765,6 +1765,7 @@ enum AuditCategory {
   LEGAL
   CONNEXION
   DONNEES
+  ARTICLES
 }
 
 /// Append-only: UPDATE is rejected by a database trigger, and so is DELETE except past the
@@ -1964,4 +1965,86 @@ model QrScanDaily {
 
   @@id([linkId, day])
   @@map("qr_scans_daily")
+}
+
+// ──────────────────────────── Guides (articles éditoriaux) ────────────────────────────
+
+/// DRAFT: never public. SCHEDULED: public from `publishedAt`. PUBLISHED: public. TO_REVIEW: a figure
+/// quoted in the text changed since the last review (it stays online when `online`), or its city
+/// was closed (then taken offline).
+enum ArticleStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  TO_REVIEW
+}
+
+/// Theme of a guide: the label « Nantes · Sélectivité » and the subject filter of /guides.
+enum ArticleTheme {
+  GUIDE
+  SELECTIVITE
+  ALTERNANCE
+  EUROPE
+  METHODE
+  CALENDRIER
+}
+
+/// An editorial guide (/guides/{slug}), written in the admin in Markdown. Its figures are tokens
+/// ({{ville.parcours}}) and data blocks (::: classement … :::), resolved on the cached figures of
+/// its city (ArticleFigures), never written by hand (lib/articles).
+model Article {
+  id                String        @id @default(cuid())
+  title             String        @db.VarChar(200)
+  slug              String        @unique @db.VarChar(120)
+  /// Slug of an open city (LaunchZone), null for a guide about every city.
+  city              String?       @db.VarChar(80)
+  theme             ArticleTheme  @default(GUIDE)
+  /// Chapô, under the H1.
+  lede              String        @default("")
+  /// Markdown, with tokens and blocks.
+  body              String        @default("")
+  metaDescription   String        @default("") @db.VarChar(300)
+  /// Main keyword (SEO checklist of the editor).
+  keyword           String        @default("") @db.VarChar(120)
+  secondaryKeywords String[]      @default([])
+  /// Extra words of the search of /guides, never shown.
+  searchKeywords    String[]      @default([])
+  /// Slugs of the guides of « À lire aussi ».
+  relatedSlugs      String[]      @default([])
+  status            ArticleStatus @default(DRAFT)
+  /// Public: published (or scheduled, or to review) and not taken offline. `publishedAt` in the
+  /// future: scheduled, public from then on.
+  online            Boolean       @default(false)
+  publishedAt       DateTime?
+  /// Byline; « Par l'équipe note ton master » when empty.
+  signature         String?       @db.VarChar(120)
+  /// Last « Marquer comme relu » and the values of the tokens quoted in the text then.
+  reviewedAt        DateTime?
+  reviewedValues    Json?
+  createdById       String?
+  updatedById       String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([online, publishedAt])
+  @@index([city])
+}
+
+/// Former slugs of a guide: /guides/<old> answers 301 to the current one.
+model ArticleSlugRedirect {
+  slug      String   @id @db.VarChar(120)
+  articleId String
+  createdAt DateTime @default(now())
+
+  @@index([articleId])
+}
+
+/// Figures of the guides, per scope (« ville:nantes », « toutes »): the parcours of the latest Mon
+/// Master session and what the tokens and blocks need. Recomputed after every Mon Master sync and
+/// every opening or closing of a city, never on a visit (lib/articles/figures.server.ts).
+model ArticleFigures {
+  scope      String   @id @db.VarChar(100)
+  session    Int?
+  data       Json
+  computedAt DateTime @default(now())
 }

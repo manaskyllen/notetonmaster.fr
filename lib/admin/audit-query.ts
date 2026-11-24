@@ -24,6 +24,7 @@ export const AUDIT_CATEGORIES: Record<AuditCategory, { slug: string; label: stri
       cls: 'bg-surface-100 text-[#3b3648] dark:text-ink-muted',
     },
     DONNEES: { slug: 'donnees', label: 'Données', cls: 'bg-warning-bg text-warning' },
+    ARTICLES: { slug: 'guides', label: 'Guides', cls: 'bg-violet-100 text-violet-700' },
   };
 
 export const PERIODS = {
@@ -209,6 +210,8 @@ export function auditHref(
       return '/admin/moderation?file=legal';
     case 'ADMIN':
       return '/admin/equipe';
+    case 'ARTICLE':
+      return r.targetId ? `/admin/articles/${r.targetId}` : '/admin/articles';
     default:
       return null;
   }

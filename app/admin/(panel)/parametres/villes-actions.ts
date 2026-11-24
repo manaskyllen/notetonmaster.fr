@@ -46,7 +46,7 @@ export async function saveZones(raw: unknown) {
       );
     if (r.changes.length) {
       // lists, fiches, search, footer, open cities; the sitemap is regenerated on its next request
-      expireTags([TAGS.catalog, TAGS.footer, TAGS.zones]);
+      expireTags([TAGS.catalog, TAGS.footer, TAGS.zones, TAGS.articles]);
       revalidatePath('/sitemap.xml');
       revalidatePath('/', 'layout');
     }

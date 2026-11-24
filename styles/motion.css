@@ -3006,3 +3006,32 @@ html:not(.nm-js) .nm-js-only,
     transform: none;
   }
 }
+
+/* ───────── Guides (styles/guides.css) ───────── */
+/* The arrow of a guide line, of « À lire aussi » and of the city card slides on hover. */
+.g-arr {
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.g-also:hover .g-arr,
+.g-row:hover .g-arr,
+.g-citycard__go:hover .g-arr {
+  transform: translateX(4px);
+}
+.g-cta__b {
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.g-cta__b:hover {
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .g-arr,
+  .g-cta__b {
+    transition: none;
+  }
+  .g-also:hover .g-arr,
+  .g-row:hover .g-arr,
+  .g-citycard__go:hover .g-arr,
+  .g-cta__b:hover {
+    transform: none;
+  }
+}
