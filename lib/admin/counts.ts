@@ -182,7 +182,8 @@ export function issueTotal(
 
 export async function ficheCount() {
   const [p, m, u] = await Promise.all([
-    prisma.program.count(),
+    // a fiche merged into its parcours (issue #21) is one of its cursus, not a fiche of the list
+    prisma.program.count({ where: { status: { not: 'MERGED' } } }),
     prisma.mention.count(),
     prisma.university.count(),
   ]);

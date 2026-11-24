@@ -15,6 +15,8 @@ import { accountVoterKey, answerRight, getQuestionsPage } from '@/lib/questions'
 import { Container } from '@/components/public/PageShell';
 import { ParcoursTabs } from '@/components/public/ParcoursTabs';
 import { ProgrammePanel } from '@/components/public/ProgrammePanel';
+import { CursusM2Banner, ParcoursCursus } from '@/components/public/ParcoursCursus';
+import { cursusView } from '@/lib/catalog/cursus-view';
 import { ProgramCard } from '@/components/catalog/ProgramCard';
 import { ficheSources } from '@/lib/catalog/fiche-identity';
 import { sameMentionElsewhere } from '@/lib/catalog/same-mention';
@@ -282,6 +284,18 @@ export default async function ParcoursPage({
     followedSet(student),
   ]);
   const voted = new Set(votes.map((v) => v.reviewId));
+  // Cursus of the parcours (issue #21): numbers of its latest session, with their figures.
+  const uaiFirst = p.university.uai?.split(';')[0]?.trim() || null;
+  const leadsTo = new Map(
+    (
+      await prisma.cursusOverride.findMany({
+        where: { code: { in: p.monMasterEntries.map((e) => e.code) }, leadsTo: { not: null } },
+        select: { code: true, leadsTo: true },
+      })
+    ).map((o) => [o.code, o.leadsTo!]),
+  );
+  const cursus = cursusView(p.monMasterEntries, p.admissionStats, leadsTo, uaiFirst);
+  const several = cursus.kind !== 'single';
   // « n nouveaux avis depuis ta dernière visite » (Masters suivis) counts from this visit on.
   if (student && followed.has(p.id))
     after(() =>
@@ -454,7 +468,7 @@ export default async function ParcoursPage({
       </Link>
     </div>
   );
-  const programmePanel = hasProgramme ? (
+  const programmeBody = hasProgramme ? (
     <ProgrammePanel
       facts={programmeFacts(outline, {
         entryLevel: entry,
@@ -491,6 +505,14 @@ export default async function ParcoursPage({
       </span>
     </EmptyState>
   );
+  const programmePanel = cursus.m2 ? (
+    <div className="flex flex-col gap-4">
+      <CursusM2Banner m2={cursus.m2} rhythm={cursus.kind === 'rhythm'} />
+      {programmeBody}
+    </div>
+  ) : (
+    programmeBody
+  );
 
   // What the team entered about the selection (manual entry, never collected from Mon Master).
   const admissionLists = (
@@ -511,8 +533,62 @@ export default async function ParcoursPage({
   ).filter((x): x is [string, string] => !!x[1]);
   // Admission tab: « D'où viennent les admis ? » first, then « Comment ce
   // master évolue »; no figure cards, no « Candidature » card.
+  // What is common to every cursus is shown once (« Commun à tous les cursus »), right after them.
+  const teamSection = admissionLists.length + admissionTexts.length > 0 && (
+    <section
+      aria-labelledby="adm-team"
+      className={cn(
+        'flex flex-col gap-3',
+        several && 'rounded-[24px] border border-border bg-surface-0 px-7 py-6 max-[900px]:p-4.5',
+      )}
+    >
+      <h2 id="adm-team" className="m-0 font-display text-[22px] font-extrabold tracking-[-0.02em]">
+        {several
+          ? cursus.kind === 'rhythm'
+            ? 'Commun aux deux rythmes'
+            : cursus.kind === 'unnamed'
+              ? 'Commun à toutes les fiches'
+              : 'Commun à tous les cursus'
+          : 'Attendus et critères'}
+      </h2>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(260px,100%),1fr))] gap-3">
+        {admissionLists.map(([k, items]) => (
+          <Fact key={k} label={k}>
+            <ul className="m-0 flex list-disc flex-col gap-1 pl-4.5">
+              {items.map((x) => (
+                <li key={x}>{x}</li>
+              ))}
+            </ul>
+          </Fact>
+        ))}
+        {admissionTexts.map(([k, v]) => (
+          <Fact key={k} label={k}>
+            {v}
+          </Fact>
+        ))}
+      </div>
+      <p className="m-0 text-[13px] text-ink-muted">
+        Saisie manuelle par l’équipe
+        {p.admissionSourceUrl ? (
+          <>
+            {' '}
+            d’après{' '}
+            <a href={p.admissionSourceUrl} rel="noopener noreferrer" target="_blank">
+              la page consultée
+              <span className="sr-only"> (nouvel onglet)</span>
+            </a>
+          </>
+        ) : null}
+        . Mon Master interdit leur collecte automatique.
+      </p>
+    </section>
+  );
+  // Admission tab: the cursus first (issue #21), what they share, then « D'où viennent les
+  // admis ? » and « Comment ce master évolue »; no figure cards, no « Candidature » card.
   const admissionPanel = (
     <div className="flex flex-col gap-4">
+      <ParcoursCursus view={cursus} />
+      {several && teamSection}
       {p.origins && (
         <AdmissionOrigins
           summary={p.origins}
@@ -521,52 +597,13 @@ export default async function ParcoursPage({
         />
       )}
       <AdmissionEvolution {...evolution} />
-      {admissionLists.length + admissionTexts.length > 0 && (
-        <section aria-labelledby="adm-team" className="flex flex-col gap-3">
-          <h2
-            id="adm-team"
-            className="m-0 font-display text-[22px] font-extrabold tracking-[-0.02em]"
-          >
-            Attendus et critères
-          </h2>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(260px,100%),1fr))] gap-3">
-            {admissionLists.map(([k, items]) => (
-              <Fact key={k} label={k}>
-                <ul className="m-0 flex list-disc flex-col gap-1 pl-4.5">
-                  {items.map((x) => (
-                    <li key={x}>{x}</li>
-                  ))}
-                </ul>
-              </Fact>
-            ))}
-            {admissionTexts.map(([k, v]) => (
-              <Fact key={k} label={k}>
-                {v}
-              </Fact>
-            ))}
-          </div>
-          <p className="m-0 text-[13px] text-ink-muted">
-            Saisie manuelle par l’équipe
-            {p.admissionSourceUrl ? (
-              <>
-                {' '}
-                d’après{' '}
-                <a href={p.admissionSourceUrl} rel="noopener noreferrer" target="_blank">
-                  la page consultée
-                  <span className="sr-only"> (nouvel onglet)</span>
-                </a>
-              </>
-            ) : null}
-            . Mon Master interdit leur collecte automatique.
-          </p>
-        </section>
-      )}
+      {!several && teamSection}
     </div>
   );
 
   // Fiche d'identité: each unknown line is left out.
   const firstEntry = p.monMasterEntries[0];
-  const uai = p.university.uai?.split(';')[0]?.trim() || null;
+  const uai = uaiFirst;
   const cert = p.mention.certification;
   const identityRows = (
     [
@@ -586,7 +623,11 @@ export default async function ParcoursPage({
       ['Certification', cert ? `${cert.code}${cert.level ? ` · niveau ${cert.level}` : ''}` : null],
       [
         'Candidature',
-        firstEntry ? (
+        several ? (
+          <a key="c" href="#cursus" className="text-ink">
+            Mon Master · {cursus.items.length} fiches ↓
+          </a>
+        ) : firstEntry ? (
           uai ? (
             <a
               key="c"
@@ -610,7 +651,8 @@ export default async function ParcoursPage({
   const split = splitParcoursTitle(p.title);
   const tags = [
     `${p.durationYears} an${p.durationYears > 1 ? 's' : ''}${p.ects ? ` · ${p.ects} ECTS` : ''}`,
-    MODALITY_LABEL[p.modality],
+    // A pair « initiale / alternance » shows its initial rhythm; the chip says « Aussi en alternance ».
+    MODALITY_LABEL[cursus.kind === 'rhythm' ? 'ONSITE' : p.modality],
     p.entryLevel === 'M2' ? 'Entrée en M2' : null,
     ...p.highlights,
   ].filter(Boolean) as string[];
@@ -706,6 +748,11 @@ export default async function ParcoursPage({
             >
               {split.title}
             </h1>
+            {split.subtitle && (
+              <p className="-mt-2 mb-0 max-w-[900px] text-[16px] leading-[1.4] text-[#e6e0ff]">
+                {split.subtitle}
+              </p>
+            )}
             <p className="m-0 text-[18px]">
               Master mention{' '}
               <Link href={`/mentions/${p.mention.slug}`} className="font-semibold text-on-violet">
@@ -718,6 +765,16 @@ export default async function ParcoursPage({
                   {t}
                 </li>
               ))}
+              {cursus.chip && (
+                <li>
+                  <a
+                    href="#cursus"
+                    className="inline-flex items-center gap-1.5 rounded-sm border border-current/35 bg-white/12 px-3 py-2 text-[14px] font-semibold text-on-violet no-underline transition-colors hover:bg-white/22"
+                  >
+                    {cursus.chip.replace(/ ↓$/, '')} <span aria-hidden="true">↓</span>
+                  </a>
+                </li>
+              )}
             </ul>
             {/* Summary and buttons on one line: the column (and the name) keeps the full width. */}
             <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">

@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { devices, expect, test, type Locator, type Page } from '@playwright/test';
 import { qrMatrix, qrPath } from '@/lib/qr/matrix';
 import { horizontalOverflow } from './responsive';
-import { loginStudent, sql, uniqueEmail, waitForHydration } from './helpers';
+import { animationsDone, loginStudent, sql, uniqueEmail, waitForHydration } from './helpers';
 
 /** « Partager » of a fiche parcours (issue #13): the panel, its two tabs, the sheet on a phone. */
 const VNP = 'valorisation-des-nouveaux-patrimoines';
@@ -401,6 +401,8 @@ test('after a review, with an account: the review sentence and the two links', a
     `/espace/verification?parcours=${VNP}`,
   );
   await expect(thanks.getByRole('link', { name: /Explorer d’autres masters/ })).toBeVisible();
+  // The sticker fades in (0.15 s + 0.6 s): axe would read its colours half transparent.
+  await animationsDone(thanks);
   expect(await seriousAxe(page, 'section.nm-thanks')).toEqual([]);
 });
 

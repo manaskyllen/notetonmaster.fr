@@ -306,6 +306,10 @@ export interface ProgramRow {
   /** Share of the reviews that recommend it (overall rating 4 or 5), or null without review. */
   recommendShare: number | null;
   durationYears: number;
+  /** Cursus of the parcours (issue #21): number, labels, how the card shows them. */
+  cursusCount: number;
+  cursusLabels: string[];
+  cursusKind: string;
   /** How a query found it (« Trouvé par RNCP · … »), when it was by an identifier. */
   matchedBy: MatchedBy | null;
   /** 2: exact identifier, 1: identifier prefix, 0: text. */
@@ -317,7 +321,7 @@ const ROW_COLUMNS = sql`"programId", slug, title, "parentTitle", "sourceTitle", 
   "mentionId", "mentionSlug", "mentionName", kind, "isPublicSector", "componentName", "cityName",
   "isAbroad", modalities, "entryLevel"::text AS "entryLevel", places, applications, offers,
   "accessRate", "lastSession", "reviewCount", "verifiedReviewCount", "avgRating", "recommendShare",
-  "durationYears", code_hit`;
+  "durationYears", "cursusCount", "cursusLabels", "cursusKind", code_hit`;
 
 /** Columns the filters, sorts and cards read (never the tsvector: CTEs may be materialised). */
 const BASE_COLUMNS = sql`i."programId", i.slug, i.title, i."parentTitle", i."sourceTitle", i."shortName", i.status,
@@ -326,7 +330,8 @@ const BASE_COLUMNS = sql`i."programId", i.slug, i.title, i."parentTitle", i."sou
   i."cityName", i."cityKey", i."cityInsee", i."departmentCode", i."departmentName", i.region, i."regionSlug", i.lat, i.lng,
   i."isAbroad", i.modalities, i."entryLevel", i.places, i.applications, i.offers, i."accessRate",
   i."accessBand", i."lastSession", i."reviewCount", i."verifiedReviewCount", i."avgRating", i."recommendShare",
-  i."durationYears", i."zoneSlugs", i."domainSlug", i."disciplineSlug", i.discipline, i."titleNorm"`;
+  i."durationYears", i."zoneSlugs", i."domainSlug", i."disciplineSlug", i.discipline, i."titleNorm",
+  i."cursusCount", i."cursusLabels", i."cursusKind"`;
 
 function baseCte(t: TextPlan | null, ctx: BrowseContext, fuzzy: boolean) {
   const codes = codeParts(t);

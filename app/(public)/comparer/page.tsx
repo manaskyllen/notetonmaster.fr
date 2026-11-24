@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { currentProgramSlug } from '@/lib/data/slugs';
 import Link from 'next/link';
 import { Container, SourceLine } from '@/components/public/PageShell';
 import { seoMetadata } from '@/lib/seo/meta';
@@ -35,7 +36,16 @@ export default async function ComparerPage({
   searchParams: Promise<{ ids?: string }>;
 }) {
   const { ids: raw } = await searchParams;
-  const asked = (raw ?? '').split(',').filter(Boolean).slice(0, 3);
+  // A former slug (a cursus merged into its parcours) compares its parcours, once.
+  const asked = [
+    ...new Set(
+      (
+        await Promise.all(
+          (raw ?? '').split(',').filter(Boolean).slice(0, 3).map(currentProgramSlug),
+        )
+      ).filter((s): s is string => !!s),
+    ),
+  ];
   const all = await getProgramSummaries(asked);
   const ids = asked.filter((s) => all.some((p) => p.slug === s));
   const cols: (ProgramSummary | null)[] = [0, 1, 2].map(

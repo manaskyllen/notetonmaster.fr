@@ -35,3 +35,27 @@ export function reviewsLine(count: number, recommendShare: number | null) {
     recommend: recommendShare != null ? `${recommendShare} % le recommandent` : null,
   };
 }
+
+/** Cursus of a parcours as the index gives them (issue #21). */
+export interface CursusInput {
+  cursusCount?: number | null;
+  cursusLabels?: string[] | null;
+  cursusKind?: string | null;
+}
+
+/**
+ * Line « 3 cursus » of a card, with the names up to 3 cursus (« 4 cursus » alone beyond). Only
+ * for cursus named by a place or a suffix: a pair told apart by the rhythm only says « Initiale ou
+ * alternance » on its pill, numbers that nothing tells apart show nothing.
+ */
+export function cursusLine(c: CursusInput): { count: string; names: string[] } | null {
+  const n = c.cursusCount ?? 1;
+  if (c.cursusKind !== 'named' || n < 2) return null;
+  return { count: `${n} cursus`, names: n <= 3 ? (c.cursusLabels ?? []).slice(0, 3) : [] };
+}
+
+/** Pill of the rhythm: « Alternance », or « Initiale ou alternance » for a pair of both. */
+export function rhythmPill(modalities: string[], c: CursusInput): string | null {
+  if (c.cursusKind === 'rhythm') return 'Initiale ou alternance';
+  return modalities.includes('alternance') ? 'Alternance' : null;
+}

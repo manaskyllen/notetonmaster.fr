@@ -19,7 +19,8 @@ export async function sameMentionElsewhere(p: {
       WITH cur AS (SELECT "cityKey" FROM "ProgramSearchIndex" WHERE "programId" = ${p.id})
       SELECT i."programId", i.slug, i.title, i."universityId", i."universityShort", i."universityName",
              i."cityName", i.modalities, i."entryLevel"::text AS "entryLevel", i."durationYears",
-             i."isPublicSector", i."avgRating", i."reviewCount", i."recommendShare"
+             i."isPublicSector", i."avgRating", i."reviewCount", i."recommendShare",
+             i."cursusCount", i."cursusLabels", i."cursusKind"
         FROM "ProgramSearchIndex" i
        WHERE i."mentionId" = ${p.mentionId} AND i."programId" <> ${p.id} AND i."isPublicSector"
        ORDER BY (i."cityKey" = (SELECT "cityKey" FROM cur)) IS NOT TRUE,

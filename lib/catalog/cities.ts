@@ -21,7 +21,8 @@ const OPTS = { revalidate: 600, tags: [TAGS.catalog, TAGS.zones] };
 
 const CARD_SQL = `i."programId", i.slug, i.title, i."universityId", i."universityShort", i."universityName",
   i."cityName", i.modalities, i."entryLevel"::text AS "entryLevel", i."durationYears",
-  i."isPublicSector", i."avgRating", i."reviewCount", i."recommendShare"`;
+  i."isPublicSector", i."avgRating", i."reviewCount", i."recommendShare",
+  i."cursusCount", i."cursusLabels", i."cursusKind"`;
 
 export interface CityMention {
   slug: string;

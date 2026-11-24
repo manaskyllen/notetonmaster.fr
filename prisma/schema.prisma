@@ -189,6 +189,8 @@ enum ProgramStatus {
   ACTIVE
   NOT_RENEWED
   DRAFT
+  /// A cursus fiche merged into a parcours (issue #21): kept for the way back, never listed.
+  MERGED
 }
 
 enum RecordOrigin {
@@ -213,10 +215,10 @@ model Program {
   campusRef           Campus?               @relation(fields: [campusId], references: [id], onDelete: SetNull)
   accreditationId     String?
   accreditation       MentionAccreditation? @relation(fields: [accreditationId], references: [id], onDelete: SetNull)
-  /// "Même parcours, autre modalité" (work-study and on-site versions are two programs by default).
-  variantOfId         String?
-  variantOf           Program?              @relation("ProgramVariant", fields: [variantOfId], references: [id], onDelete: SetNull)
-  variants            Program[]             @relation("ProgramVariant")
+  /// MERGED fiche: the parcours its Mon Master numbers (its cursus) went to (lib/catalog/cursus.ts).
+  mergedIntoId        String?
+  mergedInto          Program?              @relation("ProgramMerge", fields: [mergedIntoId], references: [id], onDelete: SetNull)
+  merged              Program[]             @relation("ProgramMerge")
   status              ProgramStatus         @default(ACTIVE)
   origin              RecordOrigin          @default(MANUAL)
   firstSeenSession    Int?
@@ -346,6 +348,13 @@ model ProgramSearchIndex {
   verifiedReviewCount Int                      @default(0)
   avgRating           Float?
   recommendShare      Int?
+  /// Final parenthesis moved out of the title (« Tronc commun menant vers les M2 : … »).
+  subtitle            String?
+  /// Cursus of the parcours (numbers of its latest session), their labels by places (largest first)
+  /// and how they show: single | named | rhythm | unnamed (lib/catalog/variants.ts cursusKind).
+  cursusCount         Int                      @default(1)
+  cursusLabels        String[]                 @default([])
+  cursusKind          String                   @default("single")
   tsv                 Unsupported("tsvector")?
   titleNorm           String
   textNorm            String
@@ -369,6 +378,42 @@ model ProgramSearchIndex {
   @@index([zoneSlugs], type: Gin)
   @@index([titleNorm(ops: raw("gin_trgm_ops"))], map: "ProgramSearchIndex_titleNorm_trgm_idx", type: Gin)
   @@index([textNorm(ops: raw("gin_trgm_ops"))], map: "ProgramSearchIndex_textNorm_trgm_idx", type: Gin)
+}
+
+/// Manual corrections of the cursus (admin, issue #21), applied after the rules at every grouping and
+/// never overwritten by a sync. Keyed by Mon Master number.
+model CursusOverride {
+  code        String   @id
+  /// « Séparer »: the number goes back to its own fiche and is never grouped again.
+  split       Boolean  @default(false)
+  /// « Rattacher »: the parcours the fiche of this number joins.
+  attachToId  String?
+  /// Label typed in the admin (« Franco-allemand »…), over the computed one.
+  label       String?
+  /// « Mène vers : » of the cursus (the M2 it leads to), typed in the admin.
+  leadsTo     String?
+  updatedById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+/// Every write of the cursus grouping (migration, sync, admin), so that it can be undone exactly:
+/// `pnpm cursus:migrate --down` replays it backwards. op: update (column, old value), insert (row
+/// key), delete (whole row). `programId`: the merged fiche the write is about (a split undoes its rows).
+model CursusJournal {
+  id        BigInt   @id @default(autoincrement())
+  runId     String
+  programId String?
+  op        String
+  tableName String
+  rowKey    Json
+  column    String?
+  oldValue  Json?
+  row       Json?
+  createdAt DateTime @default(now())
+
+  @@index([runId])
+  @@index([programId])
 }
 
 /// Former slugs of a program (renamed to tell homonyms apart): /parcours/<old> answers 301.
@@ -397,10 +442,17 @@ model Campus {
   @@unique([universityId, cityId, key])
 }
 
+/// A Mon Master number (ifc). The numbers of the latest session of a parcours are its cursus
+/// (issue #21): told apart by a site, a rhythm or a place, each with its own figures.
 model MonMasterEntry {
   id           String          @id @default(cuid())
   code         String          @unique // 2500101KDKQN (ifc)
   label        String?
+  /// Label of the cursus (« Kehl », « En alternance »), recomputed at each grouping; null for the
+  /// only cursus of a parcours, or when nothing tells the cursus apart. CursusOverride.label wins.
+  cursusLabel  String?
+  /// Fiche the number belonged to before it joined its parcours (the way back of a split).
+  homeProgramId String?
   inm          String?
   inmp         String?
   workStudy    Boolean?
