@@ -160,11 +160,14 @@ export const FICHES_BASE = sql`
       FROM f LEFT JOIN iss ON iss.id = f.id LEFT JOIN prov ON prov."entityId" = f.id)`;
 
 /** Parcours of several cursus that nothing tells apart (issue #21): to name by hand. */
-const UNNAMED_CURSUS = sql`m.type = 'PROGRAM' AND EXISTS (
-  SELECT 1 FROM "MonMasterEntry" e
-   WHERE e."programId" = m.id AND e."cursusLabel" IS NULL
-     AND e."lastSession" = (SELECT max(x."lastSession") FROM "MonMasterEntry" x WHERE x."programId" = m.id)
-     AND (SELECT count(*) FROM "MonMasterEntry" y WHERE y."programId" = m.id AND y."lastSession" = e."lastSession") > 1)`;
+const UNNAMED_CURSUS = sql`m.type = 'PROGRAM' AND m.id IN (
+  SELECT e."programId"
+    FROM (SELECT "programId", "cursusLabel", "lastSession",
+                 max("lastSession") OVER (PARTITION BY "programId") AS latest
+            FROM "MonMasterEntry") e
+   WHERE e."lastSession" IS NOT DISTINCT FROM e.latest
+   GROUP BY 1
+  HAVING count(*) > 1 AND bool_or(e."cursusLabel" IS NULL))`;
 
 function viewSql(view: ViewKey) {
   const v = VIEWS[view] as { kind?: DataIssueKind };

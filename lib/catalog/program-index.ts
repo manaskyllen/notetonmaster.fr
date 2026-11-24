@@ -58,17 +58,23 @@ agg AS (
    GROUP BY 1, 2
 ),
 cur AS (
-  -- Cursus (issue #21): numbers of the latest session, the largest first.
+  -- Cursus (issue #21): numbers of the latest session, the largest first. A window, not a
+  -- correlated subquery (MonMasterEntry has no index on programId); the figures through the
+  -- unique index of AdmissionStat (programId, monMasterEntryId, …).
   SELECT e."programId", count(*)::int AS n,
          array_agg(e."cursusLabel" ORDER BY st.capacity DESC NULLS LAST, e.code) AS labels,
          bool_or(e."cursusLabel" IS NULL) AS anynull
-    FROM "MonMasterEntry" e
-    JOIN listed l ON l.id = e."programId"
+    FROM (
+      SELECT x.id, x.code, x."programId", x."cursusLabel", x."lastSession",
+             max(x."lastSession") OVER (PARTITION BY x."programId") AS latest
+        FROM "MonMasterEntry" x JOIN listed l ON l.id = x."programId"
+    ) e
     LEFT JOIN LATERAL (
-      SELECT s.capacity FROM "AdmissionStat" s WHERE s."monMasterEntryId" = e.id
+      SELECT s.capacity FROM "AdmissionStat" s
+       WHERE s."programId" = e."programId" AND s."monMasterEntryId" = e.id
        ORDER BY s.session DESC LIMIT 1
     ) st ON true
-   WHERE e."lastSession" = (SELECT max(x."lastSession") FROM "MonMasterEntry" x WHERE x."programId" = e."programId")
+   WHERE e."lastSession" IS NOT DISTINCT FROM e.latest
    GROUP BY 1
 ),
 acc AS (
