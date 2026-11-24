@@ -52,6 +52,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ...(can(admin.role, 'moderation.manage')
       ? [{ href: '/admin/avis', label: 'Avis', icon: 'message' } as NavItem]
       : []),
+    ...(can(admin.role, 'articles.edit')
+      ? [{ href: '/admin/articles', label: 'Articles', icon: 'file' } as NavItem]
+      : []),
     { href: '/admin/equipe', label: 'Équipe & rôles', icon: 'users' },
     { href: '/admin/audit', label: 'Journal d’audit', icon: 'history' },
     ...(can(admin.role, 'team.manage')

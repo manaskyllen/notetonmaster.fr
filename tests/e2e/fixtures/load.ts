@@ -12,7 +12,8 @@
  *   any: the tests that open more than three cities.
  * - what the tests that used to skip themselves need (./extras.ts): a law parcours abroad and one
  *   with its programme, a mention with a single parcours, a Mon Master merge proposal;
- * - parcours of several cursus (./cursus.ts, issue #21).
+ * - parcours of several cursus (./cursus.ts, issue #21);
+ * - guides: one published in Strasbourg, a draft, 25 for the pagination (./guides.ts).
  * Ends by recomputing what the application derives, as after a sync.
  *
  * Run: tsx tests/e2e/fixtures/load.ts (DATABASE_URL = the template database).
@@ -25,6 +26,7 @@ import { campus, city, program, university } from '../../integration/fixtures/fa
 import { FX } from '../../integration/fixtures/ids';
 import { loadCursus } from './cursus';
 import { loadExtras } from './extras';
+import { loadGuides } from './guides';
 
 type Kind = 'LICENCE' | 'LICENCE_PRO' | 'BUT' | 'MASTER' | 'OTHER' | 'NOT_ENROLLED';
 /** Per session: admitted, then [origin, applications, offers, admitted]. */
@@ -186,6 +188,8 @@ async function main() {
   await refreshIndexRatings();
   await refreshZoneStats();
   await prisma.$executeRaw`SELECT nm_refresh_search_document()`;
+  // Guides, once the index of the parcours is built (their figures come from it).
+  await loadGuides();
   console.log('[fixtures] end-to-end dataset loaded');
 }
 

@@ -18,6 +18,8 @@ export const TAGS = {
   zones: 'launch-zones',
   /** What one student follows (« Suivi » on fiches, cards, Mon espace). */
   favorites: (studentId: string) => `favorites:${studentId}`,
+  /** Guides (/guides, their pages, the section of the city pages) and their figures. */
+  articles: 'articles',
   /** Counters of the admin (sidebar, overview, views of Fiches): 5 minutes, expired after a
    *  sync, an arbitration or a bulk action. */
   admin: 'admin-counts',

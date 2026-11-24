@@ -1,6 +1,7 @@
 import { audit } from '@/lib/audit';
 import { invalidateTagsRemote, TAGS } from '@/lib/cache/tags';
 import { refreshSearchIndex } from '@/lib/search-index';
+import { refreshArticleFigures } from '@/lib/articles/figures.server';
 import { prisma } from '@/lib/db';
 import { notifyAdmins } from '@/lib/admin/notify';
 import { runPipeline, upsertAlert } from '@/lib/data/pipeline';
@@ -78,7 +79,8 @@ export async function executeRun(run: NonNullable<Awaited<ReturnType<typeof clai
       await ctx.log(out.status === 'AWAITING_VALIDATION' ? 'WARN' : 'OK', out.summary);
       if (out.published) {
         await refreshSearchIndex({ sectors: true });
-        await invalidateTagsRemote([TAGS.footer, TAGS.catalog]);
+        await refreshGuides(ctx);
+        await invalidateTagsRemote([TAGS.footer, TAGS.catalog, TAGS.articles]);
       }
       await prisma.dataSource.update({
         where: { id: run.sourceId },
@@ -95,7 +97,8 @@ export async function executeRun(run: NonNullable<Awaited<ReturnType<typeof clai
     if (result.status === 'SUCCEEDED') {
       await ctx.log('OK', `terminé · ${result.summary}`);
       await refreshSearchIndex({ sectors: true });
-      await invalidateTagsRemote([TAGS.footer, TAGS.catalog]);
+      await refreshGuides(ctx);
+      await invalidateTagsRemote([TAGS.footer, TAGS.catalog, TAGS.articles]);
     }
     await prisma.dataSource.update({
       where: { id: run.sourceId },
@@ -147,6 +150,23 @@ export async function executeRun(run: NonNullable<Awaited<ReturnType<typeof clai
     // Data problems of the admin: recomputed after every pass, never on read.
     await computeIssues().catch((e) => console.error('[issues]', e));
     await invalidateTagsRemote([TAGS.admin]);
+  }
+}
+
+/**
+ * Figures of the guides, recomputed after the catalogue changed (never on a visit); a guide whose
+ * quoted figures changed goes to « À relire ». A failure here never fails the sync.
+ */
+async function refreshGuides(ctx: RunContext) {
+  try {
+    const r = await refreshArticleFigures({ review: true });
+    if (r.toReview.length)
+      await ctx.log('WARN', `${r.toReview.length} guide(s) à relire : chiffres changés`);
+  } catch (e) {
+    await ctx.log(
+      'WARN',
+      `chiffres des guides non recalculés : ${e instanceof Error ? e.message : String(e)}`,
+    );
   }
 }
 

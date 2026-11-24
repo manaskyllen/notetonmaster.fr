@@ -23,6 +23,7 @@ export function CityPickerPanel({
   onPick,
   onClose,
   className,
+  note,
 }: {
   id: string;
   cities: IndexCity[];
@@ -36,6 +37,8 @@ export function CityPickerPanel({
   onClose: (focusTrigger: boolean) => void;
   /** Position and width. */
   className?: string;
+  /** Line at the bottom, instead of the count of open cities (« Les guides … »). */
+  note?: string;
 }) {
   const [q, setQ] = useState('');
   const [hi, setHi] = useState(0);
@@ -172,8 +175,12 @@ export function CityPickerPanel({
         </p>
       )}
       <p className="m-0 border-t border-border bg-surface-50 px-4 py-2.5 text-[12px] text-ink-muted">
-        {plural(cities.length, 'ville ouverte', 'villes ouvertes')} · on ouvre les suivantes petit à
-        petit
+        {note ?? (
+          <>
+            {plural(cities.length, 'ville ouverte', 'villes ouvertes')} · on ouvre les suivantes
+            petit à petit
+          </>
+        )}
       </p>
     </div>
   );

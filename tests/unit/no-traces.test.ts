@@ -11,15 +11,30 @@ function files(dir: string): string[] {
   });
 }
 
+/**
+ * The removed features, by name. « Calendrier » is the removed component (its tag, import or
+ * declaration): the word itself is a theme of the guides (« Calendrier Mon Master »).
+ */
+const TRACES: [string, RegExp][] = [
+  ['Wish', /Wish/],
+  ['PhaseReminder', /PhaseReminder/],
+  ['maplibre', /maplibre/],
+  [
+    'Calendrier',
+    /<Calendrier\b|\{\s*Calendrier\b|(?:function|const|class) Calendrier\b|\/Calendrier['"]/,
+  ],
+  ['ListeVoeux', /ListeVoeux/],
+];
+
 describe('no trace', () => {
   it('of Wish, PhaseReminder, maplibre, Calendrier, ListeVoeux in app/, components/ and lib/', () => {
     const hits = ['app', 'components', 'lib']
       .flatMap((d) => files(join(process.cwd(), d)))
       .flatMap((f) => {
         const text = readFileSync(f, 'utf8');
-        return ['Wish', 'PhaseReminder', 'maplibre', 'Calendrier', 'ListeVoeux']
-          .filter((w) => text.includes(w))
-          .map((w) => `${f.replace(process.cwd(), '')}: ${w}`);
+        return TRACES.filter(([, re]) => re.test(text)).map(
+          ([w]) => `${f.replace(process.cwd(), '')}: ${w}`,
+        );
       });
     expect(hits).toEqual([]);
   });

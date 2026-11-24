@@ -1,5 +1,6 @@
 import { prisma } from '../db';
 import { refreshZoneStats } from '../catalog/index-ratings';
+import { closeCityArticles, refreshArticleFigures } from '../articles/figures.server';
 import { refreshProgramIndexRows } from '../catalog/program-index';
 import { refreshOpenZoneFlags } from './zones';
 import { epciCommunes } from './geo';
@@ -113,6 +114,9 @@ export async function applyZoneStates(
   for (let i = 0; i < ids.length; i += 500) await refreshProgramIndexRows(ids.slice(i, i + 500));
   // The figures of the cities (/masters), even when no parcours changed.
   await refreshZoneStats();
+  // Guides: those of a closed city go offline (« À relire »), and the figures follow the cities.
+  await closeCityArticles(changes.filter((c) => !c.after).map((c) => c.slug));
+  await refreshArticleFigures();
   // Through a SECURITY DEFINER function: the application role does not own the view.
   await prisma.$executeRaw`SELECT nm_refresh_search_document()`;
   return {

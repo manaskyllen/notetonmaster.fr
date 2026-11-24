@@ -4,6 +4,8 @@
 @import '../styles/overlays.css';
 /* All motion (transitions, keyframes, reduced motion): see docs/animations.md. */
 @import '../styles/motion.css';
+/* Guides: the text of the articles and their data blocks. */
+@import '../styles/guides.css';
 
 /* Dark mode follows the same rules as tokens.css: system preference unless forced by data-theme. */
 @custom-variant dark {

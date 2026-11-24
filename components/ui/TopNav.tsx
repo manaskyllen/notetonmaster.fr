@@ -79,7 +79,8 @@ export function TopNav({
         onClick={() => setOpen(false)}
         className={cn(
           'inline-flex min-h-tap items-center gap-2 rounded-pill px-3.5 text-[15px] text-ink no-underline',
-          current ? 'bg-surface-0 font-bold' : 'font-medium hover:bg-surface-0',
+          // Active tab (ArticlePublic and ArticlesIndex mockups): bold on a light green pill.
+          current ? 'bg-lime-100 font-bold text-ink' : 'font-medium hover:bg-surface-0',
         )}
       >
         {l.label}

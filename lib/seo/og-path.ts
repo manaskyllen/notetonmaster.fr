@@ -3,7 +3,7 @@
  * shows (rating, number of reviews, name): a new address, so caches never serve an old rating.
  */
 /** `avis`: the review form set on a parcours (« Donne ton avis sur … », lime). */
-export type OgKind = 'parcours' | 'avis' | 'mention' | 'universite' | 'ville';
+export type OgKind = 'parcours' | 'avis' | 'mention' | 'universite' | 'ville' | 'guide';
 
 export function ogVersion(parts: (string | number | null | undefined)[]): string {
   let h = 2166136261;

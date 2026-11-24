@@ -1,6 +1,6 @@
 /**
  * Texts written by people (reviews, questions, messages, replies, banner) are rendered as text.
- * Raw HTML only in the three places below, each with an `html-safe:` comment saying why.
+ * Raw HTML only in the places below, each with an `html-safe:` comment saying why.
  */
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -10,6 +10,7 @@ const ALLOWED = [
   'app/layout.tsx',
   'app/(public)/legal/[doc]/page.tsx',
   'components/seo/JsonLd.tsx',
+  'components/public/ArticleHtml.tsx',
 ];
 
 describe('dangerouslySetInnerHTML', () => {

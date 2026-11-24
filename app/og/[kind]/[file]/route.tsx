@@ -1,3 +1,5 @@
+import { getGuide } from '@/lib/articles/queries';
+import { themeInfo } from '@/lib/articles/model';
 import { getCityMention, getCityOverview } from '@/lib/catalog/cities';
 import { prisma } from '@/lib/db';
 import { reviewFormTitle } from '@/lib/domain/share-copy';
@@ -85,6 +87,19 @@ async function card(kind: string, slug: string): Promise<OgCard | null> {
       subtitle: `${nf.format(c.programs)} parcours · ${nf.format(c.universities.length)} établissements publics`,
       tone: 'night',
       figure: c.reviews ? `${nf.format(c.reviews)} avis d’étudiant·es` : null,
+    };
+  }
+  if (kind === 'guide') {
+    // A published guide: its city and theme, its title (same generator and style as the fiches).
+    const g = await getGuide(slug);
+    if (!g) return null;
+    return {
+      kicker: `${g.city?.name ?? 'Guide'} · ${themeInfo(g.theme).label}`,
+      title: g.title,
+      subtitle: g.session
+        ? `Chiffres Mon Master ${g.session}, mis à jour automatiquement`
+        : 'Guide',
+      tone: 'violet',
     };
   }
   return null;

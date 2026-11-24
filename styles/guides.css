@@ -1,0 +1,576 @@
+/*
+ * Guides (/guides, /guides/{slug}, the editor of the admin): the text rendered on the server from
+ * Markdown (lib/articles/render.ts) and its data blocks (lib/articles/blocks.ts). ArticlePublic
+ * mockup (23). Motion: styles/motion.css. No script: the table of contents follows the reading with CSS scroll markers
+ * where the browser has them (scroll-target-group), the FAQ is made of native <details>.
+ */
+.g-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  color: color-mix(in srgb, var(--ink) 50%, var(--ink-muted));
+}
+.g-prose > p,
+.g-prose li {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.7;
+}
+.g-prose ul,
+.g-prose ol {
+  margin: 0;
+  padding-left: 1.3em;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.g-prose h2 {
+  margin: 18px 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  scroll-margin-top: 90px;
+}
+.g-prose h3 {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 23px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  scroll-margin-top: 90px;
+}
+.g-prose strong {
+  color: var(--ink);
+}
+.g-prose a:not([class]) {
+  color: var(--violet-700);
+  text-underline-offset: 3px;
+}
+.g-prose blockquote {
+  margin: 0;
+  padding: 4px 0 4px 18px;
+  border-left: 3px solid var(--lime-400);
+}
+.g-prose code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+}
+@media (max-width: 640px) {
+  .g-prose > p,
+  .g-prose li {
+    font-size: 17px;
+  }
+  .g-prose h2 {
+    font-size: 27px;
+  }
+}
+
+/* A figure of the database in the text: lightly highlighted in lime. */
+.num {
+  font-weight: 700;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, var(--lime-100) 62%);
+}
+
+/* ─── Tables of the blocks (and Markdown tables): they scroll in their frame on phones. ─── */
+.g-table {
+  margin: 0;
+  padding: 6px 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface-0);
+}
+.g-tblwrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.g-tblwrap:focus-visible {
+  outline: 2px solid var(--violet-500);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.g-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  color: var(--ink);
+}
+.g-tbl th {
+  padding: 10px 12px;
+  border-bottom: 1.5px solid var(--ink);
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-muted);
+}
+.g-tbl td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.g-tbl tr:last-child td {
+  border-bottom: 0;
+}
+.g-tbl .r {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.g-rank {
+  color: var(--ink-muted);
+}
+.g-prog {
+  font-weight: 700;
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+.g-prog:hover {
+  color: var(--violet-700);
+}
+.g-univ {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+.g-tbl td:has(.g-prog) {
+  min-width: 220px;
+}
+.g-rate {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.g-rate--tres-selectif {
+  background: #ffe3dc;
+  color: #8a2a0e;
+}
+.g-rate--selectif {
+  background: #fff6d6;
+  color: #7a4f00;
+}
+.g-rate--accessible {
+  background: var(--success-bg);
+  color: var(--success);
+}
+.g-rate--nc {
+  background: var(--surface-100);
+  color: var(--ink-muted);
+}
+.g-source {
+  padding: 12px 12px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+/* ─── Boxes: city figures, domains, call to review, open cities ─── */
+.g-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--surface-0);
+}
+.g-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+}
+.g-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.g-stat__n {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.g-stat__l {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+.g-bar {
+  display: flex;
+  gap: 3px;
+  height: 14px;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.g-bar__tres,
+.g-sel-bar .g-bar__tres {
+  background: #ffb0a1;
+}
+.g-bar__sel {
+  background: #ffe07a;
+}
+.g-bar__acc {
+  background: #9be0a8;
+}
+.g-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--ink) 50%, var(--ink-muted));
+}
+.g-sq--tres {
+  color: #ff8a73;
+}
+.g-sq--sel {
+  color: #f2c94c;
+}
+.g-sq--acc {
+  color: #6fcf8a;
+}
+.g-domains ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.g-domains li {
+  display: grid;
+  grid-template-columns: minmax(0, 15em) minmax(60px, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.g-dom__bar {
+  height: 10px;
+  border-radius: 99px;
+  background: var(--surface-100);
+  overflow: hidden;
+}
+.g-dom__bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--violet-500);
+}
+.g-dom__n {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.g-dom__p {
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+@media (max-width: 560px) {
+  .g-domains li {
+    grid-template-columns: 1fr auto;
+  }
+  .g-dom__bar {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+}
+.g-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--lime-400);
+  color: var(--on-lime);
+}
+.g-cta__t {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 440px;
+}
+.g-cta__h {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+.g-cta__p {
+  font-size: 15px;
+  line-height: 1.45;
+}
+.g-cta__b {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: var(--night);
+  color: var(--on-night);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+}
+.g-cta__b:hover {
+  color: var(--on-night);
+}
+.g-cities {
+  margin: 0;
+  padding: 0 !important;
+  list-style: none;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px !important;
+}
+.g-cities li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-0);
+  font-size: 15px !important;
+}
+.g-cities a {
+  font-weight: 700;
+  color: var(--ink);
+}
+.g-cities span {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+/* ─── Questions fréquentes: native <details> ─── */
+.g-faq {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+}
+.g-faq:last-of-type {
+  border-bottom: 1px solid var(--border);
+}
+.g-faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  list-style: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.g-faq summary::-webkit-details-marker {
+  display: none;
+}
+.g-faq summary:focus-visible {
+  outline: 2px solid var(--violet-500);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.g-faq__i::before {
+  content: '+';
+  font-size: 20px;
+  line-height: 1;
+}
+.g-faq[open] .g-faq__i::before {
+  content: '−';
+}
+.g-faq__a {
+  margin-top: 10px;
+}
+.g-faq__a p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--ink) 50%, var(--ink-muted));
+}
+
+/* ─── Article page: table of contents, city card, « À lire aussi » ─── */
+.g-toc {
+  display: flex;
+  flex-direction: column;
+}
+.g-toc a {
+  display: block;
+  padding: 7px 0 7px 14px;
+  border-left: 2px solid var(--border);
+  color: color-mix(in srgb, var(--ink) 50%, var(--ink-muted));
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.g-toc a:hover {
+  color: var(--ink);
+}
+/* The H2 in view, highlighted (Chromium 140+: CSS scroll markers, no script). */
+@supports (scroll-target-group: auto) {
+  .g-toc {
+    scroll-target-group: auto;
+  }
+  .g-toc a:target-current {
+    border-color: var(--violet-500);
+    color: var(--ink);
+    font-weight: 700;
+  }
+}
+.g-arr {
+  display: inline-block;
+}
+.g-also {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 2px;
+  border-top: 1px solid var(--border);
+  color: var(--ink);
+  text-decoration: none;
+}
+.g-also:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.g-also:hover .g-also__t {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+@media (max-width: 600px) {
+  .g-also {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .g-also__t {
+    flex-basis: 100%;
+    order: 2;
+  }
+  .g-also .g-arr {
+    display: none;
+  }
+}
+
+/* ─── /guides: one line per guide ─── */
+.g-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 4px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  text-decoration: none;
+}
+.g-row:hover .g-row__t {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.g-row mark {
+  background: var(--lime-100);
+  color: inherit;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+@media (max-width: 640px) {
+  .g-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* ─── Editor of the admin: tokens as pills, blocks as cards, errors in red ─── */
+.g-tok {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 7px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-weight: 700;
+  cursor: help;
+}
+.g-tok--bad,
+.g-badlink {
+  background: var(--danger-bg);
+  color: var(--danger);
+  outline: 1.5px solid var(--danger);
+  border-radius: 6px;
+  padding: 0 4px;
+}
+.g-blockbad {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--danger);
+  border-radius: 16px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 14px;
+}
+.g-blockbad code,
+.g-blockcard code {
+  font-size: 12px;
+  color: var(--ink-muted);
+  word-break: break-all;
+}
+.g-blockcard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1.5px dashed #b9aef5;
+  border-radius: 16px;
+  background: #f7f5ff;
+  font-size: 14px;
+  color: var(--ink);
+}
+[data-theme='dark'] .g-blockcard {
+  background: var(--surface-100);
+}
+.g-blockcard__h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--violet-700);
+}
+.g-chip {
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 12px;
+  font-weight: 700;
+}
+.g-blockcard__rows {
+  margin: 0;
+  padding-left: 1.4em;
+}
+.g-blockcard__empty,
+.g-blockcard__more {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+.g-edit.g-prose > p,
+.g-edit.g-prose li {
+  font-size: 16px;
+}
+.g-edit.g-prose h2 {
+  font-size: 24px;
+}
