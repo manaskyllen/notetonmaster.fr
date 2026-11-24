@@ -195,7 +195,7 @@ export function renderArticle(
         kind: 'token',
         source: `{{${c}}}`,
         message:
-          isKnownToken(c) && !c.startsWith('etablissement.')
+          isKnownToken(c) && (!c.startsWith('etablissement.') || !!figures.cityClosed)
             ? `pas de valeur pour {{${c}}} (ville non ouverte ?)`
             : `jeton inconnu {{${c}}}`,
       });
@@ -283,7 +283,7 @@ export function renderArticle(
   // Blocks.
   html = html.replace(/<p>NMB(\d+)X<\/p>/g, (_m, i: string) => {
     const b = blocks[Number(i)]!;
-    const err = blockError(b, !!figures.city);
+    const err = blockError(b, !!(figures.city ?? figures.cityClosed));
     if (err) {
       issues.push({ kind: 'block', source: b.source, message: err });
       return flag
