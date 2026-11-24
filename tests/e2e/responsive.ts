@@ -50,6 +50,8 @@ export async function publicPages(): Promise<CheckedPage[]> {
       name: 'Comparateur (3 parcours)',
       path: `/comparer?ids=${[VNP, ...compared.map((c) => c.slug)].join(',')}`,
     },
+    { name: 'Index des guides', path: '/guides' },
+    { name: 'Guide', path: '/guides/e2e-guide-strasbourg' },
     { name: 'Formulaire d’avis', path: '/avis/nouveau' },
     { name: 'Formulaire d’avis réglé', path: `/avis/nouveau?parcours=${VNP}` },
     { name: 'Connexion', path: '/connexion' },

@@ -349,6 +349,13 @@ describe('rendu Markdown', () => {
     expect(out).toContain('<p>Les avis de <span class="brand-s">note<span');
     expect(out).toContain('<a href="/">note ton master</a>');
   });
+
+  it('apostrophes typographiques entre deux lettres, sommaire compris', () => {
+    const r = renderArticle("## L'alternance\n\nC'est l'été, 'cité'.", F, LINKS);
+    expect(r.html).toContain('<h2 id="l-alternance">L’alternance</h2>');
+    expect(r.html).toContain('C’est l’été');
+    expect(r.toc[0]!.text).toBe('L’alternance');
+  });
 });
 
 describe('liste de contrôle SEO', () => {

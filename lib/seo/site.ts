@@ -52,6 +52,7 @@ const LOWERCASE_SECTIONS = new Set([
   'a-propos',
   'legal',
   'comparer',
+  'guides',
 ]);
 
 /**

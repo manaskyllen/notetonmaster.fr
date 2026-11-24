@@ -78,6 +78,42 @@ async function parcoursGate(
 }
 
 /**
+ * A guide (/guides/{slug}), answered here like the fiches: public (online, its date passed, its
+ * city open) → the page; a former slug of a public guide → 301; anything else (draft, scheduled,
+ * closed city, unknown) → a real 404, never indexed.
+ */
+async function guideGate(pathname: string): Promise<{ moved: string } | { missing: true } | null> {
+  const m = /^\/guides\/([^/]+)$/.exec(pathname);
+  if (!m) return null;
+  let slug: string;
+  try {
+    slug = decodeURIComponent(m[1]!);
+  } catch {
+    return { missing: true };
+  }
+  const { prisma } = await import('@/lib/db');
+  const live = async (where: { slug: string } | { id: string }) => {
+    const a = await prisma.article.findUnique({
+      where,
+      select: { slug: true, city: true, online: true, publishedAt: true },
+    });
+    if (!a?.online || !a.publishedAt || a.publishedAt > new Date()) return null;
+    if (a.city) {
+      const z = await prisma.launchZone.findUnique({
+        where: { slug: a.city },
+        select: { open: true },
+      });
+      if (!z?.open) return null;
+    }
+    return a.slug;
+  };
+  if (await live({ slug })) return null;
+  const r = await prisma.articleSlugRedirect.findUnique({ where: { slug } });
+  const target = r ? await live({ id: r.articleId }) : null;
+  return target && target !== slug ? { moved: `/guides/${target}` } : { missing: true };
+}
+
+/**
  * Pages removed in November 2026: a permanent redirect rather than a bare 404
  * (`keepQuery`: the filters of the old address are carried over).
  */
@@ -245,7 +281,9 @@ export async function proxy(req: NextRequest) {
     return robotsHeader(NextResponse.redirect(url, 301), pathname);
   }
 
-  const gate = await parcoursGate(pathname).catch(() => null);
+  const gate =
+    (await parcoursGate(pathname).catch(() => null)) ??
+    (await guideGate(pathname).catch(() => null));
   if (gate && 'moved' in gate) {
     const url = new URL(gate.moved + req.nextUrl.search, req.url);
     return robotsHeader(NextResponse.redirect(url, 301), pathname);

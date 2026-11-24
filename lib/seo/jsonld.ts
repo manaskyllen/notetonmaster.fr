@@ -8,7 +8,8 @@ import { absoluteUrl, siteOrigin } from './site';
  * - BreadcrumbList built from the visible breadcrumb (components/ui/Breadcrumb.tsx);
  * - EducationalOccupationalProgram on a fiche parcours, without aggregateRating: that type is
  *   not eligible to review snippets, and calling a master a Course would not match the page;
- * - no FAQPage (FAQ rich results stopped being shown in May 2026).
+ * - no FAQPage (FAQ rich results stopped being shown in May 2026);
+ * - Article on a guide (/guides/{slug}), written by the organisation, never with a rating.
  * Tested by snapshots (tests/unit/seo-jsonld.test.ts) and by `pnpm seo:check`.
  */
 
@@ -109,6 +110,40 @@ export function universityJsonLd(
     ...(u.city
       ? { address: { '@type': 'PostalAddress', addressLocality: u.city, addressCountry: 'FR' } }
       : {}),
+  };
+}
+
+export interface GuideJsonLdInput {
+  slug: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+  updatedAt: string;
+  /** Absolute or root-relative address of its share image. */
+  image: string;
+}
+
+/** A guide: headline, dates, written and published by the organisation. No rating, ever. */
+export function articleJsonLd(g: GuideJsonLdInput, origin = siteOrigin()): Json {
+  const url = absoluteUrl(`/guides/${g.slug}`, origin);
+  return {
+    '@type': 'Article',
+    '@id': `${url}#article`,
+    headline: g.title,
+    description: g.description,
+    url,
+    mainEntityOfPage: url,
+    inLanguage: 'fr-FR',
+    datePublished: g.publishedAt,
+    dateModified: g.updatedAt,
+    image: absoluteUrl(g.image, origin),
+    author: {
+      '@type': 'Organization',
+      '@id': `${origin}/#organisation`,
+      name: 'notetonmaster',
+      url: `${origin}/`,
+    },
+    publisher: { '@id': `${origin}/#organisation` },
   };
 }
 

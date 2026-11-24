@@ -129,6 +129,9 @@ const BRAND_WORD = /(?<![\w@./-])notetonmaster(?![\w@-]|\.[a-z])/g;
 const BRAND_HTML =
   '<span class="brand-s">note<span class="brand__g">ton</span><span class="brand__m">master</span></span>';
 
+/** Straight apostrophes between two letters become typographic (l'alternance → l’alternance). */
+export const typographic = (text: string) => text.replace(/(\p{L})(?:'|&#39;)(?=\p{L})/gu, '$1’');
+
 export function brandInHtml(html: string): string {
   let skip = 0;
   return html
@@ -139,7 +142,8 @@ export function brandInHtml(html: string): string {
         else if (/^<\/(h[1-6]|a)>/i.test(part)) skip = Math.max(0, skip - 1);
         return part;
       }
-      return skip ? part : part.replace(BRAND_SPACED, BRAND_HTML).replace(BRAND_WORD, BRAND_HTML);
+      const text = typographic(part);
+      return skip ? text : text.replace(BRAND_SPACED, BRAND_HTML).replace(BRAND_WORD, BRAND_HTML);
     })
     .join('');
 }
@@ -223,7 +227,7 @@ export function renderArticle(
       heading({ tokens, depth }: Tokens.Heading) {
         const level = Math.min(6, Math.max(2, depth));
         const inner = plainTokens(this.parser.parseInline(tokens));
-        const label = textOf(inner);
+        const label = typographic(textOf(inner));
         let id = slugify(label) || 'section';
         for (let k = 2; ids.has(id); k++) id = `${slugify(label)}-${k}`;
         ids.add(id);

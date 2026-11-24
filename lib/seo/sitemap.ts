@@ -2,6 +2,7 @@ import 'server-only';
 import { unstable_cache } from 'next/cache';
 import { TAGS } from '@/lib/cache/tags';
 import { cityMentionPairs, getCityOverview } from '@/lib/catalog/cities';
+import { publishedGuides } from '@/lib/articles/queries';
 import { prisma } from '@/lib/db';
 import { cachedOpenZones } from '@/lib/launch/cached';
 import { LEGAL_DOCS, readLegalDoc } from '@/lib/legal';
@@ -13,7 +14,14 @@ import { absoluteUrl } from './site';
  * lastmod: the last change of the parcours or the last review published, never the build date.
  * Cached one hour, expired with the catalogue and the zones.
  */
-export const SITEMAPS = ['pages', 'villes', 'mentions', 'universites', 'parcours'] as const;
+export const SITEMAPS = [
+  'pages',
+  'villes',
+  'guides',
+  'mentions',
+  'universites',
+  'parcours',
+] as const;
 export type SitemapName = (typeof SITEMAPS)[number];
 
 export interface SitemapEntry {
@@ -64,6 +72,21 @@ async function compute(name: SitemapName): Promise<SitemapEntry[]> {
         ...pairs.map((p) => ({ path: `/masters/${p.city}/${p.mention}`, lastmod: p.updatedAt })),
       ];
     }
+    case 'guides': {
+      // Published guides only (their city open): drafts are never listed, never indexed.
+      const guides = await publishedGuides();
+      return [
+        {
+          path: '/guides',
+          lastmod:
+            guides
+              .map((g) => g.updatedAt)
+              .sort()
+              .at(-1) ?? null,
+        },
+        ...guides.map((g) => ({ path: `/guides/${g.slug}`, lastmod: g.updatedAt })),
+      ];
+    }
     case 'pages': {
       const [[last], legal] = await Promise.all([
         // raw-sql: constant LASTMOD expression; no value from a request.
@@ -92,7 +115,7 @@ async function compute(name: SitemapName): Promise<SitemapEntry[]> {
 export const sitemapEntries = (name: SitemapName) =>
   unstable_cache(() => compute(name), ['sitemap', name], {
     revalidate: 3600,
-    tags: [TAGS.catalog, TAGS.zones],
+    tags: [TAGS.catalog, TAGS.zones, TAGS.articles],
   })();
 
 const esc = (s: string) =>

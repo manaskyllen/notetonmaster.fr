@@ -7,6 +7,8 @@ import { Container, SourceLine } from '@/components/public/PageShell';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { Icon } from '@/components/ui/Icon';
 import { getCityOverview } from '@/lib/catalog/cities';
+import { guidesOfCity } from '@/lib/articles/queries';
+import { GuideList } from '@/components/guides/GuideParts';
 import type { Params } from '@/lib/pagination';
 import { listIndexing, seoMetadata } from '@/lib/seo/meta';
 import { ogImagePath } from '@/lib/seo/og-path';
@@ -72,7 +74,7 @@ export default async function CityPage({
   searchParams: Promise<Params>;
 }) {
   const [{ ville }, sp] = await Promise.all([params, searchParams]);
-  const c = await getCityOverview(ville);
+  const [c, guides] = await Promise.all([getCityOverview(ville), guidesOfCity(ville)]);
   if (!c) notFound();
   const name = c.zone.name;
   return (
@@ -143,6 +145,19 @@ export default async function CityPage({
           Établissements publics, parcours publiés dans l’intercommunalité de {name}. Sources : Mon
           Master, annuaire de l’enseignement supérieur.
         </SourceLine>
+
+        {/* The published guides of the city; no section without any. */}
+        {guides.length > 0 && (
+          <section aria-labelledby="guides-ville" className="mt-8 flex flex-col gap-2">
+            <h2
+              id="guides-ville"
+              className="m-0 font-display text-[28px] leading-tight font-extrabold tracking-[-0.025em]"
+            >
+              Guides sur les masters à {name}
+            </h2>
+            <GuideList guides={guides} />
+          </section>
+        )}
       </Container>
     </main>
   );

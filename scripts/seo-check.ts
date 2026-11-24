@@ -9,7 +9,9 @@
  * - a page does not have exactly one h1;
  * - an internal link is broken (4xx / 5xx);
  * - an indexable page is orphan (no link from another indexable page);
- * - Open Graph tags are missing.
+ * - Open Graph tags are missing;
+ * - a guide (/guides/{slug}) has a title over 60 characters, a description outside 120–155, or
+ *   a token or a data block left unresolved in its page.
  *
  * Outside production (any origin but https://notetonmaster.fr) the whole site answers
  * `X-Robots-Tag: noindex, nofollow` and its robots.txt disallows everything: the check expects
@@ -23,6 +25,9 @@ import { gzipSync } from 'node:zlib';
 import { headingJumps, isNoindex, readPage, type PageFacts } from '../lib/seo/html';
 import { breadcrumbNames, checkJsonLd, typesOf } from '../lib/seo/jsonld-check';
 import { CANONICAL_ORIGIN, DESCRIPTION, TITLE } from '../lib/seo/rules';
+import { META_MAX, META_MIN, TITLE_MAX } from '../lib/articles/model';
+
+const GUIDE = { title: TITLE_MAX, metaMin: META_MIN, metaMax: META_MAX };
 
 const arg = (k: string, d?: string) =>
   process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? d;
@@ -193,7 +198,22 @@ function pageChecks(url: string, f: Fetched, p: PageFacts, inSitemap: boolean) {
     if (!p.og[k]) err('open-graph', `${k} manquant`);
   if (p.og['og:locale'] && p.og['og:locale'] !== 'fr_FR')
     err('open-graph', `og:locale ${p.og['og:locale']}`);
+  if (/^\/guides\/[^/]+$/.test(new URL(url).pathname)) guideChecks(f, p, err);
   void f;
+}
+
+/** Guides: the lengths of the editor, and nothing of the Markdown of the figures left. */
+function guideChecks(f: Fetched, p: PageFacts, err: (rule: string, detail: string) => void) {
+  if (p.title && p.title.length > GUIDE.title)
+    err('guide', `titre de ${p.title.length} caractères (${GUIDE.title} au plus)`);
+  const d = p.description?.length ?? 0;
+  if (d < GUIDE.metaMin || d > GUIDE.metaMax)
+    err('guide', `meta description de ${d} caractères (${GUIDE.metaMin}–${GUIDE.metaMax})`);
+  const body = (f.html ?? '').replace(/<script[\s\S]*?<\/script>/g, '');
+  const token = /\{\{[^}]*\}\}/.exec(body);
+  if (token) err('guide', `jeton non résolu ${token[0]}`);
+  const block = /:::\s*[a-z-]+[^<]*:::/.exec(body);
+  if (block) err('guide', `bloc non résolu ${block[0].slice(0, 80)}`);
 }
 
 /** Origin expected in canonicals: the one the sitemap announces (APP_URL). */

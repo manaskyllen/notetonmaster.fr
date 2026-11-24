@@ -45,6 +45,7 @@ export async function SiteFooter() {
         { href: '/explorer', label: 'Explorer les masters' },
         { href: '/mentions', label: 'Les mentions' },
         { href: '/universites', label: 'Les universités' },
+        { href: '/guides', label: 'Guides' },
       ],
     },
     // The open cities only (their pages answer 404 once a city is closed).

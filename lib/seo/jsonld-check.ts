@@ -24,6 +24,7 @@ const KNOWN = new Set([
   'CollectionPage',
   'Place',
   'PostalAddress',
+  'Article',
 ]);
 
 /** Types Google accepts as `itemReviewed` of a review snippet (developers.google.com, 11/2026). */
@@ -118,6 +119,14 @@ function checkType(type: string, n: Obj, path: string, out: string[]) {
         out.push(`${path} : timeToComplete doit être une durée ISO 8601 (P2Y)`);
       if (n.numberOfCredits !== undefined && !Number.isInteger(n.numberOfCredits))
         out.push(`${path} : numberOfCredits doit être un entier`);
+      break;
+    case 'Article':
+      need('headline', (v) => isText(v) && String(v).length <= 110, 'manquant ou trop long');
+      need('datePublished', (v) => isText(v) && !Number.isNaN(Date.parse(String(v))), 'invalide');
+      need('dateModified', (v) => isText(v) && !Number.isNaN(Date.parse(String(v))), 'invalide');
+      if (!isObj(n.author)) out.push(`${path} : author manquant`);
+      if (n.aggregateRating !== undefined || n.review !== undefined)
+        out.push(`${path} : jamais de note sur un guide`);
       break;
     case 'AggregateRating': {
       const v = Number(n.ratingValue);
